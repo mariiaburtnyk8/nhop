@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHOP — Pancakes you feel before you taste.</title>
+  <meta name="description" content="National House of Pancakes — fluffy stacks, bottomless syrup, and the happiest flip in America. Reserve a booth, pick your stack, leave in a better mood." />
+
+  <!-- Satoshi — body / UI (Fontshare CDN) -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+
+  <!-- Fraunces — display fallback until Atomic Beers is fully licensed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&display=swap" />
+
+  <!-- Local styles -->
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+<body>
+
+  <!-- =========================================================
+       Custom cursor (desktop) — gets JS-driven via main.js
+       ========================================================= -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       NAV
+       ========================================================= -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo" aria-label="NHOP home">NHOP</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#menu">Menu</a>
+        <a href="#layers">Layers</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#reserve">Reserve</a>
+      </nav>
+      <a href="#reserve" class="btn">Reserve a table</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HERO — Pancake Stack Builder (3D stage on the right)
+         3D will be wired in via Three.js / R3F in a later pass.
+         This skeleton uses a blob placeholder so layout works now.
+         ========================================================= -->
+    <section class="hero" id="hero">
+      <div class="container hero__inner">
+
+        <div class="hero__copy">
+          <span class="eyebrow">National House of Pancakes</span>
+          <h1 class="hero-title">
+            Pancakes you <em>feel</em> before you taste.
+          </h1>
+          <!--
+            Alt hero headlines (pick one for client review):
+            · "Short on stacks. Long on joy."
+            · "Stack happens. Pour follows."
+            · "Breakfast that bites back. In a good way."
+            · "Dopamine, served by the stack."
+          -->
+          <p class="lead hero__lead">
+            Fluffy, fresh, flipped by hand, and served with more syrup than you
+            signed up for. Book a booth, pick your stack, leave in a better mood.
+          </p>
+          <div class="hero__cta">
+            <a href="#reserve" class="btn" data-cursor="grow">Reserve a table</a>
+            <a href="#menu" class="btn btn--ghost" data-cursor="grow">See the menu</a>
+          </div>
+        </div>
+
+        <div class="hero__stage" aria-hidden="true">
+          <!-- Canvas mount point for Three.js / R3F pancake stack -->
+          <canvas id="pancake-canvas"></canvas>
+          <!-- Placeholder shown until 3D scene initialises -->
+          <div class="hero__stage-placeholder" data-stage-placeholder></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         POPULAR — fan favorites
+         ========================================================= -->
+    <section class="section" id="menu">
+      <div class="container">
+        <div class="popular__head">
+          <div>
+            <span class="eyebrow">Stack charts</span>
+            <h2>The most-ordered stacks.</h2>
+            <p class="lead u-mt-6">
+              Fan favorites, voted for by every ring of the kitchen bell. Warning:
+              pictures do not come with maple.
+            </p>
+          </div>
+          <a href="#full-menu" class="btn btn--ghost" data-cursor="grow">See the full menu →</a>
+        </div>
+
+        <div class="popular__grid">
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">Classic Buttermilk</h3>
+            <p class="dish-card__meta">Three high · whipped butter · warm maple</p>
+          </article>
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">Wildberry Stack</h3>
+            <p class="dish-card__meta">Blueberry · raspberry · lemon cream</p>
+          </article>
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">S'mores Soirée</h3>
+            <p class="dish-card__meta">Toasted marshmallow · graham · ganache</p>
+          </article>
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">Banana Foster</h3>
+            <p class="dish-card__meta">Caramelised banana · rum glaze · pecan</p>
+          </article>
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">Savory Smash</h3>
+            <p class="dish-card__meta">Fried egg · bacon · chive cream · maple</p>
+          </article>
+          <article class="dish-card" data-cursor="grow">
+            <h3 class="dish-card__title">Birthday Flip</h3>
+            <p class="dish-card__meta">Funfetti · vanilla glaze · candle optional</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         REVIEWS — pinned horizontal-scroll reel of polaroid videos
+         The section is tall; a sticky child holds the heading + CTA
+         on top and a horizontal track of tilted polaroid cards below.
+         As the user scrolls vertically, JS translates the track on X.
+         ========================================================= -->
+    <section class="section section--pink reel" id="reviews">
+      <div class="reel__pin">
+
+        <div class="container reel__head">
+          <div class="reel__head-copy">
+            <span class="eyebrow">Scenes from the booth</span>
+            <h2>Real mouths. Real syrup.</h2>
+            <p class="lead u-mt-6">
+              Little moments, tall stacks — the kind you want to flip back to.
+            </p>
+          </div>
+          <a href="#reserve" class="btn" data-cursor="grow">Book your booth →</a>
+        </div>
+
+        <div class="reel__viewport">
+          <div class="reel__track" data-reel-track>
+
+            <figure class="reel-card" style="--tilt:-5deg; --lift:8px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v1.mp4" poster="./assets/video/v1.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A fresh pancake being flipped"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Worth every mile."</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card" style="--tilt:5deg; --lift:-18px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v2.mp4" poster="./assets/video/v2.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Pancakes stacking up on the plate"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Pink booth fever."</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card" style="--tilt:-3deg; --lift:22px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v3.mp4" poster="./assets/video/v3.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Warm maple syrup pouring over pancakes"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Texted my ex."</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card" style="--tilt:4deg; --lift:-6px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v4.mp4" poster="./assets/video/v4.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A tall stack glowing under warm light"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Ten out of ten."</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card" style="--tilt:-6deg; --lift:14px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v5.mp4" poster="./assets/video/v5.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Butter melting on the top of a hot stack"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Fluffy. Emotional."</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card" style="--tilt:6deg; --lift:-12px">
+              <div class="reel-card__media">
+                <video src="./assets/video/v6.mp4" poster="./assets/video/v6.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="First bite taken out of a pancake"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">"Brunch crush."</p>
+              </figcaption>
+            </figure>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         LAYERS — exploded-view pancake (anatomy of a stack)
+         Explains what goes into a NHOP stack + calorie story per layer.
+         The SVG layers are a fast placeholder; a dedicated 3D assembly
+         video (separate Higgsfield gen) will drop in here once ready.
+         ========================================================= -->
+    <section class="section layers" id="layers">
+      <div class="container">
+
+        <header class="layers__head">
+          <span class="eyebrow">Anatomy of a stack</span>
+          <h2 class="layers__title">Everything we pile on your plate.</h2>
+          <p class="lead">
+            Six honest layers, built in order. Pull them apart to see what's inside —
+            then tap the button and watch the tower snap back together.
+          </p>
+        </header>
+
+        <div class="layers__stage" data-layers-state="exploded" aria-live="polite">
+
+          <ol class="layers__stack" role="list">
+
+            <!-- 1 · Berry crown -->
+            <li class="layer" style="--i:0" data-label-side="left">
+              <div class="layer__art layer__art--berries">
+                <svg viewBox="0 0 160 48" aria-hidden="true" focusable="false">
+                  <!-- blueberries -->
+                  <circle cx="40"  cy="30" r="8"  fill="#3B4DA8"/>
+                  <circle cx="56"  cy="26" r="7"  fill="#2B3A86"/>
+                  <circle cx="70"  cy="32" r="6"  fill="#3B4DA8"/>
+                  <!-- raspberries -->
+                  <circle cx="92"  cy="28" r="9"  fill="#C0395B"/>
+                  <circle cx="108" cy="32" r="7"  fill="#A02D4C"/>
+                  <circle cx="120" cy="26" r="6"  fill="#C0395B"/>
+                  <!-- leaf -->
+                  <path d="M78 18 q6 -4 10 2 q-4 6 -10 -2 z" fill="#3A7A3E"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Berry Crown</span>
+                <span class="layer__cal">45 cal</span>
+              </aside>
+            </li>
+
+            <!-- 2 · Whipped cream -->
+            <li class="layer" style="--i:1" data-label-side="right">
+              <div class="layer__art layer__art--cream">
+                <svg viewBox="0 0 180 56" aria-hidden="true" focusable="false">
+                  <path d="M20 40 q10 -30 30 -20 q5 -18 25 -12 q10 -22 30 -8 q15 -18 30 -4 q12 -10 24 4 q8 12 -8 18 q-14 8 -32 4 q-18 10 -34 0 q-20 8 -38 -2 q-16 8 -27 -4 q-8 -6 0 -14 z" fill="#FFF8E7"/>
+                  <ellipse cx="90" cy="32" rx="60" ry="6" fill="rgba(57,2,25,0.08)"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Whipped Cloud</span>
+                <span class="layer__cal">80 cal</span>
+              </aside>
+            </li>
+
+            <!-- 3 · Butter + syrup -->
+            <li class="layer" style="--i:2" data-label-side="left">
+              <div class="layer__art layer__art--butter">
+                <svg viewBox="0 0 180 52" aria-hidden="true" focusable="false">
+                  <!-- maple glaze drip -->
+                  <path d="M10 20 q80 18 160 0 q-4 22 -36 20 q-30 16 -60 -2 q-34 18 -64 -18 z" fill="#C47A1E"/>
+                  <path d="M40 34 q40 10 90 0 q-10 14 -32 10 q-20 10 -58 -10 z" fill="#A25F12"/>
+                  <!-- butter pat -->
+                  <rect x="72" y="10" width="36" height="20" rx="4" fill="#FFD166"/>
+                  <rect x="72" y="10" width="36" height="6"  rx="3" fill="#FFE09A"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Butter + Syrup</span>
+                <span class="layer__cal">120 cal</span>
+              </aside>
+            </li>
+
+            <!-- 4 · Pancake top -->
+            <li class="layer" style="--i:3" data-label-side="right">
+              <div class="layer__art layer__art--pancake">
+                <svg viewBox="0 0 200 64" aria-hidden="true" focusable="false">
+                  <ellipse cx="100" cy="36" rx="92" ry="22" fill="#D89A5E"/>
+                  <ellipse cx="100" cy="30" rx="92" ry="18" fill="#E8B074"/>
+                  <ellipse cx="100" cy="28" rx="86" ry="14" fill="#F0BC7F"/>
+                  <ellipse cx="82"  cy="24" rx="10" ry="3"  fill="rgba(255,248,231,0.35)"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Pancake · Top</span>
+                <span class="layer__cal">165 cal</span>
+              </aside>
+            </li>
+
+            <!-- 5 · Pancake middle -->
+            <li class="layer" style="--i:4" data-label-side="left">
+              <div class="layer__art layer__art--pancake">
+                <svg viewBox="0 0 200 66" aria-hidden="true" focusable="false">
+                  <ellipse cx="100" cy="38" rx="94" ry="24" fill="#C68A4F"/>
+                  <ellipse cx="100" cy="32" rx="94" ry="20" fill="#D89A5E"/>
+                  <ellipse cx="100" cy="30" rx="88" ry="16" fill="#E8B074"/>
+                  <ellipse cx="118" cy="26" rx="12" ry="3"  fill="rgba(255,248,231,0.3)"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Pancake · Middle</span>
+                <span class="layer__cal">180 cal</span>
+              </aside>
+            </li>
+
+            <!-- 6 · Pancake base -->
+            <li class="layer" style="--i:5" data-label-side="right">
+              <div class="layer__art layer__art--pancake">
+                <svg viewBox="0 0 210 72" aria-hidden="true" focusable="false">
+                  <ellipse cx="105" cy="42" rx="100" ry="26" fill="#A87140"/>
+                  <ellipse cx="105" cy="36" rx="100" ry="22" fill="#BC8248"/>
+                  <ellipse cx="105" cy="34" rx="94"  ry="18" fill="#D09256"/>
+                  <ellipse cx="88"  cy="30" rx="14"  ry="3"  fill="rgba(255,248,231,0.28)"/>
+                </svg>
+              </div>
+              <aside class="layer__label">
+                <span class="layer__name">Pancake · Base</span>
+                <span class="layer__cal">195 cal</span>
+              </aside>
+            </li>
+
+            <!-- Plate (static, anchor) -->
+            <li class="layer layer--plate" style="--i:6" aria-hidden="true">
+              <div class="layer__art layer__art--plate">
+                <svg viewBox="0 0 260 40" focusable="false">
+                  <ellipse cx="130" cy="22" rx="120" ry="12" fill="rgba(57,2,25,0.15)"/>
+                  <ellipse cx="130" cy="18" rx="120" ry="12" fill="#FFF8E7"/>
+                </svg>
+              </div>
+            </li>
+
+          </ol>
+
+          <div class="layers__controls">
+            <button class="btn" data-layers-toggle aria-pressed="false">Stack it up</button>
+            <p class="layers__total"><span class="layers__total-num">785</span> calories of joy per stack</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         RESERVE — interactive 5-step mini-game
+         Each step is its own micro-scene with its own interaction.
+         State managed in scripts/reserve.js
+         ========================================================= -->
+    <section class="section reserve" id="reserve">
+      <div class="container reserve__inner">
+
+        <header class="reserve__intro">
+          <span class="eyebrow">Reserve</span>
+          <h2 class="reserve__title">Save your seat. <br/>Stack's calling.</h2>
+          <p class="lead reserve__lead">
+            Five playful steps. One warm booth. No phone trees, no waitlist
+            limbo — just you, us, and the smell of brown butter.
+          </p>
+        </header>
+
+        <div class="reserve__game" data-step="1" aria-live="polite">
+
+          <!-- Step progress dots -->
+          <ol class="reserve__progress" aria-label="Reservation progress">
+            <li class="reserve__dot is-active" data-step="1"><span>1</span></li>
+            <li class="reserve__dot" data-step="2"><span>2</span></li>
+            <li class="reserve__dot" data-step="3"><span>3</span></li>
+            <li class="reserve__dot" data-step="4"><span>4</span></li>
+            <li class="reserve__dot" data-step="5"><span>5</span></li>
+          </ol>
+
+          <!-- ======= Step 1: Party size ======= -->
+          <div class="reserve__scene is-visible" data-scene="1">
+            <h3 class="reserve__q">How many are coming?</h3>
+            <p class="reserve__hint">Tap a plate to add. Minus to take one away.</p>
+
+            <div class="party-table" data-party-count="2" aria-label="Animated party table">
+              <!-- Plates rendered by JS -->
+            </div>
+
+            <div class="party-controls">
+              <button class="party-btn" data-party="-" aria-label="Remove a plate">−</button>
+              <span class="party-display"><strong class="party-count">2</strong> <span>guests</span></span>
+              <button class="party-btn" data-party="+" aria-label="Add a plate">+</button>
+            </div>
+
+            <div class="reserve__nav">
+              <span class="reserve__nav-spacer"></span>
+              <button class="btn" data-reserve-next>Next →</button>
+            </div>
+          </div>
+
+          <!-- ======= Step 2: Date & time (flip-clock) ======= -->
+          <div class="reserve__scene" data-scene="2">
+            <h3 class="reserve__q">When should we save it?</h3>
+            <p class="reserve__hint">Pick a day, pick a time. We'll be ready.</p>
+
+            <div class="flip-clock" aria-label="Selected date and time">
+              <div class="flip-unit">
+                <div class="flip-card" data-flip="day">12</div>
+                <span class="flip-label">day</span>
+              </div>
+              <div class="flip-unit">
+                <div class="flip-card" data-flip="month">MAY</div>
+                <span class="flip-label">month</span>
+              </div>
+              <div class="flip-unit flip-unit--wide">
+                <div class="flip-card" data-flip="time">09:30</div>
+                <span class="flip-label">time</span>
+              </div>
+            </div>
+
+            <div class="date-picker">
+              <div class="date-picker__row" data-picker="day" aria-label="Day chips">
+                <!-- day chips rendered by JS -->
+              </div>
+              <div class="date-picker__row" data-picker="time" aria-label="Time chips">
+                <button class="chip" data-time="08:00">8:00 AM</button>
+                <button class="chip" data-time="09:00">9:00 AM</button>
+                <button class="chip is-active" data-time="09:30">9:30 AM</button>
+                <button class="chip" data-time="10:00">10:00 AM</button>
+                <button class="chip" data-time="11:00">11:00 AM</button>
+                <button class="chip" data-time="12:30">12:30 PM</button>
+                <button class="chip" data-time="14:00">2:00 PM</button>
+                <button class="chip" data-time="17:30">5:30 PM</button>
+                <button class="chip" data-time="19:00">7:00 PM</button>
+              </div>
+            </div>
+
+            <div class="reserve__nav">
+              <button class="btn btn--ghost" data-reserve-prev>← Back</button>
+              <button class="btn" data-reserve-next>Next →</button>
+            </div>
+          </div>
+
+          <!-- ======= Step 3: Name (handwritten) ======= -->
+          <div class="reserve__scene" data-scene="3">
+            <h3 class="reserve__q">What do we call you?</h3>
+            <p class="reserve__hint">Write it big. We'll remember.</p>
+
+            <div class="name-field">
+              <input
+                type="text"
+                class="name-input"
+                data-reserve-field="name"
+                placeholder="Type your name"
+                autocomplete="given-name"
+                maxlength="24" />
+              <span class="name-underline" aria-hidden="true"></span>
+              <svg class="name-pen" viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M20 4l8 8-16 16H4v-8L20 4z" fill="currentColor"/>
+              </svg>
+            </div>
+
+            <div class="reserve__nav">
+              <button class="btn btn--ghost" data-reserve-prev>← Back</button>
+              <button class="btn" data-reserve-next>Next →</button>
+            </div>
+          </div>
+
+          <!-- ======= Step 4: Phone (retro keypad) ======= -->
+          <div class="reserve__scene" data-scene="4">
+            <h3 class="reserve__q">Where do we ping you?</h3>
+            <p class="reserve__hint">Tap the keys. No real call — promise.</p>
+
+            <div class="phone-display">
+              <span class="phone-prefix">+1</span>
+              <span class="phone-number" data-reserve-field="phone">___-___-____</span>
+            </div>
+
+            <div class="keypad" aria-label="Phone keypad">
+              <button class="key" data-key="1">1</button>
+              <button class="key" data-key="2">2</button>
+              <button class="key" data-key="3">3</button>
+              <button class="key" data-key="4">4</button>
+              <button class="key" data-key="5">5</button>
+              <button class="key" data-key="6">6</button>
+              <button class="key" data-key="7">7</button>
+              <button class="key" data-key="8">8</button>
+              <button class="key" data-key="9">9</button>
+              <button class="key key--alt" data-key="del" aria-label="Delete last digit">⌫</button>
+              <button class="key" data-key="0">0</button>
+              <button class="key key--alt" data-key="clear" aria-label="Clear number">✕</button>
+            </div>
+
+            <div class="reserve__nav">
+              <button class="btn btn--ghost" data-reserve-prev>← Back</button>
+              <button class="btn" data-reserve-next>Next →</button>
+            </div>
+          </div>
+
+          <!-- ======= Step 5: Wishes ======= -->
+          <div class="reserve__scene" data-scene="5">
+            <h3 class="reserve__q">Any pancake wishes?</h3>
+            <p class="reserve__hint">Birthday candles? A quiet booth? A dog bowl for your pup? Tell us.</p>
+
+            <div class="wish-field">
+              <span class="wish-waiter" aria-hidden="true">
+                <!-- Simple notebook icon that "nods" while typing -->
+                <svg viewBox="0 0 32 32" width="40" height="40">
+                  <rect x="6" y="4" width="20" height="24" rx="2" fill="var(--color-honey)"/>
+                  <line x1="10" y1="10" x2="22" y2="10" stroke="var(--color-burgundy)" stroke-width="1.5"/>
+                  <line x1="10" y1="15" x2="22" y2="15" stroke="var(--color-burgundy)" stroke-width="1.5"/>
+                  <line x1="10" y1="20" x2="18" y2="20" stroke="var(--color-burgundy)" stroke-width="1.5"/>
+                </svg>
+              </span>
+              <textarea
+                class="wish-input"
+                data-reserve-field="wish"
+                rows="3"
+                maxlength="240"
+                placeholder="Take your time..."></textarea>
+            </div>
+
+            <div class="reserve__nav">
+              <button class="btn btn--ghost" data-reserve-prev>← Back</button>
+              <button class="btn" data-reserve-submit>Lock it in →</button>
+            </div>
+          </div>
+
+          <!-- ======= Confirmation scene ======= -->
+          <div class="reserve__scene reserve__scene--done" data-scene="done">
+            <div class="reserve__card" role="status">
+              <span class="reserve__card-label">RESERVED FOR</span>
+              <p class="reserve__card-name" data-confirm="name">—</p>
+              <p class="reserve__card-meta" data-confirm="meta">—</p>
+              <p class="reserve__card-wish" data-confirm="wish"></p>
+              <span class="reserve__card-seal">NHOP · Booked</span>
+            </div>
+            <p class="reserve__done-copy">Booth's warming up. You'll get a text the morning of. See you at the syrup.</p>
+            <button class="btn btn--ghost" data-reserve-restart>Book another</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+  <footer class="footer" id="about">
+    <div class="container">
+
+      <!-- Big shouted headline, one line -->
+      <h2 class="footer__headline">
+        LET'S <span class="footer__headline-accent">EAT</span> STACKS!
+      </h2>
+
+      <!-- Pink pill with cut-out crew photo extending above -->
+      <div class="footer__hero">
+        <picture>
+          <source srcset="./assets/images/footer-crew.webp" type="image/webp">
+          <img
+            class="footer__crew"
+            src="./assets/images/footer-crew.png"
+            alt="Two friends smiling behind a tall stack of pancakes"
+            loading="lazy" decoding="async"
+            width="1600" height="1194">
+        </picture>
+      </div>
+
+      <!-- Three-column info strip -->
+      <div class="footer__grid">
+
+        <div class="footer__col">
+          <div class="footer__heading">Explore</div>
+          <ul class="footer__list">
+            <li><a href="#menu">Our menu</a></li>
+            <li><a href="#layers">Anatomy of a stack</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#reserve">Reach out</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <div class="footer__heading">Follow</div>
+          <ul class="footer__list">
+            <li><a href="https://www.instagram.com/national_house_of_pancakes" rel="noopener">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/@ilovenhop" rel="noopener">TikTok</a></li>
+            <li><a href="#facebook">Facebook</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col footer__col--contact">
+          <div class="footer__heading">Contact</div>
+          <ul class="footer__list">
+            <li><a href="mailto:hello@houseofpancakes.net">hello@houseofpancakes.net</a></li>
+            <li><a href="tel:+17185550199">(718) 555-0199</a></li>
+            <li>412 Maple Ave, Brooklyn NY</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Tiny print -->
+      <div class="footer__bottom">
+        <span>All Rights Reserved · National House of Pancakes · 2026</span>
+        <span class="footer__legal">Open daily · 7am – 11pm</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- JS hooks: cursor, nav, ScrollTrigger, 3D mount -->
+  <!-- No type="module" so the file works when opened via file:// -->
+  <script src="./scripts/main.js" defer></script>
+  <script src="./scripts/reserve.js" defer></script>
+</body>
+</html>
