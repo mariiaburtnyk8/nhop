@@ -1,0 +1,13 @@
+/* ==========================================================================
+   NHOP — Fonts
+   Display: Atomic Beers (local .otf)
+   Body:    Satoshi (Fontshare CDN, imported in HTML)
+   ========================================================================== */
+
+@font-face {
+  font-family: "Atomic Beers";
+  src: url("../assets/fonts/AtomicBeers-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

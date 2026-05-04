@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews — National House of Pancakes</title>
+
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Fraunces:wght@900&display=swap" />
+  <link rel="stylesheet" href="./styles/main.css" />
+
+<style>
+/* ══ PALETTE ══ */
+:root {
+  --color-burgundy: #861519;
+  --color-cream:    #F0EEE9;
+  --color-blue:     #D2E8FF;
+  --color-honey:    #FAE38E;
+  --bg-base:        #F0EEE9;
+  --bg-dark:        #861519;
+  --fg-base:        #861519;
+  --fg-on-dark:     #F0EEE9;
+  --font-display:   "Atomic Beers","Fraunces",Georgia,serif;
+  --font-body:      "Satoshi","Inter",system-ui,sans-serif;
+}
+
+/* ══ FOOTER OVERRIDES ══ */
+.footer { background: #F0EEE9 !important; color: #861519; position: relative; z-index: 10; }
+.footer__blob-svg path { fill: #D2E8FF !important; }
+.footer__hours-title,
+.footer__hours-time { color: #861519 !important; }
+.footer__hours-label { color: #861519 !important; opacity: 0.6; }
+.footer__hours-sep { background: rgba(134,21,25,0.2) !important; }
+
+/* ══ NAV ══ */
+html { overflow-x: hidden; }
+body { background: var(--bg-base); margin: 0; font-family: var(--font-body); }
+#nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 300 !important;
+  background: var(--color-cream) !important;
+}
+#nav .nav__logo {
+  color: var(--fg-base) !important;
+  background: rgba(240,238,233,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 12px rgba(134,21,25,0.10) !important;
+}
+#nav .nav__links a {
+  color: var(--fg-base) !important;
+  background: rgba(240,238,233,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 12px rgba(134,21,25,0.10) !important;
+}
+#nav .nav__links a.reviews-active {
+  background: var(--fg-base) !important;
+  color: var(--fg-on-dark) !important;
+  pointer-events: none;
+}
+#nav .nav__links a:not(.reviews-active):hover { background: var(--color-honey) !important; }
+
+/* ══════════════════════════════
+   HERO — full-bleed photo, cards on top
+══════════════════════════════ */
+.rev-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Full-bleed background — same as homepage testimonials */
+.rev-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.rev-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.rev-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    170deg,
+    rgba(20,6,6,0.72) 0%,
+    rgba(20,6,6,0.55) 55%,
+    rgba(20,6,6,0.70) 100%
+  );
+}
+
+/* Content layer */
+.rev-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(3rem, 6vw, 5rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+  gap: clamp(2.5rem, 4vw, 4rem);
+}
+
+.rev-hero__heading-wrap {
+  text-align: center;
+}
+.rev-hero__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,238,233,0.50);
+  margin: 0 0 0.65rem;
+}
+.rev-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  color: var(--color-cream);
+  margin: 0;
+  line-height: 1.0;
+}
+
+/* CTA — same ghost button style as homepage */
+.rev-hero__cta {
+  display: flex;
+  justify-content: center;
+}
+.rev-hero__cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-cream);
+  border: 1.5px solid rgba(255,248,231,0.55);
+  border-radius: 999px;
+  padding: 0.9rem 2.2rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: background 180ms, color 180ms, border-color 180ms;
+}
+.rev-hero__cta a:hover {
+  background: var(--color-cream);
+  color: var(--color-burgundy);
+  border-color: var(--color-cream);
+}
+
+/* ══════════════════════════════
+   MARQUEE — horizontal auto-scroll
+   Outer wrapper clips X; rows have
+   vertical padding so hover lift
+   is never clipped.
+══════════════════════════════ */
+.marquee-outer {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  /*
+    padding-top/bottom = hover lift clearance.
+    overflow:hidden clips at the PADDING BOX edge, so content
+    that protrudes ≤20px into the padding is still fully visible.
+  */
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+.marquee-row {
+  /* no extra padding/margin — outer padding handles breathing room */
+}
+
+.marquee-strip {
+  display: flex;
+  gap: 1.1rem;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Row directions */
+.marquee-row--fwd .marquee-strip  { animation: ticker-left  52s linear infinite; }
+.marquee-row--rev .marquee-strip  { animation: ticker-right 46s linear infinite; }
+
+/* Pause on hover */
+.marquee-row:hover .marquee-strip { animation-play-state: paused; }
+
+@keyframes ticker-left  { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
+@keyframes ticker-right { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
+
+/* ══════════════════════════════
+   CARD — identical to homepage .t-card
+   (we just re-declare the key rules
+   so main.css differences don't interfere)
+══════════════════════════════ */
+.rv {
+  flex-shrink: 0;
+  width: clamp(260px, 20vw, 320px);
+  background: rgba(15,5,5,0.58);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,248,231,0.13);
+  border-radius: 20px;
+  padding: clamp(1.1rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 1.75rem);
+  color: var(--color-cream);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition:
+    transform  380ms cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+  cursor: default;
+}
+.rv:hover {
+  transform: translateY(-8px) scale(1.018);
+  box-shadow: 0 28px 52px rgba(0,0,0,0.55),
+              0 0 0 1px rgba(255,248,231,0.18);
+  border-color: rgba(255,248,231,0.28);
+}
+
+.rv__headline {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.55rem;
+  color: var(--color-cream);
+}
+.rv__body {
+  font-size: 0.87rem;
+  line-height: 1.65;
+  opacity: 0.78;
+  margin: 0 0 1rem;
+  flex: 1;
+}
+.rv__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255,248,231,0.10);
+}
+.rv__avatar {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-burgundy);
+}
+.rv__avatar--honey { background: var(--color-honey); }
+.rv__avatar--blue  { background: #A5D9FF; }
+.rv__avatar--pink  { background: #FAE38E; }
+.rv__avatar--green { background: #B9EACB; }
+.rv__name   { font-weight: 600; font-size: 0.85rem; line-height: 1.2; margin: 0; }
+.rv__source { font-size: 0.74rem; opacity: 0.55; margin: 2px 0 0; }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav nav--scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="NHOP home">NHOP</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="menu.html">Menu</a>
+      <a href="reviews.html" class="reviews-active">Reviews</a>
+      <a href="about.html">About Us</a>
+    </nav>
+    <a href="#" class="btn" data-open-reserve>Reserve a table</a>
+  </div>
+</header>
+
+<!-- ══ HERO + MARQUEE (all on photo) ══ -->
+<section class="rev-hero">
+
+  <div class="rev-hero__bg">
+    <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777241480/hf_20260426_220126_98782551-8d54-4b0e-8d60-3075f4c4b0ec_dpnew0.png"
+         alt="Guests at NHOP" loading="eager" />
+  </div>
+  <div class="rev-hero__overlay"></div>
+
+  <div class="rev-hero__inner">
+
+    <!-- Heading -->
+    <div class="rev-hero__heading-wrap">
+      <p class="rev-hero__eyebrow">36,000+ Google reviews</p>
+      <h1 class="rev-hero__title">Hear it from our guests</h1>
+    </div>
+
+    <!-- Two auto-scroll rows of cards, right on the photo -->
+    <div class="marquee-outer">
+
+      <!-- ROW 1 — left (standard ticker) -->
+      <div class="marquee-row marquee-row--fwd">
+        <div class="marquee-strip">
+
+          <!-- ── SET A ── -->
+          <article class="rv">
+            <h3 class="rv__headline">Best breakfast in Myrtle Beach</h3>
+            <p class="rv__body">The wildberry stack had us coming back the very next morning. Fluffy, fresh, and impossibly good — worth every mile on the drive down.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">SM</span>
+              <div><p class="rv__name">Sarah M.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Came for brunch, stayed for seconds</h3>
+            <p class="rv__body">S'mores Soirée is genuinely dangerous. We ordered one to share and immediately got another. The booth was cozy, staff was beyond friendly.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">TW</span>
+              <div><p class="rv__name">Tyler W.</p><p class="rv__source">1 month ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">A Myrtle Beach institution</h3>
+            <p class="rv__body">We've been coming every summer for six years. The Lemon Ricotta stack is unlike anything else. This place never disappoints — ever.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">AM</span>
+              <div><p class="rv__name">Amanda M.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Worth the wait — every time</h3>
+            <p class="rv__body">There was a line out the door on Saturday morning. We waited 20 minutes. Completely worth it. The Chicken &amp; Waffles alone justifies the trip.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">RB</span>
+              <div><p class="rv__name">Rachel B.</p><p class="rv__source">5 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">The staff made our anniversary special</h3>
+            <p class="rv__body">We mentioned it was our anniversary when we walked in and they surprised us. Small gesture, huge impact. The food was incredible too — obviously.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">LP</span>
+              <div><p class="rv__name">Laura P.</p><p class="rv__source">2 months ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Scratch-made is no joke here</h3>
+            <p class="rv__body">You can taste the difference the moment it hits your table. Nothing frozen, nothing pre-made. Just real ingredients done right. Highly recommend the Blueberry Bliss.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">MK</span>
+              <div><p class="rv__name">Marcus K.</p><p class="rv__source">1 week ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Feels like home</h3>
+            <p class="rv__body">We moved to Myrtle Beach two years ago and NHOP is already our Sunday tradition. The staff knows our order. That means everything to us.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">CJ</span>
+              <div><p class="rv__name">Cassie J.</p><p class="rv__source">3 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Coffee + pancakes = perfection</h3>
+            <p class="rv__body">I've been a breakfast snob my whole life. This place converted me. The pour-over coffee paired with the Pecan Praline stack is genuinely unreal.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">DO</span>
+              <div><p class="rv__name">Derek O.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <!-- ── SET B (duplicate for seamless loop) ── -->
+          <article class="rv">
+            <h3 class="rv__headline">Best breakfast in Myrtle Beach</h3>
+            <p class="rv__body">The wildberry stack had us coming back the very next morning. Fluffy, fresh, and impossibly good — worth every mile on the drive down.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">SM</span>
+              <div><p class="rv__name">Sarah M.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Came for brunch, stayed for seconds</h3>
+            <p class="rv__body">S'mores Soirée is genuinely dangerous. We ordered one to share and immediately got another. The booth was cozy, staff was beyond friendly.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">TW</span>
+              <div><p class="rv__name">Tyler W.</p><p class="rv__source">1 month ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">A Myrtle Beach institution</h3>
+            <p class="rv__body">We've been coming every summer for six years. The Lemon Ricotta stack is unlike anything else. This place never disappoints — ever.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">AM</span>
+              <div><p class="rv__name">Amanda M.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Worth the wait — every time</h3>
+            <p class="rv__body">There was a line out the door on Saturday morning. We waited 20 minutes. Completely worth it. The Chicken &amp; Waffles alone justifies the trip.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">RB</span>
+              <div><p class="rv__name">Rachel B.</p><p class="rv__source">5 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">The staff made our anniversary special</h3>
+            <p class="rv__body">We mentioned it was our anniversary when we walked in and they surprised us. Small gesture, huge impact. The food was incredible too — obviously.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">LP</span>
+              <div><p class="rv__name">Laura P.</p><p class="rv__source">2 months ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Scratch-made is no joke here</h3>
+            <p class="rv__body">You can taste the difference the moment it hits your table. Nothing frozen, nothing pre-made. Just real ingredients done right. Highly recommend the Blueberry Bliss.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">MK</span>
+              <div><p class="rv__name">Marcus K.</p><p class="rv__source">1 week ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Feels like home</h3>
+            <p class="rv__body">We moved to Myrtle Beach two years ago and NHOP is already our Sunday tradition. The staff knows our order. That means everything to us.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">CJ</span>
+              <div><p class="rv__name">Cassie J.</p><p class="rv__source">3 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Coffee + pancakes = perfection</h3>
+            <p class="rv__body">I've been a breakfast snob my whole life. This place converted me. The pour-over coffee paired with the Pecan Praline stack is genuinely unreal.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">DO</span>
+              <div><p class="rv__name">Derek O.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+        </div>
+      </div><!-- end row 1 -->
+
+      <!-- ROW 2 — right (reverse ticker) -->
+      <div class="marquee-row marquee-row--rev">
+        <div class="marquee-strip">
+
+          <!-- ── SET A ── -->
+          <article class="rv">
+            <h3 class="rv__headline">Kids approved, parents obsessed</h3>
+            <p class="rv__body">Three kids, four pancake orders, zero complaints. The Nutella Banana Blast was gone in 90 seconds. We'll be back every single Myrtle Beach trip.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">JR</span>
+              <div><p class="rv__name">Jessica R.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Hidden gem on Kings Highway</h3>
+            <p class="rv__body">Stumbled in after the beach and left with the best brunch memory of the entire trip. Chicken &amp; Waffles — don't even think about skipping it.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">DK</span>
+              <div><p class="rv__name">David K.</p><p class="rv__source">5 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Southern comfort, done properly</h3>
+            <p class="rv__body">The Shrimp &amp; Grits were better than anything I've had in Charleston. Coming from a South Carolina native, that's not a compliment I give lightly.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">ET</span>
+              <div><p class="rv__name">Ethan T.</p><p class="rv__source">6 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Every bite tells a story</h3>
+            <p class="rv__body">I tried the Red Velvet stack on a whim and it stopped my whole table mid-conversation. We ordered three more rounds. Absolutely no regrets.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">NF</span>
+              <div><p class="rv__name">Nicole F.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">The kind of place you miss immediately</h3>
+            <p class="rv__body">We left Myrtle Beach two days ago and my husband has already looked up flights back. That's what NHOP does to you. Absolutely addictive.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">KH</span>
+              <div><p class="rv__name">Kelly H.</p><p class="rv__source">4 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Fastest service, warmest welcome</h3>
+            <p class="rv__body">Packed house on Sunday morning and we still had food in front of us in 12 minutes. The team moves like a well-rehearsed show. Impressively friendly every step.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">GB</span>
+              <div><p class="rv__name">Greg B.</p><p class="rv__source">1 month ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">My daughter's birthday tradition</h3>
+            <p class="rv__body">Every year for her birthday she asks for NHOP. She's ten now. The staff always sings to her and brings something special. This place is part of our family.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">SV</span>
+              <div><p class="rv__name">Sandra V.</p><p class="rv__source">1 week ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Impossibly good syrup selection</h3>
+            <p class="rv__body">Bottomless syrup means bottomless smiles. I went through four types in one sitting — the cinnamon vanilla is unbelievable. Please never take it off the menu.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">PC</span>
+              <div><p class="rv__name">Patrick C.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <!-- ── SET B (duplicate) ── -->
+          <article class="rv">
+            <h3 class="rv__headline">Kids approved, parents obsessed</h3>
+            <p class="rv__body">Three kids, four pancake orders, zero complaints. The Nutella Banana Blast was gone in 90 seconds. We'll be back every single Myrtle Beach trip.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">JR</span>
+              <div><p class="rv__name">Jessica R.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Hidden gem on Kings Highway</h3>
+            <p class="rv__body">Stumbled in after the beach and left with the best brunch memory of the entire trip. Chicken &amp; Waffles — don't even think about skipping it.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">DK</span>
+              <div><p class="rv__name">David K.</p><p class="rv__source">5 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Southern comfort, done properly</h3>
+            <p class="rv__body">The Shrimp &amp; Grits were better than anything I've had in Charleston. Coming from a South Carolina native, that's not a compliment I give lightly.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">ET</span>
+              <div><p class="rv__name">Ethan T.</p><p class="rv__source">6 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Every bite tells a story</h3>
+            <p class="rv__body">I tried the Red Velvet stack on a whim and it stopped my whole table mid-conversation. We ordered three more rounds. Absolutely no regrets.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">NF</span>
+              <div><p class="rv__name">Nicole F.</p><p class="rv__source">2 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">The kind of place you miss immediately</h3>
+            <p class="rv__body">We left Myrtle Beach two days ago and my husband has already looked up flights back. That's what NHOP does to you. Absolutely addictive.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--honey">KH</span>
+              <div><p class="rv__name">Kelly H.</p><p class="rv__source">4 days ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Fastest service, warmest welcome</h3>
+            <p class="rv__body">Packed house on Sunday morning and we still had food in front of us in 12 minutes. The team moves like a well-rehearsed show. Impressively friendly every step.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--pink">GB</span>
+              <div><p class="rv__name">Greg B.</p><p class="rv__source">1 month ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">My daughter's birthday tradition</h3>
+            <p class="rv__body">Every year for her birthday she asks for NHOP. She's ten now. The staff always sings to her and brings something special. This place is part of our family.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--green">SV</span>
+              <div><p class="rv__name">Sandra V.</p><p class="rv__source">1 week ago · Google</p></div>
+            </footer>
+          </article>
+
+          <article class="rv">
+            <h3 class="rv__headline">Impossibly good syrup selection</h3>
+            <p class="rv__body">Bottomless syrup means bottomless smiles. I went through four types in one sitting — the cinnamon vanilla is unbelievable. Please never take it off the menu.</p>
+            <footer class="rv__meta">
+              <span class="rv__avatar rv__avatar--blue">PC</span>
+              <div><p class="rv__name">Patrick C.</p><p class="rv__source">3 weeks ago · Google</p></div>
+            </footer>
+          </article>
+
+        </div>
+      </div><!-- end row 2 -->
+
+    </div><!-- end .marquee-outer -->
+
+    <!-- CTA button — same ghost style -->
+    <div class="rev-hero__cta">
+      <a href="https://www.google.com/maps/search/?api=1&query=National+House+of+Pancakes+Myrtle+Beach+SC"
+         target="_blank" rel="noopener">
+        See all 36,000+ reviews on Google →
+      </a>
+    </div>
+
+  </div><!-- end .rev-hero__inner -->
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer" id="footer">
+  <div class="footer__blob">
+    <svg class="footer__blob-svg" viewBox="0 0 1440 460"
+         preserveAspectRatio="none" aria-hidden="true"
+         xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 H1440 V330
+        C1360,440 1280,440 1200,330
+        C1120,440 1040,440  960,330
+        C 880,440  800,440  720,330
+        C 640,440  560,440  480,330
+        C 400,440  320,440  240,330
+        C 160,440   80,440    0,330
+        Z" fill="#D2E8FF"/>
+    </svg>
+    <div class="footer__blob-inner container">
+      <h2 class="footer__hours-title">Opening Hours</h2>
+      <div class="footer__hours-row">
+        <div class="footer__hours-item">
+          <span class="footer__hours-label">Every day</span>
+          <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer__info">
+    <div class="footer__info-col">
+      <h3 class="footer__info-heading">Location</h3>
+      <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+      <a href="https://maps.google.com/?q=211+N+Kings+Hwy+Myrtle+Beach+SC"
+         target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+    </div>
+    <div class="footer__info-col footer__info-col--center">
+      <h3 class="footer__info-heading">About Us</h3>
+      <p class="footer__info-text">Myrtle Beach's most-loved breakfast spot — hand-flipped stacks, bottomless syrup, and 36,000 Google fans who always come back for seconds.</p>
+      <div class="footer__socials">
+        <a href="https://www.instagram.com/national_house_of_pancakes" class="footer__social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@ilovenhop" class="footer__social-btn" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.05a8.27 8.27 0 004.83 1.54V7.14a4.85 4.85 0 01-1.07-.45z"/></svg>
+        </a>
+        <a href="#facebook" class="footer__social-btn" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer__info-col footer__info-col--right">
+      <h3 class="footer__info-heading">Contact Us</h3>
+      <div class="footer__contact-details">
+        <a href="tel:+18432550001">☎ (843) 255-0001</a>
+        <a href="mailto:hello@houseofpancakes.net">✉ hello@houseofpancakes.net</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <span>All Rights Reserved · National House of Pancakes · 2026</span>
+    <span class="footer__legal">
+      <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Terms &amp; Conditions</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+function forceSticky() {
+  if (nav) {
+    nav.style.setProperty('position','sticky','important');
+    nav.style.setProperty('top','0','important');
+    nav.classList.add('nav--scrolled');
+  }
+}
+forceSticky();
+window.addEventListener('scroll', forceSticky, { passive: true });
+</script>
+
+<!-- ── Reserve Modal ── -->
+<div class="nhop-reserve-modal" id="nhopReserveModal" role="dialog" aria-modal="true" aria-label="Reserve your table">
+  <div class="nhop-reserve-modal__inner">
+    <button class="nhop-reserve-modal__close" id="nhopModalClose" aria-label="Close">✕</button>
+    <div class="reserve__card">
+      <div class="reserve__form-side">
+        <h2 class="reserve__title">Reserve Your Table</h2>
+        <form class="reserve__form" id="reserveForm" novalidate>
+          <div class="reserve__progress" aria-hidden="true">
+            <span class="reserve__prog-dot is-active" data-step="1">1</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="2">2</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="3">3</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="4">4</span>
+          </div>
+          <div class="reserve__scene is-visible" data-scene="1">
+            <p class="reserve__hint">Let's get your booth ready</p>
+            <h3 class="reserve__q">What's your name?</h3>
+            <div class="name-field">
+              <input class="name-input" id="r-name" type="text" placeholder="Your name…" autocomplete="name" required />
+              <div class="name-underline"></div>
+              <svg class="name-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </div>
+            <div class="reserve__nav"><span class="reserve__nav-spacer"></span><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="2">
+            <p class="reserve__hint">When's the feast?</p>
+            <h3 class="reserve__q">Pick your day</h3>
+            <div class="date-picker">
+              <div class="date-picker__day-wrap">
+                <div class="date-picker__row" data-picker="day"></div>
+                <button type="button" class="cal-btn" aria-label="Pick a different date">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <input type="date" id="calPicker" tabindex="-1" aria-hidden="true" />
+                </button>
+              </div>
+              <div class="date-picker__row" data-picker="time" style="display:none">
+                <button type="button" class="chip" data-time="08:00">8 AM</button>
+                <button type="button" class="chip" data-time="09:00">9 AM</button>
+                <button type="button" class="chip" data-time="10:00">10 AM</button>
+                <button type="button" class="chip" data-time="11:00">11 AM</button>
+                <button type="button" class="chip" data-time="12:00">12 PM</button>
+                <button type="button" class="chip" data-time="13:00">1 PM</button>
+                <button type="button" class="chip" data-time="14:00">2 PM</button>
+              </div>
+            </div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="3">
+            <p class="reserve__hint">The more, the merrier</p>
+            <h3 class="reserve__q">How many guests?</h3>
+            <div class="party-table" data-party-table></div>
+            <div class="party-controls">
+              <button type="button" class="party-btn" data-guests-change="-1">−</button>
+              <span class="party-display"><span class="party-count" data-party-count>2</span><span> guests</span></span>
+              <button type="button" class="party-btn" data-guests-change="+1">+</button>
+            </div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="4">
+            <p class="reserve__hint">Last step — we'll text your confirmation</p>
+            <h3 class="reserve__q">Your phone?</h3>
+            <div class="phone-display"><span class="phone-prefix">+1</span><span class="phone-number" data-phone-display>_ _ _–_ _ _ _</span></div>
+            <div class="keypad">
+              <button type="button" class="key" data-key="1">1</button><button type="button" class="key" data-key="2">2</button><button type="button" class="key" data-key="3">3</button>
+              <button type="button" class="key" data-key="4">4</button><button type="button" class="key" data-key="5">5</button><button type="button" class="key" data-key="6">6</button>
+              <button type="button" class="key" data-key="7">7</button><button type="button" class="key" data-key="8">8</button><button type="button" class="key" data-key="9">9</button>
+              <button type="button" class="key key--alt" data-key="clear">✕</button><button type="button" class="key" data-key="0">0</button><button type="button" class="key key--alt" data-key="back">⌫</button>
+            </div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="submit" class="btn">Book my table →</button></div>
+          </div>
+          <div class="reserve__scene reserve__scene--done" data-scene="done">
+            <div class="reserve__confirm-card">
+              <span class="reserve__card-label">You're booked!</span>
+              <p class="reserve__card-name" data-confirm="name"></p>
+              <p class="reserve__card-meta" data-confirm="meta"></p>
+            </div>
+            <p class="reserve__done-copy">See you soon! We'll confirm by text.</p>
+            <button type="button" class="btn btn--ghost" data-restart>New reservation →</button>
+          </div>
+        </form>
+      </div>
+      <div class="reserve__photo-side">
+        <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777507506/hf_20260430_000351_860f83cf-3445-4155-beb2-ca1d84cfa9e8_qcy6ub.png" alt="NHOP guests enjoying their meal" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./scripts/reserve.js" defer></script>
+<script>
+(function(){
+  var modal = document.getElementById('nhopReserveModal');
+  document.getElementById('nhopModalClose').addEventListener('click', function(){ modal.classList.remove('is-open'); document.body.style.overflow=''; });
+  modal.addEventListener('click', function(e){ if(e.target===modal){ modal.classList.remove('is-open'); document.body.style.overflow=''; }});
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ modal.classList.remove('is-open'); document.body.style.overflow=''; }});
+  document.querySelectorAll('[data-open-reserve]').forEach(function(btn){ btn.addEventListener('click',function(e){ e.preventDefault(); modal.classList.add('is-open'); document.body.style.overflow='hidden'; }); });
+})();
+</script>
+</body>
+</html>

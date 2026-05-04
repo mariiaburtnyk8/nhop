@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHOP — Pancakes you feel before you taste.</title>
+  <meta name="description" content="National House of Pancakes — fluffy stacks, bottomless syrup, and the happiest flip in America. Reserve a booth, pick your stack, leave in a better mood." />
+
+  <!-- Satoshi — body / UI (Fontshare CDN) -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+
+  <!-- Space Mono — retro monospace for phone/number inputs (no watermark glyphs) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
+
+  <!-- Fraunces — display fallback until Atomic Beers is fully licensed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&display=swap" />
+
+  <!-- Local styles -->
+  <link rel="stylesheet" href="./styles/main.css" />
+<style>
+/* ══ VERSION A — CHERRY CREAM ══
+   Cherry Pop #861519 · Cloud Dancer #F0EEE9
+   Custard Yellow #FAE38E · Blueberry Pie #D2E8FF
+   Найбільш близька до оригіналу, але refined і harmonious */
+:root {
+  --color-burgundy: #861519;
+  --color-cream:    #F0EEE9;
+  --color-blue:     #D2E8FF;
+  --color-pink:     #FAE38E;
+  --color-honey:    #FAE38E;
+  --bg-base:        #F0EEE9;
+  --bg-dark:        #861519;
+  --bg-playful-a:   #D2E8FF;
+  --bg-playful-b:   #FAE38E;
+  --fg-base:        #861519;
+  --fg-on-dark:     #F0EEE9;
+  --fg-muted:       rgba(134,21,25,0.45);
+  --cta-bg:         #861519;
+  --cta-fg:         #F0EEE9;
+  --cta-bg-hover:   #5E0F12;
+  --border-soft:    rgba(134,21,25,0.1);
+  --border-strong:  rgba(134,21,25,0.28);
+  --shadow-soft:    0 4px 24px rgba(134,21,25,0.08);
+  --shadow-deep:    0 16px 48px rgba(134,21,25,0.16);
+  --shadow-glow:    0 0 48px rgba(210,232,255,0.5);
+}
+/* ── Name input underline — blue → cherry ── */
+.name-underline { background: linear-gradient(90deg, #D2E8FF, #861519) !important; }
+
+/* ── Calendar btn — sits next to day chips ── */
+.date-picker__day-wrap { display: flex; align-items: flex-start; gap: 10px; }
+.date-picker__day-wrap .date-picker__row { flex: 1; min-width: 0; }
+.cal-btn {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: rgba(134,21,25,0.06);
+  border: 1.5px dashed rgba(134,21,25,0.22);
+  color: #861519;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; cursor: pointer;
+  transition: background 200ms, transform 200ms;
+  align-self: center;
+}
+.cal-btn:hover { background: rgba(134,21,25,0.13); transform: scale(1.06); }
+.cal-btn svg { width: 20px; height: 20px; pointer-events: none; }
+.cal-btn input[type="date"] {
+  position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer;
+}
+
+/* ── Opening hours blob — blue bg, cherry text ── */
+.footer__blob-svg path { fill: #D2E8FF !important; }
+.footer__hours-title,
+.footer__hours-time { color: #861519 !important; }
+.footer__hours-label { color: #861519 !important; opacity: 0.6; }
+.footer__hours-sep   { background: rgba(134,21,25,0.2) !important; }
+
+/* ── Footer body — cream (contrasts nicely after blue sections) ── */
+.footer { background: #F0EEE9 !important; color: #861519; }
+
+/* ── Reel section — blue bg, cherry text ── */
+.reel,
+.reel__pin,
+.reel.is-pinned .reel__pin { background: #D2E8FF !important; }
+.reel .reel__head-copy h2,
+.reel .reel__head-copy .eyebrow,
+.reel .reel__head-copy .lead { color: #861519 !important; }
+.reel .reel-card__quote { color: #861519 !important; }
+.reel .reel__head .btn { background: #861519; color: #F0EEE9; }
+.reel .reel__head .btn:hover { background: #6e1115; color: #F0EEE9; }
+/* scroll hint on blue */
+.reel__scroll-hint { color: rgba(134,21,25,0.45) !important; }
+
+/* ── Reserve section — blue bg, cherry text ── */
+.reserve { background: #D2E8FF !important; color: #861519; }
+.reserve .btn--ghost { border-color: #861519; color: #861519; }
+.reserve .btn--ghost:hover { background: #861519; color: #F0EEE9; }
+/* card hover colors per nth-child */
+.menu__list .menu-card:nth-child(1)::before { background: #D2E8FF !important; }
+.menu__list .menu-card:nth-child(2)::before { background: #FAE38E !important; }
+.menu__list .menu-card:nth-child(3)::before { background: #D2E8FF !important; }
+.menu__list .menu-card:nth-child(4)::before { background: #FAE38E !important; }
+.menu__list .menu-card:nth-child(5)::before { background: #D2E8FF !important; }
+.menu__list .menu-card:nth-child(6)::before { background: #FAE38E !important; }
+/* on hover these are light bgs → keep text dark */
+.menu__list .menu-card:hover,
+.menu__list .menu-card:focus-within { color: #861519 !important; }
+
+/* ── Darken hero video ── */
+.hero__overlay {
+  display: block !important;
+  background: rgba(0, 0, 0, 0.38);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NOW SERVING — single rotating card, right side ── */
+.hero__ns {
+  position: absolute;
+  right: clamp(24px, 4.5vw, 72px);
+  top: auto;
+  bottom: clamp(80px, 14vw, 160px);
+  transform: none;
+  width: clamp(220px, 24vw, 300px);
+  z-index: 3;
+  pointer-events: none;
+}
+.hero__ns-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hero__ns-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #FAE38E;
+  animation: ns-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes ns-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.7); }
+}
+.hero__ns-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  font-family: 'Space Mono', monospace;
+}
+/* Single card — text only, no image (pancake is the animated element) */
+.hero__ns-card {
+  background: rgba(255,255,255,0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  padding: 16px 18px 18px;
+  transition: opacity 0.4s ease;
+}
+.hero__ns-card.is-fading { opacity: 0; }
+.hero__ns-card__tag {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #FAE38E;
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-family: 'Space Mono', monospace;
+}
+.hero__ns-card__name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Fraunces', Georgia, serif;
+  line-height: 1.05;
+}
+.hero__ns-card__sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.46);
+  margin-top: 4px;
+  font-family: 'Satoshi', -apple-system, sans-serif;
+}
+@media (max-width: 900px) { .hero__ns { display: none; } }
+
+/* ── GSAP hero animation elements ── */
+#heroBgOverlay {
+  position: absolute; inset: 0;
+  background: var(--bg-dark);
+  opacity: 0; z-index: 1; pointer-events: none;
+}
+#pancakeHeroAnim {
+  position: absolute; width: 92px; height: 92px;
+  object-fit: contain; transform-origin: center center;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 40px rgba(250,180,80,0.3)) drop-shadow(0 8px 24px rgba(0,0,0,0.55));
+  z-index: 10;
+  right: calc(clamp(24px, 4.5vw, 72px) + 14px);
+  top: auto; bottom: clamp(80px, 14vw, 160px);
+}
+#heroAnimText {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 clamp(36px, 5.5vw, 72px);
+  z-index: 5;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 1;
+}
+#heroAnimText p {
+  font-size: clamp(52px, 8vw, 108px);
+  font-weight: 900;
+  color: #FAE38E;
+  font-family: var(--font-display, 'Fraunces', Georgia, serif);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#heroAnimSub {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+}
+#heroAnimSub p {
+  font-size: clamp(14px, 1.4vw, 19px);
+  color: rgba(250,227,142,0.65);
+  font-family: 'Satoshi', -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Nav: always show the scrolled/pill style (no transparent state) ── */
+.nav:not(.nav--scrolled) .nav__logo,
+.nav:not(.nav--scrolled) .nav__links a {
+  color: var(--color-burgundy) !important;
+}
+.nav:not(.nav--scrolled) .nav__logo {
+  background: rgba(255, 248, 231, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 12px rgba(57, 2, 25, 0.10);
+}
+.nav:not(.nav--scrolled) .nav__links a {
+  background: rgba(255, 248, 231, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 2px 12px rgba(57, 2, 25, 0.10);
+}
+</style></head>
+<body>
+
+  <!-- =========================================================
+       Custom cursor (desktop) — gets JS-driven via main.js
+       ========================================================= -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       NAV
+       ========================================================= -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo" aria-label="NHOP home">NHOP</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="menu.html">Menu</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="about.html">About Us</a>
+      </nav>
+      <a href="#reserve" class="btn">Reserve a table</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HERO — poster-style centered composition
+         Display headline wraps above and below the photo.
+         All entrance animations are CSS-driven via .fx-* helpers.
+         ========================================================= -->
+    <section class="hero" id="hero">
+
+      <!-- Full-bleed background video; poster = static photo until video loads.
+           Hosted on Cloudinary — `.mp4` URL triggers their auto-transcode so
+           Chrome/Edge/Firefox get H.264 instead of the original .mov.
+           f_auto + q_auto = best codec & quality the browser supports. -->
+      <video class="hero__bg-video"
+             autoplay muted loop playsinline preload="auto"
+             aria-hidden="true">
+        <source src="https://res.cloudinary.com/dksohsy0i/video/upload/f_auto,q_auto/v1777216780/video_NHOP_new_gornui.mp4" type="video/mp4">
+        <source src="https://res.cloudinary.com/dksohsy0i/video/upload/v1777216780/video_NHOP_new_gornui.mov" type="video/quicktime">
+      </video>
+
+      <!-- Gradient overlay — left-heavy so text stays readable -->
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <!-- Left content -->
+      <div class="container hero__content">
+        <div class="hero__left">
+
+          <!-- Location + rating badges — inline row above title -->
+          <div class="hero__badges fx-fade" style="--d:120ms">
+            <span class="hero__badge">📍 211 N Kings Hwy, Myrtle Beach, SC</span>
+            <span class="hero__badge">⭐ 4.7 · 36K+ Google reviews</span>
+          </div>
+
+          <h1 class="hero-title fx-rise" style="--d:300ms">
+            National House<br>of <em>Pancakes</em>
+          </h1>
+          <p class="lead hero__lead fx-fade" style="--d:600ms">
+            Myrtle Beach's most-loved breakfast spot. Hand-flipped stacks,
+            bottomless syrup, and 36,000 Google fans who always come back
+            for seconds.
+          </p>
+          <div class="hero__cta fx-fade" style="--d:850ms">
+            <a href="#reserve" class="btn" data-cursor="grow">Reserve a table</a>
+            <a href="#menu" class="btn btn--ghost" data-cursor="grow">See the menu</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NOW SERVING: single rotating card ── -->
+      <div class="hero__ns" id="heroNsBlock" aria-hidden="true">
+        <div class="hero__ns-header">
+          <div class="hero__ns-dot"></div>
+          <span class="hero__ns-label">Now Serving</span>
+        </div>
+        <div class="hero__ns-card" id="heroNsCard">
+          <span class="hero__ns-card__tag" id="nsTag">Fan Favorite</span>
+          <div class="hero__ns-card__name" id="nsName">Wildberry Stack</div>
+          <div class="hero__ns-card__sub" id="nsSub">Blueberry · raspberry · lemon cream</div>
+        </div>
+      </div>
+
+      <!-- ── Burgundy overlay ── -->
+      <div id="heroBgOverlay" aria-hidden="true"></div>
+      <!-- ── PANCAKE ── -->
+      <img id="pancakeHeroAnim" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777470487/single_pancake_idjjli.png" alt="" aria-hidden="true" />
+      <!-- ── Scroll-animated headline ── -->
+      <div id="heroAnimText" aria-hidden="true">
+        <p>Made fresh, every morning.</p>
+      </div>
+
+      <!-- ── Sub-caption: fades in below pancake ── -->
+      <div id="heroAnimSub" aria-hidden="true">
+        <p>Warm, fluffy, and made with love.</p>
+      </div>
+
+    </section>
+
+    <!-- Wave divider: hero (dark) → menu (cream) -->
+    <div class="wave-divider" aria-hidden="true"></div>
+
+    <!-- =========================================================
+         MENU — Crumbl-style horizontal cards
+         Each card: photo on one side (alternating L/R), title + desc + CTAs
+         on the other. Default has no fill — hover triggers a coloured wash
+         via ::before. Pink/brown alternate down the column.
+         ========================================================= -->
+    <section class="section menu" id="menu">
+      <div class="container">
+
+        <header class="menu__head">
+          <h2 class="menu__title">Fan Favorites</h2>
+          <p class="menu__lead">
+            Fan favorites, here to stay. Stack 'em high, flip 'em fresh, and pour
+            a generous puddle of maple — your booth's already warm.
+          </p>
+        </header>
+
+        <div class="menu__list">
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:0">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251870/02_card_2_n4ammc.png" alt="Wildberry Stack with berries" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Wildberry Stack</h3>
+              <p class="menu-card__desc">Wild blueberries, raspberries, lemon-zest mascarpone, and a slow-pour citrus curd. Bright, tart, stacked tall.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:1">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251870/03_card_2_t2hqu7.png" alt="S'mores Soirée pancakes" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">S'mores Soirée</h3>
+              <p class="menu-card__desc">Marshmallow fluff, dark-chocolate ganache, graham-cracker crumble. Campfire energy — best eaten while it's still steaming.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:2">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251874/05_card_2_qluf9r.png" alt="Chocolate &amp; Reese's Extreme Stack" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Chocolate &amp; Reese's</h3>
+              <p class="menu-card__desc">Cocoa-batter pancakes, melted Reese's cups, dark-fudge ribbon, salty peanut crunch. Gone five minutes after arrival.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:3">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251873/06_card_2_frzriu.png" alt="Nutella Strawberry Banana Blast" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Nutella Banana Blast</h3>
+              <p class="menu-card__desc">Nutella ribbons, banana coins, fresh strawberries, icing sugar. Childhood breakfast — upgraded.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:4">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251875/07_card_2_dtjh0a.png" alt="Southern Fried Chicken &amp; Waffles" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Chicken &amp; Waffles</h3>
+              <p class="menu-card__desc">Buttermilk chicken tenders on a Belgian waffle, scallion, chili honey. Sweet, salty, crunchy — built for a lazy brunch.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:5">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777251874/08_card_2_xg8wk4.png" alt="Shrimp &amp; Grits" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Shrimp &amp; Grits</h3>
+              <p class="menu-card__desc">Stone-ground grits, blackened gulf shrimp, cajun butter, scallion, lemon. Low-country comfort — exactly as it should be.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <div style="display:flex; justify-content:center; margin-top: clamp(3rem, 6vw, 5rem);">
+          <a href="#reserve" class="btn" data-cursor="grow">See the full menu →</a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         TESTIMONIALS — Google review cards over cafe photo bg
+         ========================================================= -->
+    <section class="testimonials" id="testimonials">
+
+      <div class="testimonials__bg" aria-hidden="true">
+        <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777241480/hf_20260426_220126_98782551-8d54-4b0e-8d60-3075f4c4b0ec_dpnew0.png"
+             alt="" loading="lazy" />
+        <div class="testimonials__overlay"></div>
+      </div>
+
+      <div class="container testimonials__inner">
+
+        <h2 class="testimonials__title">Hear it from our guests</h2>
+
+        <div class="testimonials__grid">
+
+          <article class="t-card" style="--i:0">
+            <h3 class="t-card__headline">Best breakfast in Myrtle Beach</h3>
+            <p class="t-card__body">The wildberry stack had us coming back the very next morning. Fluffy, fresh, and impossibly good — worth every mile on the drive down.</p>
+            <footer class="t-card__meta">
+              <span class="t-card__avatar t-card__avatar--pink" aria-hidden="true">SM</span>
+              <div>
+                <p class="t-card__name">Sarah M.</p>
+                <p class="t-card__source">2 weeks ago · Google</p>
+              </div>
+            </footer>
+          </article>
+
+          <article class="t-card" style="--i:1">
+            <h3 class="t-card__headline">Came for brunch, stayed for seconds</h3>
+            <p class="t-card__body">S'mores Soirée is genuinely dangerous. We ordered one to share and immediately got another. The booth was cozy, staff was beyond friendly.</p>
+            <footer class="t-card__meta">
+              <span class="t-card__avatar t-card__avatar--blue" aria-hidden="true">TW</span>
+              <div>
+                <p class="t-card__name">Tyler W.</p>
+                <p class="t-card__source">1 month ago · Google</p>
+              </div>
+            </footer>
+          </article>
+
+          <article class="t-card" style="--i:2">
+            <h3 class="t-card__headline">Kids approved, parents obsessed</h3>
+            <p class="t-card__body">Three kids, four pancake orders, zero complaints. The Nutella Banana Blast was gone in 90 seconds. We'll be back every single Myrtle Beach trip.</p>
+            <footer class="t-card__meta">
+              <span class="t-card__avatar t-card__avatar--honey" aria-hidden="true">JR</span>
+              <div>
+                <p class="t-card__name">Jessica R.</p>
+                <p class="t-card__source">3 weeks ago · Google</p>
+              </div>
+            </footer>
+          </article>
+
+          <article class="t-card" style="--i:3">
+            <h3 class="t-card__headline">Hidden gem on Kings Highway</h3>
+            <p class="t-card__body">Stumbled in after the beach and left with the best brunch memory of the entire trip. Chicken &amp; Waffles — don't even think about skipping it.</p>
+            <footer class="t-card__meta">
+              <span class="t-card__avatar t-card__avatar--pink" aria-hidden="true">DK</span>
+              <div>
+                <p class="t-card__name">David K.</p>
+                <p class="t-card__source">5 days ago · Google</p>
+              </div>
+            </footer>
+          </article>
+
+        </div>
+
+        <div class="testimonials__cta">
+          <a href="https://www.google.com/maps/search/?api=1&query=National+House+of+Pancakes+Myrtle+Beach+SC"
+             class="btn btn--ghost testimonials__btn"
+             target="_blank" rel="noopener">
+            See all 36,000+ reviews on Google →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         REVIEWS — pinned horizontal-scroll reel of polaroid videos
+         The section is tall; a sticky child holds the heading + CTA
+         on top and a horizontal track of tilted polaroid cards below.
+         As the user scrolls vertically, JS translates the track on X.
+         ========================================================= -->
+    <section class="section reel" id="reviews">
+      <div class="reel__pin">
+
+        <div class="container reel__head">
+          <div class="reel__head-copy">
+            <h2>See it on the plate</h2>
+            <p class="lead u-mt-6">
+              Little moments, tall stacks — the kind you want to flip back to
+            </p>
+          </div>
+        </div>
+
+        <div class="reel__viewport">
+          <div class="reel__track" data-reel-track>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v1.mp4" poster="./assets/video/v1.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A fresh pancake being flipped"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Worth every mile.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v2.mp4" poster="./assets/video/v2.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Pancakes stacking up on the plate"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Pink booth fever.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v3.mp4" poster="./assets/video/v3.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Warm maple syrup pouring over pancakes"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Texted my ex.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v4.mp4" poster="./assets/video/v4.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A tall stack glowing under warm light"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Ten out of ten.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v5.mp4" poster="./assets/video/v5.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Butter melting on the top of a hot stack"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Fluffy. Emotional.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v6.mp4" poster="./assets/video/v6.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="First bite taken out of a pancake"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Brunch crush.</p>
+              </figcaption>
+            </figure>
+
+          </div>
+        </div>
+
+        <!-- Scroll hint — oryzo.ai style -->
+        <div class="reel__scroll-hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v8M8.5 12.5l3.5 3.5 3.5-3.5"/>
+          </svg>
+          <span>Scroll to continue</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LAYERS section removed — Anatomy of a stack block was here.
+         May return later as a dedicated 3D assembly video section. -->
+
+
+    <!-- =========================================================
+         RESERVE — unified card: form left + photo right (BunBite ref)
+         Dark burgundy bg flows seamlessly into footer blob.
+         ========================================================= -->
+    <section class="section reserve" id="reserve">
+      <div class="container">
+
+        <!-- One cream card: form side + video side -->
+        <div class="reserve__card">
+
+          <!-- ---- Form side — game-format wizard ---- -->
+          <div class="reserve__form-side">
+            <h2 class="reserve__title">Reserve Your Table</h2>
+
+            <form class="reserve__form" id="reserveForm" novalidate>
+
+              <!-- Progress indicator with step numbers -->
+              <div class="reserve__progress" aria-hidden="true">
+                <span class="reserve__prog-dot is-active" data-step="1">1</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="2">2</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="3">3</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="4">4</span>
+              </div>
+
+              <!-- Scene 1: Name -->
+              <div class="reserve__scene is-visible" data-scene="1">
+                <p class="reserve__hint">Let's get your booth ready</p>
+                <h3 class="reserve__q">What's your name?</h3>
+                <div class="name-field">
+                  <input class="name-input" id="r-name" type="text"
+                         placeholder="Your name…" autocomplete="name" required />
+                  <div class="name-underline"></div>
+                  <svg class="name-pen" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                  </svg>
+                </div>
+                <div class="reserve__nav">
+                  <span class="reserve__nav-spacer"></span>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 2: Day chips + Time chips -->
+              <div class="reserve__scene" data-scene="2">
+                <p class="reserve__hint">When's the feast?</p>
+                <h3 class="reserve__q">Pick your day</h3>
+                <div class="date-picker">
+                  <div class="date-picker__day-wrap">
+                    <div class="date-picker__row" data-picker="day"></div>
+                    <button type="button" class="cal-btn" aria-label="Pick a different date">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                      </svg>
+                      <input type="date" id="calPicker" tabindex="-1" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <div class="date-picker__row" data-picker="time" style="display:none">
+                    <button type="button" class="chip" data-time="08:00">8 AM</button>
+                    <button type="button" class="chip" data-time="09:00">9 AM</button>
+                    <button type="button" class="chip" data-time="10:00">10 AM</button>
+                    <button type="button" class="chip" data-time="11:00">11 AM</button>
+                    <button type="button" class="chip" data-time="12:00">12 PM</button>
+                    <button type="button" class="chip" data-time="13:00">1 PM</button>
+                    <button type="button" class="chip" data-time="14:00">2 PM</button>
+                  </div>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 3: Party table + +/- -->
+              <div class="reserve__scene" data-scene="3">
+                <p class="reserve__hint">The more, the merrier</p>
+                <h3 class="reserve__q">How many guests?</h3>
+                <div class="party-table" data-party-table></div>
+                <div class="party-controls">
+                  <button type="button" class="party-btn" data-guests-change="-1">−</button>
+                  <span class="party-display">
+                    <span class="party-count" data-party-count>2</span>
+                    <span> guests</span>
+                  </span>
+                  <button type="button" class="party-btn" data-guests-change="+1">+</button>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 4: Phone keypad -->
+              <div class="reserve__scene" data-scene="4">
+                <p class="reserve__hint">Last step — we'll text your confirmation</p>
+                <h3 class="reserve__q">Your phone?</h3>
+                <div class="phone-display">
+                  <span class="phone-prefix">+1</span>
+                  <span class="phone-number" data-phone-display>_ _ _–_ _ _ _</span>
+                </div>
+                <div class="keypad">
+                  <button type="button" class="key" data-key="1">1</button>
+                  <button type="button" class="key" data-key="2">2</button>
+                  <button type="button" class="key" data-key="3">3</button>
+                  <button type="button" class="key" data-key="4">4</button>
+                  <button type="button" class="key" data-key="5">5</button>
+                  <button type="button" class="key" data-key="6">6</button>
+                  <button type="button" class="key" data-key="7">7</button>
+                  <button type="button" class="key" data-key="8">8</button>
+                  <button type="button" class="key" data-key="9">9</button>
+                  <button type="button" class="key key--alt" data-key="clear">✕</button>
+                  <button type="button" class="key" data-key="0">0</button>
+                  <button type="button" class="key key--alt" data-key="back">⌫</button>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="submit" class="btn">Book my table →</button>
+                </div>
+              </div>
+
+              <!-- Scene done: Confirmation -->
+              <div class="reserve__scene reserve__scene--done" data-scene="done">
+                <div class="reserve__confirm-card">
+                  <span class="reserve__card-label">You're booked!</span>
+                  <p class="reserve__card-name" data-confirm="name"></p>
+                  <p class="reserve__card-meta" data-confirm="meta"></p>
+                </div>
+                <p class="reserve__done-copy">See you soon! We'll confirm by text.</p>
+                <button type="button" class="btn btn--ghost" data-restart>New reservation →</button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- ---- Photo side — flush to card edges ---- -->
+          <div class="reserve__photo-side">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777507506/hf_20260430_000351_860f83cf-3445-4155-beb2-ca1d84cfa9e8_qcy6ub.png"
+                 alt="NHOP guests enjoying their meal"
+                 loading="lazy" />
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MERCH CTA — temporarily hidden -->
+  <!-- <section class="section merch-cta" id="merch"> ... </section> -->
+
+  <!-- =========================================================
+       FOOTER — BunBite-style composition:
+       · Dark burgundy blob at top with Opening Hours
+       · Cream area below: 3 columns Location / About+Socials / Contact
+       ========================================================= -->
+  <footer class="footer" id="footer">
+
+    <!-- ---- Hours blob ---- -->
+    <div class="footer__blob">
+      <!-- Scalloped-bottom SVG: solid dark area with 6 downward bumps -->
+      <svg class="footer__blob-svg" viewBox="0 0 1440 460"
+           preserveAspectRatio="none" aria-hidden="true"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 H1440 V330
+          C1360,440 1280,440 1200,330
+          C1120,440 1040,440  960,330
+          C 880,440  800,440  720,330
+          C 640,440  560,440  480,330
+          C 400,440  320,440  240,330
+          C 160,440   80,440    0,330
+          Z" fill="#390219"/>
+      </svg>
+      <div class="footer__blob-inner container">
+        <h2 class="footer__hours-title">Opening Hours</h2>
+        <div class="footer__hours-row">
+          <div class="footer__hours-item">
+            <span class="footer__hours-label">Every day</span>
+            <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Three-column info strip ---- -->
+    <div class="container footer__info">
+
+      <!-- Col 1: Location -->
+      <div class="footer__info-col">
+        <h3 class="footer__info-heading">Location</h3>
+        <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+        <a href="https://maps.google.com/?q=211+N+Kings+Hwy+Myrtle+Beach+SC"
+           target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+      </div>
+
+      <!-- Col 2: About + Socials -->
+      <div class="footer__info-col footer__info-col--center">
+        <h3 class="footer__info-heading">About Us</h3>
+        <p class="footer__info-text">
+          Myrtle Beach's most-loved breakfast spot — hand-flipped stacks,
+          bottomless syrup, and 36 000 Google fans who always come back for seconds.
+        </p>
+        <div class="footer__socials">
+          <a href="https://www.instagram.com/national_house_of_pancakes"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4.4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@ilovenhop"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.05a8.27 8.27 0 004.83 1.54V7.14a4.85 4.85 0 01-1.07-.45z"/>
+            </svg>
+          </a>
+          <a href="#facebook" class="footer__social-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 3: Contact + Email subscribe -->
+      <div class="footer__info-col footer__info-col--right">
+        <h3 class="footer__info-heading">Contact Us</h3>
+        <div class="footer__contact-details">
+          <a href="tel:+18432550001">☎ (843) 255-0001</a>
+          <a href="mailto:hello@houseofpancakes.net">✉ hello@houseofpancakes.net</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ---- Legal strip ---- -->
+    <div class="container footer__bottom">
+      <span>All Rights Reserved · National House of Pancakes · 2026</span>
+      <span class="footer__legal">
+        <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Terms &amp; Conditions</a>
+      </span>
+    </div>
+
+  </footer>
+
+  <!-- JS hooks: cursor, nav, ScrollTrigger, 3D mount -->
+  <!-- No type="module" so the file works when opened via file:// -->
+  <script src="./scripts/main.js" defer></script>
+  <script src="./scripts/reserve.js" defer></script>
+
+  <!-- ── GSAP + ScrollTrigger ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+  (function () {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const hero       = document.getElementById('hero');
+    const pancake    = document.getElementById('pancakeHeroAnim');
+    const heroLeft   = document.querySelector('.hero__left');
+    const nsBlock    = document.getElementById('heroNsBlock');
+    const bgOverlay  = document.getElementById('heroBgOverlay');
+    const animText   = document.getElementById('heroAnimText');
+    const animSub    = document.getElementById('heroAnimSub');
+    if (!hero || !pancake) return;
+
+    /* ═══════════════════════════════════════════════════════════════
+       NOW SERVING card rotation (every 3s while hero is visible)
+    ═══════════════════════════════════════════════════════════════ */
+    const nsItems = [
+      { tag: 'Fan Favorite', name: 'Wildberry Stack',  sub: 'Blueberry · raspberry · lemon cream' },
+      { tag: "Chef's Pick",  name: "S'mores Soirée",   sub: 'Marshmallow · ganache · graham' },
+      { tag: 'Sweet Pick',   name: 'Nutella Banana',   sub: 'Nutella · banana · strawberry' },
+      { tag: 'New Drop',     name: 'Chicken & Waffles',sub: 'Buttermilk · chili honey · scallion' },
+    ];
+    let nsIdx = 0;
+    const nsCard = document.getElementById('heroNsCard');
+    const nsTag  = document.getElementById('nsTag');
+    const nsName = document.getElementById('nsName');
+    const nsSub  = document.getElementById('nsSub');
+
+    if (nsCard) {
+      setInterval(() => {
+        nsCard.classList.add('is-fading');
+        setTimeout(() => {
+          nsIdx = (nsIdx + 1) % nsItems.length;
+          const it = nsItems[nsIdx];
+          nsTag.textContent  = it.tag;
+          nsName.textContent = it.name;
+          nsSub.textContent  = it.sub;
+          nsCard.classList.remove('is-fading');
+        }, 400);
+      }, 3200);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PANCAKE + SCROLL ANIMATION
+    ═══════════════════════════════════════════════════════════════ */
+
+    const pr = pancake.getBoundingClientRect();
+    const hr = hero.getBoundingClientRect();
+    const initDX = (pr.left + pr.width  / 2) - (hr.left + hr.width  / 2);
+    const initDY = (pr.top  + pr.height / 2) - (hr.top  + hr.height / 2);
+
+    const targetPx = Math.min(hr.width * 0.64, hr.height * 0.68, 500);
+    const scaleUp  = targetPx / pr.width;
+
+    pancake.style.right      = 'auto';
+    pancake.style.left       = '50%';
+    pancake.style.top        = '50%';
+    pancake.style.marginLeft = -(pr.width  / 2) + 'px';
+    pancake.style.marginTop  = -(pr.height / 2) + 'px';
+
+    gsap.set(pancake,   { x: initDX, y: initDY, scale: 1, rotate: -5, opacity: 1 });
+    gsap.set(bgOverlay, { opacity: 0, backgroundColor: '#861519' });
+    gsap.set(animText, { x: window.innerWidth * 1.05 });
+    gsap.set(animSub,  { opacity: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger:       hero,
+        start:         'top top',
+        end:           '+=95%',
+        pin:           true,
+        scrub:         0.6,
+        anticipatePin: 1,
+        onLeave: () => {
+          const menu = document.getElementById('menu');
+          if (menu) window.scrollTo({ top: menu.offsetTop, behavior: 'instant' });
+        },
+      }
+    });
+
+    // ① Hero UI fades out fast
+    tl.to([heroLeft, nsBlock], { opacity: 0, duration: 0.18, ease: 'power1.in' }, 0);
+
+    // ② Burgundy bg fades in (covers the video)
+    tl.to(bgOverlay, { opacity: 1, duration: 0.22, ease: 'power1.inOut' }, 0.05);
+
+    // ③ Pancake flies from NS-card to center + grows + rotates
+    tl.to(pancake, {
+      x: 0, y: 0, scale: scaleUp, rotate: 360,
+      ease: 'power2.inOut', duration: 0.46
+    }, 0.12);
+
+    // ④ Headline slides in from right
+    tl.to(animText, { x: 0, ease: 'power3.out', duration: 0.26 }, 0.42);
+
+    // ⑤ Sub-caption fades in below pancake
+    tl.to(animSub, { opacity: 1, ease: 'power2.out', duration: 0.10 }, 0.56);
+
+    // ⑥ Text + sub exit — BEFORE pancake falls
+    tl.to(animText, {
+      x: -window.innerWidth * 0.25, opacity: 0, ease: 'power2.in', duration: 0.12
+    }, 0.64);
+    tl.to(animSub, { opacity: 0, ease: 'power1.in', duration: 0.08 }, 0.65);
+
+    // ⑦ Pancake falls
+    tl.to(pancake, {
+      x: 0, y: hr.height * 0.55,
+      scale: scaleUp * 0.03, rotate: 410, opacity: 0,
+      ease: 'power2.in', duration: 0.26
+    }, 0.74);
+
+    // ⑧ Overlay cross-fades to menu colour — seamless cut
+    tl.to(bgOverlay, { backgroundColor: '#F0EEE9', ease: 'none', duration: 0.07 }, 0.93);
+
+
+    /* ═══════════════════════════════════════════════════════════
+       MENU CARDS — stagger via IntersectionObserver
+    ══════════════════════════════════════════════════════════ */
+    const cards = Array.from(document.querySelectorAll('.menu__list .menu-card'));
+    cards.forEach((card, i) => {
+      card.style.opacity   = '0';
+      card.style.transform = 'translateY(44px)';
+      card.style.transition =
+        'opacity 0.60s ease ' + (i * 0.09) + 's, ' +
+        'transform 0.60s ease ' + (i * 0.09) + 's';
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity   = '1';
+          e.target.style.transform = 'translateY(0)';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -30px 0px' });
+    cards.forEach(c => io.observe(c));
+
+  })();
+  </script>
+</body>
+</html>
