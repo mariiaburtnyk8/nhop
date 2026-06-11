@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>@font-face{font-family:"Atomic Beers";src:url("./assets/fonts/AtomicBeers-Regular.woff2")format("woff2"),url("./assets/fonts/AtomicBeers-Regular.otf")format("opentype");font-weight:400;font-style:normal;font-display:block;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms &amp; Conditions — NHOP</title>
+  <meta name="description" content="Terms and Conditions for National House of Pancakes (NHOP), Myrtle Beach." />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&display=swap" />
+  <link rel="preload" href="./assets/fonts/AtomicBeers-Regular.woff2" as="font" type="font/woff2" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/main.css" />
+  <style>
+    /* ── Legal page overrides ── */
+    body { background: #FFF8E7; }
+
+    /* Nav always visible */
+    #nav {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 600 !important;
+      background: var(--color-cream) !important;
+    }
+    #nav .nav__logo {
+      color: var(--fg-base) !important;
+      background: rgba(255,248,231,0.92) !important;
+      padding: 0.5rem 1.25rem !important;
+      border-radius: 999px !important;
+    }
+    #nav .nav__links {
+      background: rgba(255,248,231,0.92) !important;
+    }
+    #nav .nav__links a { color: #390219 !important; background: transparent !important; }
+
+    /* ── Hero ── */
+    .legal-hero {
+      background: #390219;
+      padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+      color: #FFF8E7;
+    }
+    .legal-hero__inner { max-width: 760px; margin: 0 auto; }
+    .legal-hero__label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #FFA5D7;
+      margin-bottom: 0.75rem;
+    }
+    .legal-hero__title {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 900;
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-hero__meta {
+      font-size: 0.85rem;
+      color: rgba(255,248,231,0.55);
+    }
+
+    /* ── Content ── */
+    .legal-body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 2rem);
+    }
+
+    .legal-section { margin-bottom: 2.75rem; }
+
+    .legal-section h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 900;
+      font-size: clamp(1.25rem, 3vw, 1.6rem);
+      color: #390219;
+      margin-bottom: 0.85rem;
+      line-height: 1.15;
+    }
+
+    .legal-section p,
+    .legal-section li {
+      font-family: "Satoshi", "Inter", system-ui, sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      line-height: 1.75;
+      color: rgba(57,2,25,0.8);
+    }
+
+    .legal-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .legal-section ul li {
+      padding-left: 1.4rem;
+      position: relative;
+    }
+    .legal-section ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #FFA5D7;
+      font-weight: 700;
+    }
+
+    .legal-section a {
+      color: #390219;
+      font-weight: 600;
+      text-underline-offset: 3px;
+    }
+    .legal-section a:hover { opacity: 0.65; }
+
+    .legal-divider {
+      border: none;
+      border-top: 1px solid rgba(57,2,25,0.12);
+      margin: 0 0 2.75rem;
+    }
+
+    .legal-contact-box {
+      background: rgba(255,165,215,0.15);
+      border: 1.5px solid rgba(255,165,215,0.4);
+      border-radius: 16px;
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+      margin-top: 0.75rem;
+    }
+    .legal-contact-box p {
+      margin-bottom: 0.35rem;
+    }
+    .legal-contact-box p:last-child { margin-bottom: 0; }
+
+    /* ── Footer blob — cream scalloped arch over pink footer (same shape as About) ── */
+    .footer__blob-svg path { fill: #FFF8E7 !important; }
+    @media (max-width: 860px) {
+      .footer__blob { height: clamp(170px, 46vw, 250px) !important; }
+      .footer__blob-inner {
+        justify-content: flex-start !important;
+        padding-top: clamp(10px, 3vw, 18px) !important;
+        height: 78% !important;
+      }
+    }
+    .footer__hours-title { color: #390219 !important; }
+    .footer__hours-time  { color: #390219 !important; }
+    .footer__hours-label { color: rgba(57,2,25,0.55) !important; }
+    .footer__hours-sep   { background: rgba(57,2,25,0.20) !important; }
+  </style></head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav nav--scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="NHOP home">NHOP</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="menu.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">Menu</span></span>
+      </a>
+      <a href="reserve.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">Reserve</span></span>
+      </a>
+      <a href="about.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">About Us</span></span>
+      </a>
+    </nav>
+    <a href="reserve.html" class="btn">Reserve a table</a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div id="bubble-overlay" class="bubble-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+  <ul class="bubble-pill-list">
+    <li><a href="index.html"   class="bubble-pill"><span class="bubble-pill__label">Home</span></a></li>
+    <li><a href="menu.html"    class="bubble-pill"><span class="bubble-pill__label">Menu</span></a></li>
+    <li><a href="reserve.html" class="bubble-pill"><span class="bubble-pill__label">Reserve</span></a></li>
+    <li><a href="about.html"   class="bubble-pill"><span class="bubble-pill__label">About Us</span></a></li>
+  </ul>
+</div>
+
+<main>
+
+  <!-- Hero -->
+  <section class="legal-hero">
+    <div class="legal-hero__inner">
+      <p class="legal-hero__label">Legal</p>
+      <h1 class="legal-hero__title">Terms &amp; Conditions</h1>
+      <p class="legal-hero__meta">Last updated: May 2026</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <article class="legal-body">
+
+    <div class="legal-section">
+      <p>Please read these Terms and Conditions carefully before using the National House of Pancakes ("NHOP", "we", "us", or "our") website or making an online reservation. By accessing our website or submitting a reservation, you agree to be bound by these terms.</p>
+    </div>
+
+    <hr class="legal-divider" />
+
+    <div class="legal-section">
+      <h2>1. Use of This Website</h2>
+      <p>This website is provided for informational purposes and to facilitate online reservations at our Myrtle Beach location. You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of others or restrict their use of the site.</p>
+      <p>You must not:</p>
+      <ul>
+        <li>Submit false or misleading information when making a reservation</li>
+        <li>Attempt to gain unauthorized access to any part of the website</li>
+        <li>Use automated tools to scrape or harvest data from the site</li>
+        <li>Transmit any harmful, offensive, or disruptive content</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Online Reservations</h2>
+      <p>By submitting a reservation request through our website, you are requesting a table at NHOP. A reservation is not confirmed until you receive a confirmation email from us.</p>
+      <p>Please note:</p>
+      <ul>
+        <li>Reservations are subject to availability</li>
+        <li>We reserve the right to decline or cancel any reservation at our discretion</li>
+        <li>Please arrive within 15 minutes of your reservation time — late arrivals may result in your table being released</li>
+        <li>For parties of 8 or more, please contact us directly by phone</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Cancellations &amp; Changes</h2>
+      <p>If you need to cancel or modify your reservation, please contact us as soon as possible by phone or email. We appreciate at least 2 hours' notice so we can accommodate other guests.</p>
+      <p>We reserve the right to cancel confirmed reservations in exceptional circumstances (such as restaurant closure, staffing issues, or events outside our control). In such cases, we will contact you using the details provided.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Menu &amp; Pricing</h2>
+      <p>Menu items and prices displayed on this website are for reference only and are subject to change without notice. The most current menu and pricing will be available in the restaurant. We cannot guarantee the availability of any particular item on the day of your visit.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Intellectual Property</h2>
+      <p>All content on this website — including text, images, logos, design, and branding — is the property of National House of Pancakes and is protected by applicable copyright and intellectual property laws. You may not reproduce, distribute, or use any content from this website without our prior written permission.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Disclaimer of Warranties</h2>
+      <p>This website is provided on an "as is" basis without warranties of any kind. We do not guarantee that the website will be available at all times, free of errors, or that information on the site is always accurate or up to date. We make no warranty regarding the results that may be obtained from use of this website.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, National House of Pancakes shall not be liable for any indirect, incidental, or consequential damages arising from your use of this website or inability to access it. Our total liability for any claim related to this website shall not exceed the value of the reservation in question.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>8. Third-Party Links</h2>
+      <p>This website may contain links to third-party websites (such as Google Maps). These links are provided for your convenience only. We have no control over the content of those sites and accept no responsibility for them or for any loss or damage that may arise from your use of them.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>9. Privacy</h2>
+      <p>Your use of this website is also governed by our <a href="privacy-policy.html">Privacy Policy</a>, which is incorporated into these Terms and Conditions by reference. Please review it to understand how we collect and use your information.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>10. Changes to These Terms</h2>
+      <p>We may update these Terms and Conditions from time to time. Changes will be posted on this page with an updated date. Continued use of the website after changes are posted constitutes your acceptance of the revised terms.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>11. Governing Law</h2>
+      <p>These Terms and Conditions are governed by the laws of the State of South Carolina, United States. Any disputes arising in connection with these terms shall be subject to the exclusive jurisdiction of the courts of South Carolina.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>12. Contact Us</h2>
+      <p>If you have any questions about these Terms and Conditions, please get in touch:</p>
+      <div class="legal-contact-box">
+        <p><strong>National House of Pancakes (NHOP)</strong></p>
+        <p>211 N Kings Hwy, Myrtle Beach, SC 29577</p>
+        <p>Email: <a href="mailto:hello@houseofpancakes.net">hello@houseofpancakes.net</a></p>
+        <p>Phone: <a href="tel:+18434486149">(843) 448-6149</a></p>
+      </div>
+    </div>
+
+  </article>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer" id="footer">
+  <div class="footer__blob">
+    <svg class="footer__blob-svg" viewBox="0 0 1440 460" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M0,0 H1440 V330
+        C1360,440 1280,440 1200,330
+        C1120,440 1040,440  960,330
+        C 880,440  800,440  720,330
+        C 640,440  560,440  480,330
+        C 400,440  320,440  240,330
+        C 160,440   80,440    0,330
+        Z"/>
+    </svg>
+    <div class="footer__blob-inner container">
+      <h2 class="footer__hours-title">Opening Hours</h2>
+      <div class="footer__hours-row">
+        <div class="footer__hours-item">
+          <span class="footer__hours-label">Every day</span>
+          <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container footer__info">
+    <div class="footer__info-col">
+      <h3 class="footer__info-heading">Location</h3>
+      <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+      <a href="https://www.google.com/maps/place/national+house+of+pancakes/data=!4m2!3m1!1s0x890069ac291efdf5:0x67f7cff9881bf83c?sa=X&ved=1t:242&ictx=111" target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+    </div>
+    <div class="footer__info-col footer__info-col--center">
+      <h3 class="footer__info-heading">About Us</h3>
+      <p class="footer__info-text">Scratch-made pancakes, bold Southern flavors, and a dining room full of good mornings.</p>
+    </div>
+    <div class="footer__info-col footer__info-col--right">
+      <h3 class="footer__info-heading">Contact Us</h3>
+      <div class="footer__contact-details">
+        <a href="tel:+18434486149" class="footer__contact-link">(843) 448-6149</a>
+        <a href="mailto:hello@houseofpancakes.net" class="footer__contact-link">hello@houseofpancakes.net</a>
+      </div>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>All Rights Reserved · National House of Pancakes · 2026</span>
+    <span class="footer__legal">
+      <a href="privacy-policy.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="terms.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Terms &amp; Conditions</a>
+    </span>
+  </div>
+</footer>
+
+<script src="./scripts/main.js" defer></script>
+</body>
+</html>

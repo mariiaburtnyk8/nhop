@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>@font-face{font-family:"Atomic Beers";src:url("./assets/fonts/AtomicBeers-Regular.woff2")format("woff2"),url("./assets/fonts/AtomicBeers-Regular.otf")format("opentype");font-weight:400;font-style:normal;font-display:block;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — NHOP</title>
+  <meta name="description" content="Privacy Policy for National House of Pancakes (NHOP), Myrtle Beach." />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&display=swap" />
+  <link rel="preload" href="./assets/fonts/AtomicBeers-Regular.woff2" as="font" type="font/woff2" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/main.css" />
+  <style>
+    /* ── Legal page overrides ── */
+    body { background: #FFF8E7; }
+
+    /* Nav always visible */
+    #nav {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 600 !important;
+      background: var(--color-cream) !important;
+    }
+    #nav .nav__logo {
+      color: var(--fg-base) !important;
+      background: rgba(255,248,231,0.92) !important;
+      padding: 0.5rem 1.25rem !important;
+      border-radius: 999px !important;
+    }
+    #nav .nav__links {
+      background: rgba(255,248,231,0.92) !important;
+    }
+    #nav .nav__links a { color: #390219 !important; background: transparent !important; }
+
+    /* ── Hero ── */
+    .legal-hero {
+      background: #390219;
+      padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+      color: #FFF8E7;
+    }
+    .legal-hero__inner { max-width: 760px; margin: 0 auto; }
+    .legal-hero__label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #FFA5D7;
+      margin-bottom: 0.75rem;
+    }
+    .legal-hero__title {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 900;
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .legal-hero__meta {
+      font-size: 0.85rem;
+      color: rgba(255,248,231,0.55);
+    }
+
+    /* ── Content ── */
+    .legal-body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 2rem);
+    }
+
+    .legal-section { margin-bottom: 2.75rem; }
+
+    .legal-section h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 900;
+      font-size: clamp(1.25rem, 3vw, 1.6rem);
+      color: #390219;
+      margin-bottom: 0.85rem;
+      line-height: 1.15;
+    }
+
+    .legal-section p,
+    .legal-section li {
+      font-family: "Satoshi", "Inter", system-ui, sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      line-height: 1.75;
+      color: rgba(57,2,25,0.8);
+    }
+
+    .legal-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .legal-section ul li {
+      padding-left: 1.4rem;
+      position: relative;
+    }
+    .legal-section ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #FFA5D7;
+      font-weight: 700;
+    }
+
+    .legal-section a {
+      color: #390219;
+      font-weight: 600;
+      text-underline-offset: 3px;
+    }
+    .legal-section a:hover { opacity: 0.65; }
+
+    .legal-divider {
+      border: none;
+      border-top: 1px solid rgba(57,2,25,0.12);
+      margin: 0 0 2.75rem;
+    }
+
+    .legal-contact-box {
+      background: rgba(255,165,215,0.15);
+      border: 1.5px solid rgba(255,165,215,0.4);
+      border-radius: 16px;
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+      margin-top: 0.75rem;
+    }
+    .legal-contact-box p {
+      margin-bottom: 0.35rem;
+    }
+    .legal-contact-box p:last-child { margin-bottom: 0; }
+
+    /* ── Footer blob — cream scalloped arch over pink footer (same shape as About) ── */
+    .footer__blob-svg path { fill: #FFF8E7 !important; }
+    @media (max-width: 860px) {
+      .footer__blob { height: clamp(170px, 46vw, 250px) !important; }
+      .footer__blob-inner {
+        justify-content: flex-start !important;
+        padding-top: clamp(10px, 3vw, 18px) !important;
+        height: 78% !important;
+      }
+    }
+    .footer__hours-title { color: #390219 !important; }
+    .footer__hours-time  { color: #390219 !important; }
+    .footer__hours-label { color: rgba(57,2,25,0.55) !important; }
+    .footer__hours-sep   { background: rgba(57,2,25,0.20) !important; }
+  </style></head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav nav--scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="NHOP home">NHOP</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="menu.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">Menu</span></span>
+      </a>
+      <a href="reserve.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">Reserve</span></span>
+      </a>
+      <a href="about.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack"><span class="pill-label">About Us</span></span>
+      </a>
+    </nav>
+    <a href="reserve.html" class="btn">Reserve a table</a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div id="bubble-overlay" class="bubble-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+  <ul class="bubble-pill-list">
+    <li><a href="index.html"   class="bubble-pill"><span class="bubble-pill__label">Home</span></a></li>
+    <li><a href="menu.html"    class="bubble-pill"><span class="bubble-pill__label">Menu</span></a></li>
+    <li><a href="reserve.html" class="bubble-pill"><span class="bubble-pill__label">Reserve</span></a></li>
+    <li><a href="about.html"   class="bubble-pill"><span class="bubble-pill__label">About Us</span></a></li>
+  </ul>
+</div>
+
+<main>
+
+  <!-- Hero -->
+  <section class="legal-hero">
+    <div class="legal-hero__inner">
+      <p class="legal-hero__label">Legal</p>
+      <h1 class="legal-hero__title">Privacy Policy</h1>
+      <p class="legal-hero__meta">Last updated: May 2026</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <article class="legal-body">
+
+    <div class="legal-section">
+      <p>National House of Pancakes ("NHOP", "we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard information when you visit our website or make a reservation online.</p>
+    </div>
+
+    <hr class="legal-divider" />
+
+    <div class="legal-section">
+      <h2>1. Information We Collect</h2>
+      <p>When you make a reservation through our website, we collect the following information:</p>
+      <ul>
+        <li>Full name</li>
+        <li>Email address</li>
+        <li>Phone number</li>
+        <li>Reservation date, time, and number of guests</li>
+        <li>Any special notes or requests you choose to include</li>
+      </ul>
+      <p>We do not collect payment information, social security numbers, or any other sensitive financial or identity data through this website.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. How We Use Your Information</h2>
+      <p>We use the information you provide solely to:</p>
+      <ul>
+        <li>Confirm and manage your reservation</li>
+        <li>Send you a booking confirmation email</li>
+        <li>Contact you if there are any changes or issues with your reservation</li>
+        <li>Improve our service and guest experience</li>
+      </ul>
+      <p>We do not use your information for marketing purposes without your explicit consent, and we do not sell or rent your data to third parties.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Data Storage &amp; Security</h2>
+      <p>Your reservation data is stored securely using <strong>Supabase</strong>, a cloud database platform with industry-standard encryption. Data is stored on servers in the United States.</p>
+      <p>We take reasonable steps to protect your personal information from unauthorized access, alteration, or disclosure. However, no method of internet transmission is 100% secure, and we cannot guarantee absolute security.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Email Communications</h2>
+      <p>By submitting a reservation, you may receive transactional emails related to your booking — such as a confirmation email when your reservation is confirmed. These are not marketing emails and are sent only in connection with your reservation.</p>
+      <p>Transactional emails are sent via <strong>Brevo</strong> (formerly Sendinblue), a third-party email service provider. We share only the information necessary to deliver those emails.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Cookies</h2>
+      <p>Our website does not currently use tracking cookies or third-party analytics tools. We may use essential cookies necessary for the site to function properly.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Third-Party Services</h2>
+      <p>We use the following third-party services to operate this website:</p>
+      <ul>
+        <li><strong>Supabase</strong> — database and backend infrastructure</li>
+        <li><strong>Brevo</strong> — transactional email delivery</li>
+        <li><strong>Vercel</strong> — website hosting</li>
+        <li><strong>Cloudinary</strong> — image hosting</li>
+      </ul>
+      <p>Each of these providers has their own privacy policy and data practices. We encourage you to review them if you have concerns.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request access to the personal information we hold about you</li>
+        <li>Request correction or deletion of your data</li>
+        <li>Withdraw consent at any time (where applicable)</li>
+      </ul>
+      <p>To exercise any of these rights, please contact us directly using the details below.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>8. Children's Privacy</h2>
+      <p>Our website is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has submitted information through our site, please contact us and we will delete it promptly.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated date. We encourage you to review this page periodically.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>10. Contact Us</h2>
+      <p>If you have any questions about this Privacy Policy or how we handle your data, please reach out:</p>
+      <div class="legal-contact-box">
+        <p><strong>National House of Pancakes (NHOP)</strong></p>
+        <p>211 N Kings Hwy, Myrtle Beach, SC 29577</p>
+        <p>Email: <a href="mailto:hello@houseofpancakes.net">hello@houseofpancakes.net</a></p>
+        <p>Phone: <a href="tel:+18434486149">(843) 448-6149</a></p>
+      </div>
+    </div>
+
+  </article>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer" id="footer">
+  <div class="footer__blob">
+    <svg class="footer__blob-svg" viewBox="0 0 1440 460" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M0,0 H1440 V330
+        C1360,440 1280,440 1200,330
+        C1120,440 1040,440  960,330
+        C 880,440  800,440  720,330
+        C 640,440  560,440  480,330
+        C 400,440  320,440  240,330
+        C 160,440   80,440    0,330
+        Z"/>
+    </svg>
+    <div class="footer__blob-inner container">
+      <h2 class="footer__hours-title">Opening Hours</h2>
+      <div class="footer__hours-row">
+        <div class="footer__hours-item">
+          <span class="footer__hours-label">Every day</span>
+          <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container footer__info">
+    <div class="footer__info-col">
+      <h3 class="footer__info-heading">Location</h3>
+      <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+      <a href="https://www.google.com/maps/place/national+house+of+pancakes/data=!4m2!3m1!1s0x890069ac291efdf5:0x67f7cff9881bf83c?sa=X&ved=1t:242&ictx=111" target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+    </div>
+    <div class="footer__info-col footer__info-col--center">
+      <h3 class="footer__info-heading">About Us</h3>
+      <p class="footer__info-text">Scratch-made pancakes, bold Southern flavors, and a dining room full of good mornings.</p>
+    </div>
+    <div class="footer__info-col footer__info-col--right">
+      <h3 class="footer__info-heading">Contact Us</h3>
+      <div class="footer__contact-details">
+        <a href="tel:+18434486149" class="footer__contact-link">(843) 448-6149</a>
+        <a href="mailto:hello@houseofpancakes.net" class="footer__contact-link">hello@houseofpancakes.net</a>
+      </div>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>All Rights Reserved · National House of Pancakes · 2026</span>
+    <span class="footer__legal">
+      <a href="privacy-policy.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="terms.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Terms &amp; Conditions</a>
+    </span>
+  </div>
+</footer>
+
+<script src="./scripts/main.js" defer></script>
+</body>
+</html>

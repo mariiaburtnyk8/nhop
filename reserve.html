@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>@font-face{font-family:"Atomic Beers";src:url("./assets/fonts/AtomicBeers-Regular.woff2")format("woff2"),url("./assets/fonts/AtomicBeers-Regular.otf")format("opentype");font-weight:400;font-style:normal;font-display:block;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff">
+  <title>Reserve a Table — National House of Pancakes</title>
+  <meta name="description" content="Reserve your booth at NHOP — Myrtle Beach's most-loved breakfast spot. Book online in seconds." />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Fraunces:wght@900&display=swap" />
+  <link rel="preload" href="./assets/fonts/AtomicBeers-Regular.woff2" as="font" type="font/woff2" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/main.css" />
+
+<style>
+/* ══ PALETTE ══ */
+:root {
+  --color-burgundy: #390219;
+  --color-cream:    #FFF8E7;
+  --color-pink:     #FFA5D7;
+  --bg-base:        #FFF8E7;
+  --bg-dark:        #390219;
+  --bg-accent:      #FFA5D7;
+  --fg-base:        #390219;
+  --fg-on-dark:     #FFF8E7;
+  --fg-muted:       rgba(57,2,25,0.55);
+  --cta-bg:         #390219;
+  --cta-fg:         #FFF8E7;
+  --cta-bg-hover:   #5a0a28;
+  --border-soft:    rgba(57,2,25,0.10);
+  --border-strong:  rgba(57,2,25,0.30);
+  --shadow-soft:    0 4px 24px rgba(57,2,25,0.08);
+  --shadow-deep:    0 16px 48px rgba(57,2,25,0.18);
+  --font-display:   "Atomic Beers","Fraunces",Georgia,serif;
+  --font-body:      "Satoshi","Inter",system-ui,sans-serif;
+}
+
+/* ══ FOOTER OVERRIDES — pink footer ══ */
+.footer { background: #FFA5D7 !important; color: #390219 !important; position: relative; z-index: 100; transform: translateZ(0); -webkit-transform: translateZ(0); }
+/* Blob top must be burgundy so no pink gap shows between contacts-block and opening hours */
+.footer__blob { background: #390219; }
+.footer__info-heading { color: #390219 !important; border-bottom-color: rgba(57,2,25,0.25) !important; }
+.footer__info-address, .footer__info-text { color: rgba(57,2,25,0.75) !important; opacity: 1; }
+.footer__visit-link, .footer__contact-details a { color: #390219 !important; }
+.footer__info-col--center { border-color: rgba(57,2,25,0.18) !important; }
+.footer__social-btn { border-color: rgba(57,2,25,0.35) !important; color: #390219 !important; }
+.footer__social-btn:hover { background: #390219 !important; color: #FFA5D7 !important; border-color: #390219 !important; }
+.footer__bottom { border-top-color: rgba(57,2,25,0.18) !important; color: rgba(57,2,25,0.50) !important; }
+
+/* Mobile: footer blob shaped/sized like About — shorter arch, hours near its top */
+@media (max-width: 860px) {
+  .footer__blob { height: clamp(170px, 46vw, 250px) !important; }
+  .footer__blob-inner {
+    justify-content: flex-start !important;
+    padding-top: clamp(10px, 3vw, 18px) !important;
+    height: 78% !important;
+  }
+}
+
+/* Reserve card: kill the iOS double-tap-to-zoom (and the 300ms tap delay) on the
+   booking UI so quick taps on chips/buttons don't accidentally zoom the page.
+   Vertical scrolling and intentional pinch-zoom are unaffected. */
+.reserve__card { touch-action: manipulation; }
+
+/* Narrow screens (below the 15 Pro's 393px): the two nav buttons shrink to fit
+   the card width and "Book my table →" wraps to two lines. Trim the horizontal
+   padding and forbid wrapping so they stay one clean line side by side.
+   Larger phones (393px+) are untouched. */
+@media (max-width: 392px) {
+  .reserve__form-side .reserve__nav .btn {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+    white-space: nowrap;
+  }
+}
+
+/* ══ NAV ══ */
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { background: #390219; margin: 0; font-family: var(--font-body); }
+
+#nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 600 !important;
+  background: transparent !important;
+}
+#nav .nav__logo {
+  color: var(--fg-base) !important;
+  background: rgba(255,248,231,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 12px rgba(57,2,25,0.10) !important;
+}
+#nav .nav__links {
+  background: rgba(255,248,231,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 2px 12px rgba(57,2,25,0.10) !important;
+}
+#nav .nav__links a {
+  color: #390219 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+#nav .nav__links a.reserve-active {
+  background: #390219 !important;
+  color: #FFF8E7 !important;
+  pointer-events: none;
+}
+#nav .btn {
+  background: #FFF8E7 !important;
+  color: #390219 !important;
+}
+#nav .nav__links a:not(.reserve-active):hover {
+  background: transparent !important;
+}
+
+/* ══ RESERVE SECTION ══ */
+.reserve { background: #390219 !important; color: #FFF8E7; }
+
+/* Prevents cream body background bleeding through any inter-section gap on mobile */
+main { background: #390219; }
+
+/* ══ CONTACTS BLOCK ══ */
+.contacts-block {
+  background: #390219;
+  padding: clamp(5rem, 10vw, 8rem) clamp(1.5rem, 5vw, 6rem) clamp(3rem, 6vw, 5rem);
+  border-top: none;
+  margin-top: 0;
+  margin-bottom: -2px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+.contacts-block__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.contacts-block__label {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #FFF8E7;
+  opacity: 0.45;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+.contacts-block__item {
+  display: block;
+  font-family: var(--font-body); /* Satoshi */
+  font-weight: 700;
+  line-height: 1;
+  color: #FFF8E7;
+  text-decoration: none !important;
+  -webkit-text-decoration: none !important;
+  border-bottom: none !important;
+  transition: opacity 160ms;
+}
+.contacts-block__item:hover { opacity: 0.55; }
+.contacts-block__phone {
+  font-family: var(--font-body); /* Satoshi — digits read clearly */
+  font-weight: 700;
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  margin-bottom: clamp(0.25rem, 1vw, 0.75rem);
+}
+.contacts-block__email {
+  font-size: clamp(2rem, 4.8vw, 5.2rem);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  /* Pull contacts block up to cover any subpixel gap */
+  .contacts-block { margin-top: -1px; }
+  /* Remove reserve section bottom padding */
+  .reserve { padding-bottom: 0 !important; }
+  /* Outline matching the background hides the iOS Safari subpixel antialiasing
+     artifact (light line) that appears at the border-radius bottom edge of the
+     cream card against the dark background on high-DPI screens. The outline
+     follows border-radius and sits outside the card without affecting layout. */
+  .reserve__card {
+    outline: 3px solid #390219;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    overflow: hidden;
+  }
+  .reserve__photo-side {
+    margin-bottom: -1px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  .reserve__form-side {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .contacts-block__phone {
+    font-size: clamp(2rem, 9.5vw, 3.5rem);
+    white-space: nowrap;
+    margin-bottom: clamp(1.25rem, 4vw, 2rem);
+  }
+  .contacts-block__email {
+    font-size: clamp(1rem, 4.8vw, 2rem);
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+}
+
+/* Mobile-only step text — hidden on desktop */
+.reserve__step-text { display: none; }
+
+@media (max-width: 768px) {
+  /* Hide dot stepper, show "Step X of 6" text */
+  .reserve__progress { display: none !important; }
+  .reserve__step-text {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(57, 2, 25, 0.35);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Title — smaller font, wraps on very narrow screens */
+  .reserve__form-side .reserve__title {
+    font-size: 1.85rem !important;
+    white-space: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Hint bigger, question stays readable */
+  .reserve__form-side .reserve__hint { font-size: 1rem !important; opacity: 0.6; }
+  .reserve__form-side .reserve__q    { font-size: 1.35rem !important; }
+
+  /* Input underline — always full width */
+  .reserve__form-side .name-underline { transform: scaleX(1) !important; }
+
+  /* Day chips — perfect circles */
+  .reserve__form-side .chip--day {
+    border-radius: 50% !important;
+    justify-content: center;
+    padding: 0 !important;
+    flex: 0 0 60px !important;
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .reserve__form-side .chip--day .chip__num     { font-size: 1.25rem !important; }
+  .reserve__form-side .chip--day .chip__weekday,
+  .reserve__form-side .chip--day .chip__month   { font-size: 0.6rem !important; }
+
+  /* Phone step (4) has no hint line above the field, so its card came out
+     ~31px shorter than the email step (5) and looked cramped at the bottom.
+     Match the email step's height; the extra space sits below the nav buttons. */
+  .reserve__form-side .reserve__scene[data-scene="4"] { min-height: 205px; }
+
+}
+
+/* ══ FOOTER BLOB (Opening Hours) — burgundy bumps over pink footer ══ */
+.footer__blob { background: transparent !important; }
+.footer__blob-svg path { fill: #390219 !important; }
+.footer__blob-inner { position: relative; z-index: 1; }
+.footer__hours-title { color: #FFF8E7 !important; }
+.footer__hours-time { color: #FFF8E7 !important; }
+.footer__hours-label { color: rgba(255,248,231,0.60) !important; }
+</style></head>
+<body>
+
+<div class="cursor" aria-hidden="true"></div>
+
+<header class="nav nav--scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="NHOP home">NHOP</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="menu.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack">
+          <span class="pill-label">Menu</span>
+          <span class="pill-label-hover" aria-hidden="true">Menu</span>
+        </span>
+      </a>
+      <a href="reserve.html" class="reserve-active">
+        <span class="label-stack">
+          <span class="pill-label">Reserve</span>
+        </span>
+      </a>
+      <a href="about.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack">
+          <span class="pill-label">About Us</span>
+          <span class="pill-label-hover" aria-hidden="true">About Us</span>
+        </span>
+      </a>
+    </nav>
+    <a href="reserve.html" class="btn">Reserve a table</a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── Mobile Bubble Menu Overlay ── -->
+<div id="bubble-overlay" class="bubble-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+  <ul class="bubble-pill-list">
+    <li><a href="index.html"  class="bubble-pill"          ><span class="bubble-pill__label">Home</span></a></li>
+    <li><a href="menu.html"   class="bubble-pill"          ><span class="bubble-pill__label">Menu</span></a></li>
+    <li><a href="reserve.html"class="bubble-pill is-active"><span class="bubble-pill__label">Reserve</span></a></li>
+    <li><a href="about.html"  class="bubble-pill"          ><span class="bubble-pill__label">About Us</span></a></li>
+  </ul>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<main>
+
+  <!-- =========================================================
+       RESERVE SECTION
+       ========================================================= -->
+  <section class="section reserve" id="reserve">
+    <div class="container">
+
+      <div class="reserve__card">
+
+        <!-- ---- Form side ---- -->
+        <div class="reserve__form-side">
+          <h2 class="reserve__title">Reserve Your Table</h2>
+
+          <form class="reserve__form" id="reserveForm" novalidate>
+
+            <div class="reserve__progress" aria-hidden="true">
+              <span class="reserve__prog-dot is-active" data-step="1">1</span>
+              <span class="reserve__prog-line"></span>
+              <span class="reserve__prog-dot" data-step="2">2</span>
+              <span class="reserve__prog-line"></span>
+              <span class="reserve__prog-dot" data-step="3">3</span>
+              <span class="reserve__prog-line"></span>
+              <span class="reserve__prog-dot" data-step="4">4</span>
+              <span class="reserve__prog-line"></span>
+              <span class="reserve__prog-dot" data-step="5">5</span>
+              <span class="reserve__prog-line"></span>
+              <span class="reserve__prog-dot" data-step="6">6</span>
+            </div>
+            <!-- Mobile-only step counter text -->
+            <div class="reserve__step-text" aria-live="polite">Step <span class="reserve__step-current">1</span> of 6</div>
+
+            <!-- Scene 1: Name -->
+            <div class="reserve__scene is-visible" data-scene="1">
+              <p class="reserve__hint">Let's get your booth ready</p>
+              <h3 class="reserve__q">What's your name?</h3>
+              <div class="name-field">
+                <input class="name-input" id="r-name" type="text"
+                       placeholder="Your name…" autocomplete="name" required />
+                <div class="name-underline"></div>
+                <svg class="name-pen" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                </svg>
+              </div>
+              <div class="reserve__nav">
+                <span class="reserve__nav-spacer"></span>
+                <button type="button" class="btn" data-next>Next →</button>
+              </div>
+            </div>
+
+            <!-- Scene 2: Day + Time -->
+            <div class="reserve__scene" data-scene="2">
+              <p class="reserve__hint">When's the feast?</p>
+              <h3 class="reserve__q">Pick your day</h3>
+              <div class="date-picker">
+                <div class="date-picker__day-wrap">
+                  <div class="date-picker__row" data-picker="day"></div>
+                  <button type="button" class="cal-btn-wrap chip chip--more" aria-label="Pick a different date">
+                    <span class="chip__more-text">Other<br>dates</span>
+                    <input type="date" id="calPicker" aria-label="Pick a different date" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;pointer-events:auto;" />
+                  </button>
+                </div>
+                <div class="date-picker__row" data-picker="time" style="display:none">
+                  <button type="button" class="chip" data-time="08:00">8 AM</button>
+                  <button type="button" class="chip" data-time="09:00">9 AM</button>
+                  <button type="button" class="chip" data-time="10:00">10 AM</button>
+                  <button type="button" class="chip" data-time="11:00">11 AM</button>
+                  <button type="button" class="chip" data-time="12:00">12 PM</button>
+                  <button type="button" class="chip" data-time="13:00">1 PM</button>
+                  <button type="button" class="chip" data-time="14:00">2 PM</button>
+                </div>
+              </div>
+              <div class="reserve__nav">
+                <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                <button type="button" class="btn" data-next>Next →</button>
+              </div>
+            </div>
+
+            <!-- Scene 3: Guests -->
+            <div class="reserve__scene" data-scene="3">
+              <p class="reserve__hint">The more, the merrier</p>
+              <h3 class="reserve__q">How many guests?</h3>
+              <div class="party-table" data-party-table></div>
+              <div class="party-controls">
+                <button type="button" class="party-btn" data-guests-change="-1">−</button>
+                <span class="party-display">
+                  <span class="party-count" data-party-count>2</span>
+                  <span> guests</span>
+                </span>
+                <button type="button" class="party-btn" data-guests-change="+1">+</button>
+              </div>
+              <p class="party-hint">OR TYPE A NUMBER</p>
+              <div class="reserve__nav">
+                <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                <button type="button" class="btn" data-next>Next →</button>
+              </div>
+            </div>
+
+            <!-- Scene 4: Phone keypad -->
+            <div class="reserve__scene" data-scene="4">
+              <h3 class="reserve__q">Your phone?</h3>
+              <div class="phone-display">
+                <span class="phone-prefix">+1</span>
+                <span class="phone-number" data-phone-display>_ _ _–_ _ _ _</span>
+              </div>
+              <div class="reserve__nav">
+                <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                <button type="button" class="btn" data-next>Next →</button>
+              </div>
+            </div>
+
+            <!-- Scene 5: Email -->
+            <div class="reserve__scene" data-scene="5">
+              <p class="reserve__hint">We'll send your confirmation here</p>
+              <h3 class="reserve__q">Your email?</h3>
+              <div class="name-field">
+                <input class="name-input" id="r-email" type="email"
+                       placeholder="your@email.com" autocomplete="email" />
+                <div class="name-underline"></div>
+                <svg class="name-pen" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div class="reserve__nav">
+                <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                <button type="button" class="btn" data-next>Next →</button>
+              </div>
+            </div>
+
+            <!-- Scene 6: Notes -->
+            <div class="reserve__scene" data-scene="6">
+              <p class="reserve__hint">Optional — skip if nothing special</p>
+              <h3 class="reserve__q">Any special wishes?</h3>
+              <div class="notes-field">
+                <textarea class="notes-input" id="r-notes"
+                          placeholder="Window seat, birthday cake, highchair…"
+                          rows="1" maxlength="400"></textarea>
+                <div class="notes-underline"></div>
+              </div>
+              <div class="reserve__nav">
+                <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                <button type="submit" class="btn">Book my table →</button>
+              </div>
+            </div>
+
+            <!-- Scene done -->
+            <div class="reserve__scene reserve__scene--done" data-scene="done">
+              <div class="reserve__confirm-card">
+                <span class="reserve__card-label">You're booked!</span>
+                <p class="reserve__card-name" data-confirm="name"></p>
+                <p class="reserve__card-meta" data-confirm="meta"></p>
+              </div>
+              <p class="reserve__done-copy">Confirmation will be sent to <strong data-confirm="email"></strong></p>
+              <button type="button" class="btn btn--ghost" data-restart>New reservation →</button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- ---- Photo side ---- -->
+        <div class="reserve__photo-side">
+          <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777507506/hf_20260430_000351_860f83cf-3445-4155-beb2-ca1d84cfa9e8_qcy6ub.png"
+               alt="NHOP guests enjoying their meal"
+               loading="lazy" />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CONTACTS BLOCK
+       ========================================================= -->
+  <section class="contacts-block" id="contact">
+    <div class="contacts-block__inner">
+      <p class="contacts-block__label">Have questions? Get in touch</p>
+      <a href="tel:+18434486149" class="contacts-block__item contacts-block__phone">(843) 448-6149</a>
+      <a href="mailto:hello@houseofpancakes.net" class="contacts-block__item contacts-block__email">hello@houseofpancakes.net</a>
+    </div>
+  </section>
+
+</main>
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+  <footer class="footer" id="footer">
+
+    <div class="footer__blob">
+      <svg class="footer__blob-svg" viewBox="0 0 1440 460"
+           preserveAspectRatio="none" aria-hidden="true"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 H1440 V330
+          C1360,440 1280,440 1200,330
+          C1120,440 1040,440  960,330
+          C 880,440  800,440  720,330
+          C 640,440  560,440  480,330
+          C 400,440  320,440  240,330
+          C 160,440   80,440    0,330
+          Z" fill="#FFA5D7"/>
+      </svg>
+      <div class="footer__blob-inner container">
+        <h2 class="footer__hours-title">Opening Hours</h2>
+        <div class="footer__hours-row">
+          <div class="footer__hours-item">
+            <span class="footer__hours-label">Every day</span>
+            <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer__info">
+
+      <div class="footer__info-col">
+        <h3 class="footer__info-heading">Location</h3>
+        <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+        <a href="https://www.google.com/maps/place/national+house+of+pancakes/data=!4m2!3m1!1s0x890069ac291efdf5:0x67f7cff9881bf83c?sa=X&ved=1t:242&ictx=111"
+           target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+      </div>
+
+      <div class="footer__info-col footer__info-col--center">
+        <h3 class="footer__info-heading">About Us</h3>
+        <p class="footer__info-text">
+          Myrtle Beach's most-loved breakfast spot — hand-flipped stacks,
+          bottomless syrup, and 36 000 Google fans who always come back for seconds.
+        </p>
+        <div class="footer__socials">
+          <a href="https://www.instagram.com/national_house_of_pancakes"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4.4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@ilovenhop"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.05a8.27 8.27 0 004.83 1.54V7.14a4.85 4.85 0 01-1.07-.45z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__info-col footer__info-col--right">
+        <h3 class="footer__info-heading">Contact Us</h3>
+        <div class="footer__contact-details">
+          <a href="tel:+18434486149"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="display:inline;vertical-align:-0.12em;margin-right:0.18em"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.39 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (843) 448-6149</a>
+          <a href="mailto:hello@houseofpancakes.net"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="display:inline;vertical-align:-0.12em;margin-right:0.18em"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg> hello@houseofpancakes.net</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container footer__bottom">
+      <span class="footer__bottom-copy">All Rights Reserved · National House of Pancakes 2026</span>
+      <span class="footer__bottom-legal">
+        <a href="#" data-legal="privacy" class="footer__bottom-link">Privacy Policy</a>
+        <a href="#" data-legal="terms" class="footer__bottom-link">Terms &amp; Conditions</a>
+      </span>
+    </div>
+
+  </footer>
+
+  <script src="./scripts/legal-content.js"></script>
+  <script src="./scripts/main.js" defer></script>
+  <!-- Supabase SDK + client init must load before reserve.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./scripts/supabase-client.js"></script>
+  <script src="./scripts/reserve.js" defer></script>
+
+<!-- ══ LEGAL MODAL ══ -->
+<div id="legal-modal" class="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title" hidden>
+  <div class="legal-modal__overlay"></div>
+  <div class="legal-modal__panel">
+    <div class="legal-modal__header">
+      <h2 class="legal-modal__title" id="legal-modal-title"></h2>
+      <button class="legal-modal__close" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="legal-modal__body" id="legal-modal-body"></div>
+  </div>
+</div>
+</body>
+</html>

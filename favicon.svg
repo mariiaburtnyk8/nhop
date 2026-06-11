@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Burgundy rounded square background -->
+  <rect width="64" height="64" rx="14" fill="#390219"/>
+  <!-- Atomic Beers "N" glyph, scaled & y-flipped from font coords (UPM=1000, W=728, H≈679) -->
+  <path
+    fill="#FFF8E7"
+    transform="translate(10 53) scale(0.0604 -0.0604)"
+    d="M420 0H693C686 173 682 173 682 339C682 506 686 506 693 679H420C427 513 430 506 430 360C372 456 321 564 274 679H0C8 506 11 506 11 339C11 173 8 173 0 0H274C267 166 263 172 263 319C326 211 372 123 420 0Z"
+  />
+</svg>

@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHOP — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== DESIGN TOKENS ===== */
+    :root {
+      --color-burgundy:  #390219;
+      --color-pink:      #FFA5D7;
+      --color-cream:     #ffffff;
+      --color-honey:     #FEE885;
+      --bg-base:         #f4efe6;
+      --bg-dark:         var(--color-burgundy);
+      --fg-base:         var(--color-burgundy);
+      --fg-muted:        rgba(57,2,25,0.5);
+      --border-soft:     rgba(57,2,25,0.12);
+      --border-strong:   rgba(57,2,25,0.3);
+      --shadow-soft:     0 4px 24px rgba(57,2,25,0.08);
+      --shadow-deep:     0 16px 48px rgba(57,2,25,0.16);
+      --radius-sm:       8px;
+      --radius-md:       14px;
+      --radius-lg:       24px;
+      --radius-pill:     999px;
+      --font-display:    "Fraunces", Georgia, serif;
+      --font-body:       "Satoshi", "Inter", system-ui, -apple-system, sans-serif;
+      --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* status */
+      --status-pending-bg:   rgba(250,200,0,0.22);
+      --status-pending-fg:   #8a5e00;
+      --status-confirmed-bg: rgba(34,197,94,0.14);
+      --status-confirmed-fg: #166534;
+      --status-cancelled-bg: rgba(239,68,68,0.12);
+      --status-cancelled-fg: #991b1b;
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      background: var(--bg-base);
+      color: var(--fg-base);
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { background: none; border: none; cursor: pointer; font: inherit; color: inherit; }
+    input, select { font: inherit; color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ===== LOGIN SCREEN ===== */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      background: var(--color-burgundy);
+      padding: 1.5rem;
+    }
+
+    .login-card {
+      background: var(--color-cream);
+      border-radius: var(--radius-lg);
+      padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-deep);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .login-logo {
+      text-align: center;
+    }
+    .login-logo .brand {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 2.5rem;
+      color: var(--color-burgundy);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .login-logo .sub {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--fg-muted);
+      margin-top: 0.25rem;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--fg-muted);
+    }
+    .field input {
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      background: transparent;
+      transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+      outline: none;
+    }
+    .field input:focus {
+      border-color: var(--color-burgundy);
+      box-shadow: 0 0 0 3px rgba(57,2,25,0.1);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+    .password-wrap input {
+      width: 100%;
+      padding-right: 2.75rem;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--fg-muted);
+      display: flex;
+      align-items: center;
+      transition: color 150ms;
+    }
+    .password-toggle:hover { color: var(--color-burgundy); }
+
+    .login-error {
+      font-size: 0.8rem;
+      color: #991b1b;
+      background: rgba(239,68,68,0.09);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.9rem;
+      display: none;
+    }
+    .login-error.visible { display: block; }
+
+    .btn-primary {
+      background: var(--color-burgundy);
+      color: var(--color-cream);
+      border-radius: var(--radius-pill);
+      padding: 0.85rem 2rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      transition: background 200ms, transform 120ms;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover { background: #5a0a28; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ===== ADMIN APP (hidden until logged in) ===== */
+    #admin-app { display: none; min-height: 100dvh; flex-direction: column; }
+    #admin-app.visible { display: flex; }
+
+    /* ===== SIDEBAR + LAYOUT ===== */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100dvh;
+    }
+
+    @media (max-width: 768px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+      }
+    }
+
+    /* ===== TOP BAR ===== */
+    .topbar {
+      grid-column: 1 / -1;
+      background: var(--color-burgundy);
+      color: var(--color-cream);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .topbar__logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+    .topbar__sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(255,248,231,0.25);
+    }
+    .topbar__title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.7;
+    }
+
+    .topbar__actions { display: flex; align-items: center; gap: 0.75rem; }
+    .topbar__user {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+    .btn-logout {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--color-cream);
+      border: 1.5px solid rgba(255,248,231,0.3);
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 0.9rem;
+      transition: border-color 150ms, background 150ms;
+    }
+    .btn-logout:hover {
+      border-color: rgba(255,248,231,0.7);
+      background: rgba(255,248,231,0.1);
+    }
+
+    @media (min-width: 769px) {
+      .btn-logout { display: none; }
+    }
+    @media (max-width: 768px) {
+      .topbar__user { display: none; }
+      .btn-logout {
+        font-size: 0.72rem;
+        padding: 0.3rem 0.75rem;
+        border-color: rgba(255,248,231,0.5);
+        letter-spacing: 0.01em;
+      }
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      background: #2a0115;
+      color: var(--color-cream);
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    @media (max-width: 768px) { .sidebar { display: none; } }
+
+    .sidebar__label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,248,231,0.4);
+      padding: 0.5rem 1.25rem 0.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 0;
+      font-size: 0.87rem;
+      color: rgba(255,248,231,0.7);
+      transition: background 150ms, color 150ms;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover {
+      background: rgba(255,248,231,0.07);
+      color: var(--color-cream);
+    }
+    .nav-item.active {
+      background: rgba(255,165,215,0.12);
+      color: var(--color-pink);
+      border-left-color: var(--color-pink);
+    }
+    .nav-item .nav-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.9; }
+
+    .sidebar__count {
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: var(--color-pink);
+      color: var(--color-burgundy);
+      border-radius: var(--radius-pill);
+      padding: 0.15rem 0.55rem;
+      min-width: 22px;
+      text-align: center;
+    }
+    .sidebar__count:empty,
+    .sidebar__count[data-zero="true"] {
+      background: rgba(255,165,215,0.2);
+      color: var(--color-pink);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      background: var(--bg-base);
+      padding: 1.75rem clamp(1rem, 3vw, 2rem);
+      overflow-y: auto;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .page-header__title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--color-burgundy);
+      line-height: 1.1;
+    }
+    .page-header__sub {
+      font-size: 0.82rem;
+      color: var(--fg-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ===== STAT CARDS ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--color-cream);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .stat-card__label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--fg-muted);
+      font-weight: 600;
+    }
+    .stat-card__value {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 2.75rem;
+      color: var(--color-burgundy);
+      line-height: 1.1;
+      margin-top: 0.2rem;
+    }
+    .stat-card__sub {
+      font-size: 0.82rem;
+      color: var(--fg-muted);
+      margin-top: 0.2rem;
+    }
+    .stat-card--accent .stat-card__value { color: var(--color-burgundy); }
+    .stat-card--pink .stat-card__value { color: #8b1a4e; }
+
+    /* Pending card — visually prominent */
+    .stat-card--pending {
+      border: 2px solid var(--color-pink);
+      position: relative;
+    }
+    .stat-card--pending .stat-card__label {
+      color: var(--color-burgundy);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .stat-card--pending .stat-card__label::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--color-pink);
+      flex-shrink: 0;
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    .stat-card--pending .stat-card__value {
+      color: var(--color-burgundy);
+      font-size: 2.75rem;
+    }
+    .stat-card--pending .stat-card__sub {
+      color: #8b1a4e;
+      font-weight: 600;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    /* ===== FILTERS ===== */
+    .filters-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 340px;
+    }
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--fg-muted);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-pill);
+      background: var(--color-cream);
+      outline: none;
+      transition: border-color 180ms, box-shadow 180ms;
+    }
+    .search-input:focus {
+      border-color: var(--color-burgundy);
+      box-shadow: 0 0 0 3px rgba(57,2,25,0.09);
+    }
+
+    .filter-select {
+      padding: 0.6rem 0.9rem;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-pill);
+      background: var(--color-cream);
+      outline: none;
+      cursor: pointer;
+      transition: border-color 180ms;
+      appearance: none;
+      padding-right: 2rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(57,2,25,0.5)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem center;
+    }
+    .filter-select:focus { border-color: var(--color-burgundy); }
+
+    .filters-bar__count {
+      font-size: 0.875rem;
+      color: var(--fg-muted);
+      margin-left: auto;
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+
+    /* ===== CALENDAR PICKER — same pattern as .cal-btn on reserve page ===== */
+    .btn-calendar {
+      flex-shrink: 0;
+      width: 38px; height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--color-cream);
+      border: 1.5px solid var(--border-strong);
+      color: var(--fg-muted);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: border-color 150ms, color 150ms, background 150ms;
+    }
+    .btn-calendar:hover { border-color: var(--color-burgundy); color: var(--color-burgundy); }
+    .btn-calendar.active {
+      background: var(--color-burgundy);
+      border-color: var(--color-burgundy);
+      color: var(--color-cream);
+    }
+    .btn-calendar svg { width: 16px; height: 16px; pointer-events: none; }
+    .btn-calendar input[type="date"] {
+      position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer;
+    }
+
+    .btn-cal-clear {
+      display: none;
+      align-items: center; justify-content: center;
+      height: 38px; padding: 0 0.6rem;
+      border-radius: var(--radius-sm);
+      background: rgba(57,2,25,0.08);
+      color: var(--fg-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1.5px solid var(--border-soft);
+      cursor: pointer;
+      white-space: nowrap;
+      gap: 0.3rem;
+      transition: background 150ms;
+    }
+    .btn-cal-clear:hover { background: rgba(239,68,68,0.1); color: #991b1b; border-color: rgba(239,68,68,0.2); }
+    .btn-cal-clear.visible { display: flex; }
+
+    /* ===== RESERVATIONS TABLE ===== */
+    .table-wrap {
+      background: var(--color-cream);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .res-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .res-table thead {
+      background: rgba(57,2,25,0.04);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .res-table th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+      color: var(--fg-muted);
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .res-table th:hover { color: var(--fg-base); }
+    .res-table th .sort-icon { display: inline-block; margin-left: 3px; opacity: 0.4; }
+    .res-table th.sorted .sort-icon { opacity: 1; color: var(--color-burgundy); }
+
+    .res-table tbody tr {
+      border-bottom: 1px solid var(--border-soft);
+      transition: background 120ms;
+    }
+    .res-table tbody tr:last-child { border-bottom: none; }
+    .res-table tbody tr:hover { background: rgba(57,2,25,0.025); }
+    .res-table tbody tr.res-past { opacity: 0.45; }
+    .res-table tbody tr.res-past:hover { opacity: 0.65; background: rgba(57,2,25,0.025); }
+    .res-card.res-past { opacity: 0.45; }
+
+    .res-table td {
+      padding: 0.85rem 1rem;
+      vertical-align: middle;
+    }
+
+    .guest-name { font-weight: 600; }
+    .guest-phone { color: var(--fg-muted); font-size: 0.82rem; }
+
+    .td-date { white-space: nowrap; }
+    .td-date .date { font-weight: 600; }
+    .td-date .time { color: var(--fg-muted); font-size: 0.8rem; }
+
+    .td-guests { font-weight: 700; text-align: center; }
+
+    .td-note {
+      max-width: 180px;
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ===== STATUS BADGE ===== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: var(--radius-pill);
+      padding: 0.25rem 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      transition: filter 150ms, transform 100ms;
+    }
+    .status-badge:hover { filter: brightness(0.95); }
+    .status-badge:active { transform: scale(0.97); }
+
+    .status-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-badge[data-status="pending"] {
+      background: var(--status-pending-bg);
+      color: var(--status-pending-fg);
+    }
+    .status-badge[data-status="confirmed"] {
+      background: var(--status-confirmed-bg);
+      color: var(--status-confirmed-fg);
+    }
+    .status-badge[data-status="cancelled"] {
+      background: var(--status-cancelled-bg);
+      color: var(--status-cancelled-fg);
+    }
+
+    /* ===== ROW ACTIONS ===== */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .action-btn {
+      width: 30px; height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--fg-muted);
+      transition: background 150ms, color 150ms;
+    }
+    .action-btn:hover { background: rgba(57,2,25,0.08); color: var(--fg-base); }
+    .action-btn svg { width: 15px; height: 15px; }
+    .action-btn--danger:hover { background: rgba(239,68,68,0.1); color: #991b1b; }
+
+    /* ===== STATUS DROPDOWN POPUP ===== */
+    .status-popup {
+      position: fixed;
+      background: var(--color-cream);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-deep);
+      padding: 0.4rem;
+      z-index: 500;
+      min-width: 160px;
+      display: none;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .status-popup.open { display: flex; }
+    .status-option {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 120ms;
+    }
+    .status-option:hover { background: rgba(57,2,25,0.06); }
+    .status-option .dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .status-option[data-val="pending"]   .dot { background: #ca8a04; }
+    .status-option[data-val="confirmed"] .dot { background: #16a34a; }
+    .status-option[data-val="cancelled"] .dot { background: #dc2626; }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--fg-muted);
+    }
+    .empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.3; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ===== DETAIL DRAWER ===== */
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(57,2,25,0.35);
+      z-index: 200;
+      opacity: 0; pointer-events: none;
+      transition: opacity 250ms var(--ease-out);
+    }
+    .drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+    .drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(420px, 100vw);
+      background: var(--color-cream);
+      z-index: 300;
+      box-shadow: -8px 0 40px rgba(57,2,25,0.18);
+      transform: translateX(100%);
+      transition: transform 300ms var(--ease-out);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .drawer.open { transform: translateX(0); }
+
+    .drawer__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--color-burgundy);
+      color: var(--color-cream);
+      position: sticky; top: 0; z-index: 1;
+    }
+    .drawer__title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+    .drawer__close {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius-sm);
+      color: rgba(255,248,231,0.7);
+      transition: background 150ms, color 150ms;
+    }
+    .drawer__close:hover { background: rgba(255,248,231,0.1); color: var(--color-cream); }
+
+    .drawer__body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.1rem; }
+
+    /* Date + guests block */
+    .d-primary { display: flex; flex-direction: column; gap: 0.35rem; }
+    .d-datetime {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--fg-base);
+      line-height: 1.2;
+    }
+    .d-guests {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--fg-base);
+      background: rgba(57,2,25,0.06);
+      border-radius: var(--radius-pill);
+      padding: 0.2rem 0.65rem;
+      width: fit-content;
+    }
+
+    /* Contact block */
+    .d-contact { display: flex; flex-direction: column; gap: 0.5rem; }
+    .d-contact__item {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--fg-base);
+      text-decoration: none;
+      transition: color 150ms;
+    }
+    .d-contact__item:hover { color: var(--color-burgundy); text-decoration: underline; }
+    .d-contact__item svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--fg-muted); }
+
+    /* Note */
+    .d-note {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      background: rgba(57,2,25,0.04);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.75rem;
+    }
+    .d-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
+
+    /* Meta: status + booked at */
+    .d-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .d-created {
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+    }
+
+    .drawer__divider {
+      border: none; border-top: 1px solid var(--border-soft);
+      margin: 1.25rem 0;
+    }
+
+    .drawer__actions { display: flex; flex-direction: column; gap: 0.6rem; }
+    .btn-confirm {
+      background: #166534; color: #fff;
+      border-radius: var(--radius-pill); padding: 0.7rem 1.25rem;
+      font-weight: 700; font-size: 0.85rem;
+      transition: background 150ms, opacity 150ms;
+    }
+    .btn-confirm:hover:not(:disabled) { background: #15803d; }
+    .btn-cancel-res {
+      background: rgba(239,68,68,0.1); color: #991b1b;
+      border-radius: var(--radius-pill); padding: 0.7rem 1.25rem;
+      font-weight: 700; font-size: 0.85rem;
+      transition: background 150ms, opacity 150ms;
+    }
+    .btn-cancel-res:hover:not(:disabled) { background: rgba(239,68,68,0.18); }
+
+    /* disabled state for action buttons */
+    .drawer__actions button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ===== MOBILE TABLE CARDS ===== */
+    @media (max-width: 640px) {
+      .res-table { display: none; }
+      .table-wrap { display: none; }
+      .mobile-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+      .filters-bar { flex-wrap: wrap; }
+      .search-wrap { flex: none; width: 100%; max-width: 100%; }
+      .filter-select { flex: 1; min-width: 0; max-width: 42%; }
+      .btn-calendar, .btn-cal-clear { flex-shrink: 0; }
+      .filters-bar { gap: 0.5rem; }
+      .filters-bar__count { margin-left: 0; width: 100%; font-size: 0.875rem; }
+      .filters-bar { margin-bottom: 0.4rem; }
+      .mobile-cards { margin-top: 0.5rem; }
+    }
+    @media (min-width: 641px) {
+      .mobile-cards { display: none; }
+    }
+
+    .res-card {
+      background: var(--color-cream);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: box-shadow 150ms;
+    }
+    .res-card:hover { box-shadow: 0 6px 30px rgba(57,2,25,0.12); }
+    .res-card__top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+    .res-card__name { font-weight: 700; font-size: 0.95rem; }
+    .res-card__meta { display: flex; gap: 1.2rem; font-size: 0.8rem; color: var(--fg-muted); }
+    .res-card__meta span { display: flex; align-items: center; gap: 0.25rem; }
+
+    /* ===== TOAST ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      z-index: 999;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .toast {
+      background: var(--color-burgundy);
+      color: var(--color-cream);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.1rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-deep);
+      display: flex; align-items: center; gap: 0.5rem;
+      animation: toast-in 250ms var(--ease-out) both;
+      max-width: 280px;
+    }
+    .toast--green { background: #166534; }
+    .toast--red   { background: #991b1b; }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(10px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(57,2,25,0.2); border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand">NHOP</div>
+      <div class="sub">Admin Panel</div>
+    </div>
+
+    <form class="login-form" id="login-form" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="your@email.com" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+          <button type="button" class="password-toggle" id="password-toggle" aria-label="Show password">
+            <svg id="eye-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="eye-off-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-error" id="login-error">
+        Incorrect email or password. Please try again.
+      </div>
+
+      <button type="submit" class="btn-primary" id="login-btn">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== ADMIN APP ==================== -->
+<div id="admin-app">
+  <div class="app-layout">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar__brand">
+        <span class="topbar__logo">NHOP</span>
+        <span class="topbar__sep"></span>
+        <span class="topbar__title">Admin</span>
+      </div>
+      <div class="topbar__actions">
+        <span class="topbar__user" id="topbar-user">admin@nhop.com</span>
+        <button class="btn-logout" id="logout-btn">Log out</button>
+      </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-item active" data-page="reservations">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Reservations
+        <span class="sidebar__count" id="sidebar-count">0</span>
+      </div>
+
+      <span class="sidebar__label" style="margin-top:auto;">Account</span>
+      <div class="nav-item" id="sidebar-logout" style="margin-top:0;">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Log out
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Reservations</h1>
+          <p class="page-header__sub" id="header-date">Today · May 24, 2026</p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card stat-card--pending">
+          <div class="stat-card__label">Pending</div>
+          <div class="stat-card__value" id="stat-pending">4</div>
+          <div class="stat-card__sub">need confirmation</div>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <div class="stat-card__label">Confirmed</div>
+          <div class="stat-card__value" id="stat-confirmed">7</div>
+          <div class="stat-card__sub">upcoming</div>
+        </div>
+        <div class="stat-card stat-card--pink">
+          <div class="stat-card__label">Today's guests</div>
+          <div class="stat-card__value" id="stat-guests">24</div>
+          <div class="stat-card__sub">across 5 bookings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Total this week</div>
+          <div class="stat-card__value" id="stat-total">12</div>
+          <div class="stat-card__sub">reservations</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-bar">
+        <div class="search-wrap">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" class="search-input" id="search-input" placeholder="Search by name or phone…" />
+        </div>
+
+        <select class="filter-select" id="filter-status">
+          <option value="all">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <select class="filter-select" id="filter-date">
+          <option value="all">All dates</option>
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="week">This week</option>
+          <option disabled>──────────</option>
+          <option value="past">Past</option>
+        </select>
+
+        <!-- Calendar picker -->
+        <div style="position:relative; display:inline-flex;">
+          <button class="btn-calendar" id="btn-calendar" type="button" title="Pick a date">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </button>
+          <input type="date" id="filter-date-custom" tabindex="-1" aria-hidden="true" style="position:absolute;bottom:0;right:0;width:1px;height:1px;opacity:0;pointer-events:none;" />
+        </div>
+        <button class="btn-cal-clear" id="btn-cal-clear" title="Clear date" type="button">✕</button>
+
+        <span class="filters-bar__count" id="result-count">12 reservations</span>
+      </div>
+
+      <!-- Desktop table -->
+      <div class="table-wrap">
+        <table class="res-table" id="res-table">
+          <thead>
+            <tr>
+              <th data-col="name">Guest <span class="sort-icon">↕</span></th>
+              <th data-col="date" class="sorted">Date & Time <span class="sort-icon">↓</span></th>
+              <th data-col="guests" style="text-align:center;">Guests <span class="sort-icon">↕</span></th>
+              <th data-col="phone">Phone <span class="sort-icon">↕</span></th>
+              <th data-col="note">Note <span class="sort-icon">↕</span></th>
+              <th data-col="status">Status <span class="sort-icon">↕</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="res-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="empty-state" style="display:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <p>No reservations match your filters.</p>
+        </div>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="mobile-cards" id="mobile-cards"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- STATUS POPUP -->
+<div class="status-popup" id="status-popup">
+  <div class="status-option" data-val="pending">
+    <span class="dot"></span> Pending
+  </div>
+  <div class="status-option" data-val="confirmed">
+    <span class="dot"></span> Confirmed
+  </div>
+  <div class="status-option" data-val="cancelled">
+    <span class="dot"></span> Cancelled
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer__header">
+    <span class="drawer__title" id="drawer-name">—</span>
+    <button class="drawer__close" id="drawer-close">
+      <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="drawer__body">
+
+    <!-- Date + guests: most important, shown large -->
+    <div class="d-primary">
+      <div class="d-datetime" id="d-datetime">—</div>
+      <div class="d-guests" id="d-guests">—</div>
+    </div>
+
+    <!-- Contact: phone + email in one compact block -->
+    <div class="d-contact">
+      <a class="d-contact__item" id="d-phone" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.41 2 2 0 0 1 3.59 1.23h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>—</span>
+      </a>
+      <a class="d-contact__item" id="d-email" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>—</span>
+      </a>
+    </div>
+
+    <!-- Note (hidden when empty) -->
+    <div class="d-note" id="d-note-wrap" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span id="d-note">—</span>
+    </div>
+
+    <!-- Footer meta: booked at + status -->
+    <div class="d-meta">
+      <span id="d-status">—</span>
+      <span class="d-created" id="d-created">—</span>
+    </div>
+
+    <hr class="drawer__divider" />
+
+    <div class="drawer__actions">
+      <button class="btn-confirm" id="d-btn-confirm">✓ Confirm reservation</button>
+      <button class="btn-cancel-res" id="d-btn-cancel">✕ Cancel reservation</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* =====================================================================
+   NHOP Admin Panel — client-side logic
+   ===================================================================== */
+
+/* ---- SUPABASE CLIENT ---- */
+const _db = window.supabase.createClient(
+  "https://szlhpjempvggsijjvtgm.supabase.co",
+  "sb_publishable_Wyy9TTJMOjROAbM6rLxw0g_8jFbylh6"
+);
+
+/* ---- STATE ---- */
+let reservations    = [];
+let filteredIds     = [];
+let activePopupId   = null;
+let openDrawerId    = null;
+let sortCol         = "date";
+let sortDir         = -1;
+let customDateFilter = null; // ISO string "YYYY-MM-DD" or null
+
+/* ---- LOAD RESERVATIONS FROM SUPABASE ---- */
+async function loadReservations() {
+  const { data, error } = await _db
+    .from("reservations")
+    .select("*")
+    .order("date", { ascending: true })
+    .order("time", { ascending: true });
+
+  if (error) { console.error("[NHOP Admin] load error:", error.message); return; }
+
+  reservations = (data || []).map(r => ({
+    ...r,
+    note:    r.notes || "",
+    created: r.created_at
+      ? new Date(r.created_at).toLocaleString("en-US", { dateStyle: "short", timeStyle: "short" })
+      : ""
+  }));
+
+  applyFilters();
+}
+
+/* ---- AUTH (Supabase Auth) ---- */
+
+/* ---- DOM REFS ---- */
+const loginScreen = document.getElementById("login-screen");
+const adminApp    = document.getElementById("admin-app");
+const loginForm   = document.getElementById("login-form");
+const loginError  = document.getElementById("login-error");
+const loginBtn    = document.getElementById("login-btn");
+const logoutBtns  = [document.getElementById("logout-btn"), document.getElementById("sidebar-logout")];
+const topbarUser  = document.getElementById("topbar-user");
+
+const searchInput  = document.getElementById("search-input");
+const filterDate   = document.getElementById("filter-date");
+const filterStatus = document.getElementById("filter-status");
+const resultCount  = document.getElementById("result-count");
+const resTbody     = document.getElementById("res-tbody");
+const mobileCards  = document.getElementById("mobile-cards");
+const emptyState   = document.getElementById("empty-state");
+
+const statusPopup   = document.getElementById("status-popup");
+const drawerOverlay = document.getElementById("drawer-overlay");
+const drawer        = document.getElementById("drawer");
+
+/* ---- HELPERS ---- */
+function fmtDate(iso) {
+  const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+function fmtTime(t) {
+  const [h, m] = t.split(":");
+  const hr = parseInt(h);
+  return `${hr % 12 || 12}:${m} ${hr < 12 ? "AM" : "PM"}`;
+}
+function statusLabel(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+function tomorrowISO() {
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+function weekISO() {
+  const d = new Date(); d.setDate(d.getDate() + 7);
+  return d.toISOString().slice(0, 10);
+}
+
+/* ---- FILTER + SORT ---- */
+function applyFilters() {
+  const q     = searchInput.value.trim().toLowerCase();
+  const fDate = customDateFilter ? "custom" : filterDate.value;
+  const fStat = filterStatus.value;
+  const today = todayISO();
+  const tom   = tomorrowISO();
+  const week  = weekISO();
+
+  let list = reservations.filter(r => {
+    if (q && !r.name.toLowerCase().includes(q) && !r.phone.includes(q)) return false;
+    if (fDate === "custom"   && r.date !== customDateFilter) return false;
+    if (fDate === "today"    && r.date !== today) return false;
+    if (fDate === "tomorrow" && r.date !== tom)   return false;
+    if (fDate === "week"     && (r.date < today || r.date > week)) return false;
+    if (fDate === "past"     && r.date >= today) return false;
+    if (fStat !== "all"      && r.status !== fStat) return false;
+    return true;
+  });
+
+  list.sort((a, b) => {
+    let va, vb;
+    if (sortCol === "name")   { va = a.name;  vb = b.name;  }
+    if (sortCol === "date")   { va = a.date + a.time; vb = b.date + b.time; }
+    if (sortCol === "guests") { va = a.guests; vb = b.guests; }
+    if (sortCol === "status") { va = a.status; vb = b.status; }
+    if (va < vb) return -sortDir;
+    if (va > vb) return  sortDir;
+    return 0;
+  });
+
+  filteredIds = list.map(r => r.id);
+  renderTable(list);
+  renderMobileCards(list);
+  updateStats();
+  resultCount.textContent = `${list.length} reservation${list.length !== 1 ? "s" : ""}`;
+}
+
+/* ---- RENDER TABLE ---- */
+function renderTable(list) {
+  if (!list.length) {
+    resTbody.innerHTML = "";
+    emptyState.style.display = "block";
+    return;
+  }
+  emptyState.style.display = "none";
+
+  const today0 = todayISO();
+  resTbody.innerHTML = list.map(r => `
+    <tr data-id="${r.id}"${r.date < today0 ? ' class="res-past"' : ''}>
+      <td>
+        <div class="guest-name">${r.name}</div>
+        <div class="guest-phone">${r.email}</div>
+      </td>
+      <td class="td-date">
+        <div class="date">${fmtDate(r.date)}</div>
+        <div class="time">${fmtTime(r.time)}</div>
+      </td>
+      <td class="td-guests">${r.guests}</td>
+      <td>${r.phone}</td>
+      <td class="td-note" title="${r.note}">${r.note || "<span style='opacity:0.3'>—</span>"}</td>
+      <td>
+        <button class="status-badge" data-status="${r.status}" data-id="${r.id}">
+          ${statusLabel(r.status)}
+        </button>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="action-btn" title="View details" data-action="view" data-id="${r.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+          <button class="action-btn action-btn--danger" title="Delete" data-action="delete" data-id="${r.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+}
+
+/* ---- RENDER MOBILE CARDS ---- */
+function renderMobileCards(list) {
+  if (!list.length) { mobileCards.innerHTML = ""; return; }
+  const todayM = todayISO();
+  mobileCards.innerHTML = list.map(r => `
+    <div class="res-card${r.date < todayM ? ' res-past' : ''}" data-id="${r.id}">
+      <div class="res-card__top">
+        <div class="res-card__name">${r.name}</div>
+        <button class="status-badge" data-status="${r.status}" data-id="${r.id}">${statusLabel(r.status)}</button>
+      </div>
+      <div class="res-card__meta">
+        <span>📅 ${fmtDate(r.date)} · ${fmtTime(r.time)}</span>
+        <span>👥 ${r.guests}</span>
+        <span>📞 ${r.phone}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ---- UPDATE STATS ---- */
+function updateStats() {
+  const today = todayISO();
+  const pendingCount = reservations.filter(r => r.status === "pending").length;
+  document.getElementById("stat-pending").textContent   = pendingCount;
+  document.getElementById("stat-confirmed").textContent = reservations.filter(r => r.status === "confirmed").length;
+  const todayBookings = reservations.filter(r => r.date === today && r.status !== "cancelled");
+  const todayGuests   = todayBookings.reduce((sum, r) => sum + r.guests, 0);
+  document.getElementById("stat-guests").textContent  = todayGuests;
+  document.getElementById("stat-total").textContent   = reservations.filter(r => r.status !== "cancelled").length;
+  const sidebarCount = document.getElementById("sidebar-count");
+  sidebarCount.textContent = pendingCount;
+  sidebarCount.dataset.zero = pendingCount === 0 ? "true" : "false";
+}
+
+/* ---- OPEN DRAWER ---- */
+function openDrawer(id) {
+  const r = reservations.find(x => x.id === id);
+  if (!r) return;
+  openDrawerId = id;
+
+  document.getElementById("drawer-name").textContent = r.name;
+  document.getElementById("d-datetime").textContent  = `${fmtDate(r.date)} · ${fmtTime(r.time)}`;
+  document.getElementById("d-guests").textContent    = `${r.guests} guest${r.guests !== 1 ? "s" : ""}`;
+
+  // Phone link
+  const phoneEl = document.getElementById("d-phone");
+  phoneEl.href = `tel:${r.phone}`;
+  phoneEl.querySelector("span").textContent = r.phone;
+
+  // Email link
+  const emailEl = document.getElementById("d-email");
+  emailEl.href = `mailto:${r.email}`;
+  emailEl.querySelector("span").textContent = r.email;
+
+  // Note (show only if exists)
+  const noteWrap = document.getElementById("d-note-wrap");
+  if (r.note) {
+    document.getElementById("d-note").textContent = r.note;
+    noteWrap.style.display = "flex";
+  } else {
+    noteWrap.style.display = "none";
+  }
+
+  // Meta
+  document.getElementById("d-status").innerHTML  = `<span class="status-badge" data-status="${r.status}">${statusLabel(r.status)}</span>`;
+  document.getElementById("d-created").textContent = `Booked ${r.created}`;
+
+  // Button states based on current status
+  const btnConfirm = document.getElementById("d-btn-confirm");
+  const btnCancel  = document.getElementById("d-btn-cancel");
+  btnConfirm.disabled = r.status === "confirmed";
+  btnCancel.disabled  = r.status === "cancelled";
+
+  drawer.classList.add("open");
+  drawerOverlay.classList.add("open");
+}
+
+function closeDrawer() {
+  drawer.classList.remove("open");
+  drawerOverlay.classList.remove("open");
+  openDrawerId = null;
+}
+
+/* ---- STATUS UPDATE ---- */
+async function setStatus(id, status) {
+  const r = reservations.find(x => x.id === id);
+  if (!r) return;
+  const { error } = await _db
+    .from("reservations")
+    .update({ status })
+    .eq("id", id);
+  if (error) { toast("Update failed: " + error.message, "red"); return; }
+  r.status = status;
+  applyFilters();
+  if (openDrawerId === id) openDrawer(id);
+  toast(`Status updated to ${statusLabel(status)}`, status === "confirmed" ? "green" : status === "cancelled" ? "red" : "");
+}
+
+/* ---- DELETE ---- */
+async function deleteReservation(id) {
+  if (!confirm("Delete this reservation? This cannot be undone.")) return;
+  const { error } = await _db
+    .from("reservations")
+    .delete()
+    .eq("id", id);
+  if (error) { toast("Delete failed: " + error.message, "red"); return; }
+  reservations = reservations.filter(x => x.id !== id);
+  if (openDrawerId === id) closeDrawer();
+  applyFilters();
+  toast("Reservation deleted", "red");
+}
+
+/* ---- TOAST ---- */
+function toast(msg, type = "") {
+  const el = document.createElement("div");
+  el.className = `toast${type ? " toast--" + type : ""}`;
+  el.textContent = msg;
+  document.getElementById("toast-container").appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ---- STATUS POPUP ---- */
+let _popupId = null;
+function openStatusPopup(btn, id) {
+  _popupId = id;
+  const rect = btn.getBoundingClientRect();
+  statusPopup.style.top  = (rect.bottom + 6) + "px";
+  statusPopup.style.left = rect.left + "px";
+  statusPopup.classList.add("open");
+  activePopupId = id;
+}
+function closeStatusPopup() {
+  statusPopup.classList.remove("open");
+  _popupId = null;
+}
+
+/* ---- SORT ---- */
+document.querySelectorAll(".res-table th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (sortCol === col) { sortDir *= -1; }
+    else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll(".res-table th").forEach(t => t.classList.remove("sorted"));
+    th.classList.add("sorted");
+    const icon = th.querySelector(".sort-icon");
+    if (icon) icon.textContent = sortDir === 1 ? "↑" : "↓";
+    applyFilters();
+  });
+});
+
+/* ---- DELEGATED EVENTS (table + mobile cards) ---- */
+[resTbody, mobileCards].forEach(container => {
+  container.addEventListener("click", e => {
+    const statusBadge = e.target.closest(".status-badge");
+    if (statusBadge) {
+      e.stopPropagation();
+      openStatusPopup(statusBadge, statusBadge.dataset.id);
+      return;
+    }
+    const actionBtn = e.target.closest("[data-action]");
+    if (actionBtn) {
+      const id = actionBtn.dataset.id;
+      if (actionBtn.dataset.action === "view")   openDrawer(id);
+      if (actionBtn.dataset.action === "delete") deleteReservation(id);
+      return;
+    }
+    const row = e.target.closest("tr[data-id], .res-card[data-id]");
+    if (row) openDrawer(row.dataset.id);
+  });
+});
+
+/* ---- STATUS POPUP OPTION CLICK ---- */
+statusPopup.querySelectorAll(".status-option").forEach(opt => {
+  opt.addEventListener("click", () => {
+    if (_popupId != null) setStatus(_popupId, opt.dataset.val);
+    closeStatusPopup();
+  });
+});
+
+/* Close popup on outside click */
+document.addEventListener("click", e => {
+  if (!statusPopup.contains(e.target) && !e.target.closest(".status-badge")) {
+    closeStatusPopup();
+  }
+});
+
+/* ---- DRAWER BUTTONS ---- */
+document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+drawerOverlay.addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+document.getElementById("d-btn-confirm").addEventListener("click", () => {
+  if (openDrawerId != null) setStatus(openDrawerId, "confirmed");
+});
+document.getElementById("d-btn-cancel").addEventListener("click", () => {
+  if (openDrawerId != null) setStatus(openDrawerId, "cancelled");
+});
+
+/* ---- CALENDAR DATE PICKER ---- */
+const btnCalendar      = document.getElementById("btn-calendar");
+const btnCalClear      = document.getElementById("btn-cal-clear");
+const filterDateCustom = document.getElementById("filter-date-custom");
+
+// Open native date picker on button click
+btnCalendar.addEventListener("click", () => {
+  try { filterDateCustom.showPicker(); } catch(e) { filterDateCustom.click(); }
+});
+
+// Date selected
+filterDateCustom.addEventListener("change", () => {
+  const val = filterDateCustom.value;
+  if (!val) return;
+  customDateFilter = val;
+  const d = new Date(val + "T12:00:00");
+  const label = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  btnCalClear.innerHTML = `${label} <span style="opacity:0.5">✕</span>`;
+  btnCalendar.classList.add("active");
+  btnCalClear.classList.add("visible");
+  filterDate.value = "all";
+  applyFilters();
+});
+
+// Clear button
+btnCalClear.addEventListener("click", () => {
+  customDateFilter = null;
+  filterDateCustom.value = "";
+  btnCalendar.classList.remove("active");
+  btnCalClear.classList.remove("visible");
+  applyFilters();
+});
+
+/* ---- FILTERS ---- */
+searchInput.addEventListener("input", applyFilters);
+filterDate.addEventListener("change", () => {
+  if (filterDate.value !== "all") {
+    customDateFilter = null;
+    filterDateCustom.value = "";
+    btnCalendar.classList.remove("active");
+  }
+  applyFilters();
+});
+filterStatus.addEventListener("change", applyFilters);
+
+/* ---- AUTH FLOW ---- */
+
+// Check for existing session on page load — skip login if still active
+_db.auth.getSession().then(({ data: { session } }) => {
+  if (session) showAdmin(session.user.email);
+});
+
+// Listen for auth state changes (login / logout / token refresh)
+_db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") {
+    adminApp.classList.remove("visible");
+    loginScreen.style.display = "flex";
+    loginForm.reset();
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Sign in";
+    loginError.classList.remove("visible");
+    closeDrawer();
+    reservations = [];
+  }
+});
+
+loginForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const pass  = document.getElementById("password").value;
+
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Signing in…";
+
+  const { data, error } = await _db.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    loginError.classList.add("visible");
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Sign in";
+  } else {
+    showAdmin(data.user.email);
+  }
+});
+
+document.getElementById("email").addEventListener("input",    () => loginError.classList.remove("visible"));
+document.getElementById("password").addEventListener("input", () => loginError.classList.remove("visible"));
+
+// Password visibility toggle
+document.getElementById("password-toggle").addEventListener("click", () => {
+  const input   = document.getElementById("password");
+  const eyeOn   = document.getElementById("eye-icon");
+  const eyeOff  = document.getElementById("eye-off-icon");
+  const visible = input.type === "text";
+  input.type      = visible ? "password" : "text";
+  eyeOn.style.display  = visible ? "" : "none";
+  eyeOff.style.display = visible ? "none" : "";
+});
+
+function showAdmin(email) {
+  loginScreen.style.display = "none";
+  adminApp.classList.add("visible");
+  topbarUser.textContent = email;
+  const now = new Date();
+  document.getElementById("header-date").textContent =
+    "Today · " + now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  loadReservations();
+}
+
+async function doLogout() {
+  await _db.auth.signOut();
+}
+
+logoutBtns.forEach(btn => btn && btn.addEventListener("click", doLogout));
+
+/* ---- INIT ---- */
+updateStats(); // zeros on load; real data comes after login
+</script>
+</body>
+</html>

@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>@font-face{font-family:"Atomic Beers";src:url("./assets/fonts/AtomicBeers-Regular.woff2")format("woff2"),url("./assets/fonts/AtomicBeers-Regular.otf")format("opentype");font-weight:400;font-style:normal;font-display:block;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHOP — Pancakes you feel before you taste.</title>
+  <meta name="description" content="National House of Pancakes — fluffy stacks, bottomless syrup, and the happiest flip in America. Reserve a booth, pick your stack, leave in a better mood." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="./favicon.svg" sizes="any" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="NHOP — National House of Pancakes" />
+  <meta property="og:description" content="Scratch-made pancakes, bold Southern flavors, and a dining room full of good mornings. Myrtle Beach, SC." />
+  <meta property="og:image" content="https://res.cloudinary.com/dksohsy0i/image/upload/c_fill,w_1200,h_630,q_auto,f_auto/v1777584965/hf_20260430_213412_b76365fb-c0dc-4c8a-9feb-073aa4a82349_fribsf.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://nationalhouseofpancakes.vercel.app" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NHOP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NHOP — National House of Pancakes" />
+  <meta name="twitter:description" content="Scratch-made pancakes, bold Southern flavors, and a dining room full of good mornings. Myrtle Beach, SC." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dksohsy0i/image/upload/c_fill,w_1200,h_630,q_auto,f_auto/v1777584965/hf_20260430_213412_b76365fb-c0dc-4c8a-9feb-073aa4a82349_fribsf.png" />
+  <meta name="theme-color" content="#390219">
+
+  <!-- Satoshi — body / UI (Fontshare CDN) -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" as="style" />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+
+  <!-- Fraunces — display fallback until Atomic Beers is fully licensed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Mono:wght@400;700&display=swap" as="style" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Mono:wght@400;700&display=swap" />
+
+  <!-- Local styles -->
+  <link rel="preload" href="./assets/fonts/AtomicBeers-Regular.woff2" as="font" type="font/woff2" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/main.css" /><style>
+/* ══ PALETTE — BURGUNDY · PINK · CREAM ══ */
+:root {
+  --color-burgundy: #390219;
+  --color-cream:    #FFF8E7;
+  --color-pink:     #FFA5D7;
+  --bg-base:        #FFF8E7;
+  --bg-dark:        #390219;
+  --bg-accent:      #FFA5D7;
+  --fg-base:        #390219;
+  --fg-on-dark:     #FFF8E7;
+  --fg-muted:       rgba(57,2,25,0.50);
+  --cta-bg:         #390219;
+  --cta-fg:         #FFF8E7;
+  --cta-bg-hover:   #5a0a28;
+  --border-soft:    rgba(57,2,25,0.10);
+  --border-strong:  rgba(57,2,25,0.30);
+  --shadow-soft:    0 4px 24px rgba(57,2,25,0.08);
+  --shadow-deep:    0 16px 48px rgba(57,2,25,0.18);
+  --shadow-glow:    0 0 48px rgba(255,165,215,0.35);
+}
+/* ── Name input underline — pink inactive, pink→burgundy gradient on active ── */
+.name-underline { background: #FFA5D7 !important; }
+.name-input:focus ~ .name-underline,
+.name-input:not(:placeholder-shown) ~ .name-underline { background: linear-gradient(90deg, #FFA5D7, #390219) !important; }
+/* ── Hero: show immediately, no entrance animation ── */
+.hero .fx-fade, .hero .fx-rise, .hero .fx-pop {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+/* Mobile-only extra subtitle words */
+.mob-extra { display: none; }
+/* Step text counter — hidden on desktop, shown on mobile */
+.reserve__step-text { display: none; }
+/* Mobile-only line break */
+.mob-break { display: none; }
+/* ── Menu cards: no stagger on mobile — show all immediately ── */
+@media (max-width: 860px) {
+  .menu__list .menu-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ── Nav button: cream on dark sections ── */
+#nav.nav--on-dark .btn { background: #FFF8E7 !important; color: #390219 !important; }
+#nav.nav--on-dark .btn:hover { background: rgba(255,248,231,0.88) !important; }
+
+/* ── Calendar btn ── */
+.date-picker__day-wrap { display: flex; align-items: flex-start; gap: 10px; }
+.date-picker__day-wrap .date-picker__row { flex: 1; min-width: 0; }
+.reserve__q-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 0;
+}
+
+/* ── Opening hours blob — pink fill → pink wave on dark footer ── */
+.footer__blob-svg path { fill: #FFA5D7 !important; }
+.footer__hours-title { color: #390219 !important; }
+.footer__hours-time { color: #390219 !important; }
+.footer__hours-label { color: rgba(57,2,25,0.55) !important; }
+.footer__hours-sep   { background: rgba(57,2,25,0.20) !important; }
+
+/* ── Footer body — burgundy bg, cream + pink text ── */
+.footer { background: #FFA5D7 !important; color: #390219 !important; }
+
+/* footer blob — burgundy on pink */
+.footer__blob-svg path { fill: #390219 !important; }
+.footer__hours-title { color: #FFF8E7 !important; }
+.footer__hours-time { color: #FFF8E7 !important; }
+.footer__hours-label { color: rgba(255,248,231,0.65) !important; }
+
+/* footer info columns */
+.footer__info-heading {
+  color: #390219 !important;
+  border-bottom-color: rgba(57,2,25,0.25) !important;
+}
+.footer__info-address,
+.footer__info-text { color: rgba(57,2,25,0.75) !important; opacity: 1; }
+.footer__visit-link { color: #390219 !important; }
+.footer__contact-details a { color: #390219 !important; }
+.footer__info-col--center {
+  border-color: rgba(57,2,25,0.18) !important;
+}
+
+/* social buttons */
+.footer__social-btn {
+  border-color: rgba(57,2,25,0.35) !important;
+  color: #390219 !important;
+}
+.footer__social-btn:hover {
+  background: #390219 !important;
+  color: #FFA5D7 !important;
+  border-color: #390219 !important;
+}
+
+/* legal strip */
+.footer__bottom {
+  border-top-color: rgba(57,2,25,0.18) !important;
+  color: rgba(57,2,25,0.50) !important;
+}
+
+/* Mobile: footer blob shaped/sized like About — shorter arch, hours near its top */
+@media (max-width: 860px) {
+  .footer__blob { height: clamp(170px, 46vw, 250px) !important; }
+  .footer__blob-inner {
+    justify-content: flex-start !important;
+    padding-top: clamp(10px, 3vw, 18px) !important;
+    height: 78% !important;
+  }
+}
+
+/* ── Reel section — pink bg, dark text ── */
+.reel,
+.reel__pin,
+.reel.is-pinned .reel__pin { background: #390219 !important; }
+.reel .reel__head-copy h2,
+.reel .reel__head-copy .eyebrow { color: #FFF8E7 !important; }
+.reel .reel__head-copy .lead { color: rgba(255,248,231,0.65) !important; }
+.reel .reel-card__quote {
+  color: rgba(255,248,231,0.75) !important;
+  letter-spacing: 0.02em !important;
+  font-kerning: none !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "calt" 0, "kern" 0 !important;
+}
+.reel .reel__head .btn { background: #FFA5D7; color: #390219; }
+.reel .reel__head .btn:hover { background: #FFF8E7; color: #390219; }
+/* scroll hint on dark */
+.reel__scroll-hint { color: rgba(255,248,231,0.35) !important; }
+
+/* ── Reserve section — pink bg, dark text ── */
+.reserve { background: #390219 !important; color: #FFF8E7; }
+
+/* ══ HOMEPAGE MARQUEE REVIEWS — replaces static 2×2 grid ══ */
+.testimonials__grid { display: none; }    /* hide old grid */
+
+.t-mq-outer {
+  /* Direct child of .testimonials section — spans full width */
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  overflow: hidden;                /* clips the ticker animation */
+  display: flex; flex-direction: column; gap: 1rem;
+  padding-block: 1rem;
+}
+.t-mq-strip {
+  display: flex; gap: 1rem;
+  width: max-content; will-change: transform;
+}
+.t-mq-row--fwd .t-mq-strip { animation: tq-left  52s linear infinite; }
+.t-mq-row--rev .t-mq-strip { animation: tq-right 46s linear infinite; }
+.t-mq-row:hover .t-mq-strip { animation-play-state: paused; }
+@keyframes tq-left  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+@keyframes tq-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* Wide card — matches screenshot proportions */
+.t-mq-card {
+  flex-shrink: 0;
+  width: clamp(380px, 36vw, 442px);
+  background: rgba(15,5,5,0.58);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,248,231,0.13);
+  border-radius: 28px;
+  padding: 1.75rem 2rem;
+  color: #FFF8E7;
+  display: flex; flex-direction: column; gap: 0;
+  transition: transform 360ms cubic-bezier(0.34,1.56,0.64,1), border-color 300ms ease, background 300ms ease;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+.t-mq-card:hover,
+.t-mq-card:active {
+  transform: translateY(-6px) scale(1.016);
+  background: rgba(15,5,5,0.72);
+  border-color: rgba(255,248,231,0.28);
+  box-shadow: none;
+  outline: none;
+}
+.t-mq-card:focus,
+.t-mq-card:focus-visible {
+  outline: 2px solid rgba(255,248,231,0.35);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.t-mq__headline { font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; line-height: 1.3; margin: 0 0 0.65rem; color: #FFF8E7; }
+.t-mq__body     { font-size: 0.93rem; line-height: 1.65; color: rgba(255,248,231,0.78); margin: 0 0 1.1rem; flex: 1; }
+.t-mq__meta     { display: flex; align-items: center; gap: 0.7rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,248,231,0.10); }
+.t-mq__avatar   { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: #390219; }
+.t-mq__av--honey { background: #FEE885; }
+.t-mq__av--blue  { background: #A5D9FF; }
+.t-mq__av--pink  { background: #FFA5D7; }
+.t-mq__av--green { background: #B9EACB; }
+.t-mq__name   { font-weight: 600; font-size: 0.85rem; line-height: 1.2; margin: 0; color: #FFF8E7; }
+.t-mq__source { font-size: 0.74rem; color: rgba(255,248,231,0.55); margin: 2px 0 0; }
+/* card hover colors — alternating pink / blue */
+.menu__list .menu-card:nth-child(odd)::before  { background: #FFA5D7 !important; }
+.menu__list .menu-card:nth-child(even)::before { background: #A5D9FF !important; }
+/* on hover these are light bgs → keep text dark */
+.menu__list .menu-card:hover,
+.menu__list .menu-card:focus-within { color: #390219 !important; }
+
+/* ── Global text colour — force #390219 on all cream/light sections ── */
+body,
+h1, h2, h3, h4, h5, h6,
+p, li, a:not(.btn),
+.menu__lead, .menu__title,
+.section__title, .section__lead,
+.lead, .eyebrow, .u-lead {
+  color: #390219;
+}
+/* Muted / secondary text — softer */
+.lead, .eyebrow {
+  color: rgba(57,2,25,0.62) !important;
+}
+.menu__lead {
+  color: rgba(57,2,25,0.90) !important;
+}
+/* Hero — keep cream text on dark video bg */
+.hero h1, .hero h2, .hero p,
+.hero__lead, .hero__title,
+.hero .lead, .hero .eyebrow {
+  color: var(--fg-on-dark) !important;
+}
+
+/* ── Darken hero video ── */
+.hero__overlay {
+  display: block !important;
+  background: rgba(0, 0, 0, 0.38);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NOW SERVING — single rotating card, right side ── */
+.hero__ns {
+  position: absolute;
+  right: clamp(24px, 4.5vw, 72px);
+  top: auto;
+  bottom: clamp(80px, 14vw, 160px);
+  transform: none;
+  width: clamp(220px, 24vw, 300px);
+  z-index: 3;
+  pointer-events: none;
+}
+.hero__ns-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hero__ns-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #FAE38E;
+  animation: ns-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes ns-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.7); }
+}
+.hero__ns-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  font-family: 'Space Mono', monospace;
+}
+/* Single card — text only, no image (pancake is the animated element) */
+.hero__ns-card {
+  background: rgba(255,255,255,0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  padding: 16px 18px 18px;
+  transition: opacity 0.4s ease;
+}
+.hero__ns-card.is-fading { opacity: 0; }
+.hero__ns-card__tag {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #FAE38E;
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-family: 'Space Mono', monospace;
+}
+.hero__ns-card__name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Fraunces', Georgia, serif;
+  line-height: 1.05;
+}
+.hero__ns-card__sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.46);
+  margin-top: 4px;
+  font-family: 'Satoshi', -apple-system, sans-serif;
+}
+@media (max-width: 900px) { .hero__ns { display: none; } }
+
+/* ── GSAP hero animation elements ── */
+#heroBgOverlay {
+  position: absolute; inset: 0;
+  background: #390219;
+  opacity: 0; z-index: 1; pointer-events: none;
+}
+#pancakeHeroAnim {
+  position: absolute; width: 92px; height: 92px;
+  object-fit: contain; transform-origin: center center;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 32px rgba(57,2,25,0.25)) drop-shadow(0 8px 28px rgba(0,0,0,0.50));
+  z-index: 10;
+  right: calc(clamp(24px, 4.5vw, 72px) + 14px);
+  top: auto;
+  bottom: clamp(80px, 14vw, 160px);
+  opacity: 0; /* FOUC guard: GSAP controls visibility */
+}
+#heroAnimText {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 42%;
+  transform: translateY(-50%);
+  padding: 0 clamp(36px, 5.5vw, 72px);
+  z-index: 5;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0; /* FOUC guard: GSAP slides in from off-screen */
+}
+#heroAnimText p {
+  font-size: clamp(52px, 8vw, 108px); /* desktop: overridden by JS proportional calc */
+  color: #FFF8E7;
+  font-family: var(--font-display, 'Fraunces', Georgia, serif);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+br.hero-break { display: none; }
+#heroAnimSub {
+  position: absolute;
+  top: 78%; /* desktop: overridden by JS to sit below waffle bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+}
+#heroAnimSub p {
+  font-size: clamp(14px, 1.4vw, 19px);
+  color: rgba(255,248,231,0.65);
+  font-family: 'Satoshi', -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ---- Contacts block ---- */
+.contacts-block {
+  background: #FFF8E7;
+  padding: clamp(5rem, 10vw, 8rem) clamp(1.5rem, 5vw, 6rem);
+}
+.contacts-block__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.contacts-block__label {
+  font-family: var(--font-body, 'Satoshi', sans-serif);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #390219;
+  opacity: 0.45;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+.contacts-block__item {
+  display: block;
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-weight: 700;
+  line-height: 0.95;
+  color: #390219;
+  text-decoration: none;
+  transition: opacity 160ms;
+}
+.contacts-block__item:hover { opacity: 0.6; }
+.contacts-block__phone {
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  margin-bottom: clamp(0.25rem, 1vw, 0.75rem);
+}
+.contacts-block__email {
+  font-size: clamp(2.2rem, 5.5vw, 5.8rem);
+  word-break: break-all;
+}
+
+/* ── heroAnimLine2: below-waffle text, mobile-only ── */
+#heroAnimLine2 { display: none; pointer-events: none; }
+
+/* ── heroAnimCTA: reserve button, mobile-only ── */
+#heroAnimCTA { display: none; pointer-events: none; }
+
+/* ── MOBILE OVERRIDES — must live here (after external CSS) to win cascade ── */
+@media (max-width: 768px) {
+  /* Render waffle at target size so CSS transform scale doesn't pixelate it */
+  #pancakeHeroAnim {
+    width: 320px !important;
+    height: 320px !important;
+  }
+
+  /* CSS fallback if JS hasn't computed yet — 14% is below the nav.
+     JS sets an inline `top: Xpx` which overrides this once image loads. */
+  #heroAnimText {
+    top: 14%;
+    z-index: 15 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    white-space: normal !important;
+  }
+  #heroAnimText p {
+    font-size: clamp(34px, 9vw, 46px) !important;
+    text-align: center !important;
+    line-height: 1.1 !important;
+    font-stretch: normal !important;
+    letter-spacing: normal !important;
+  }
+  /* Hide "every morning." from the top text block — shown below waffle instead */
+  .hero-rest { display: none !important; }
+
+  /* "every morning." element below waffle */
+  #heroAnimLine2 {
+    display: block !important;
+    position: absolute;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 15;
+    pointer-events: none;
+    opacity: 0; /* FOUC guard: GSAP controls via opacity + x-slide */
+    top: 70%; /* CSS fallback; JS overrides */
+  }
+  #heroAnimLine2 p {
+    font-size: clamp(34px, 9vw, 46px);
+    color: #FFF8E7;
+    font-family: var(--font-display, 'Fraunces', Georgia, serif);
+    line-height: 1.1;
+    font-stretch: normal;
+    letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+  }
+
+  #heroAnimSub {
+    z-index: 15 !important;
+  }
+
+  #heroAnimCTA {
+    display: block !important;
+    position: absolute;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 15;
+    pointer-events: auto;
+    opacity: 0;
+    top: 80%; /* CSS fallback; JS overrides */
+  }
+  #heroAnimCTA .btn {
+    background: #FFF8E7 !important;
+    color: #390219 !important;
+    font-family: 'Satoshi', Inter, system-ui, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 0.9rem 2.6rem !important;
+    width: auto !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  #heroAnimCTA .btn:hover {
+    background: #FFA5D7 !important;
+    transform: none !important;
+  }
+  br.hero-break {
+    display: inline;
+  }
+}
+/* ── Reel mobile: display:contents on pin makes it invisible to layout ──
+   The pin element simply ceases to exist as a box. No flex, no height,
+   no padding, no position — JS can't break what isn't there.           ── */
+@media (max-width: 860px) {
+  /* Kill any height JS or CSS might add to the section */
+  /* Uniform section spacing on mobile — 4rem top/bottom for all sections */
+  .section, #menu.section, #reserve.section {
+    padding-block: 4rem !important;
+  }
+  #testimonials {
+    padding-block: 4rem 1rem !important;
+  }
+  .reel { padding-block: 9rem 3rem !important; }
+
+  .reel,
+  .reel.is-pinned               { height: auto !important; min-height: 0 !important; }
+
+  /* THE FIX: remove pin from layout entirely */
+  .reel__pin,
+  .reel.is-pinned .reel__pin    { display: contents !important; }
+
+  /* Head sits directly in the section — simple block with padding */
+  .reel__head,
+  .reel.is-pinned .reel__head   { display: block !important;
+                                   padding: 0 24px 2rem !important;
+                                   min-height: 0 !important; }
+
+  /* Viewport — plain horizontal scroll */
+  .reel__viewport,
+  .reel.is-pinned .reel__viewport { position: static !important;
+                                    display: block !important;
+                                    height: auto !important; min-height: 0 !important;
+                                    overflow-x: auto !important; overflow-y: visible !important;
+                                    padding: 0 0 24px !important; }
+
+  /* Track — plain flex row, no absolute, no transform */
+  .reel__track,
+  .reel.is-pinned .reel__track  { position: static !important;
+                                   transform: none !important;
+                                   top: auto !important; left: auto !important;
+                                   align-items: flex-start !important;
+                                   width: max-content !important;
+                                   padding-inline: 24px !important; }
+
+  .reel__scroll-hint { display: none !important; }
+  /* Spacer not needed — padding-right on track handles right clearance */
+  .reel__end-spacer { display: none !important; }
+  .reel__track::after { display: none; }
+}
+
+/* ── Testimonials marquee — mobile ── */
+@media (max-width: 768px) {
+  /* Hero — bigger title, balanced subtitle */
+  .hero-title { font-size: clamp(2.9rem, 10vw, 3.6rem) !important; }
+  .hero__lead { font-size: 1.05rem !important; text-wrap: balance; max-width: 90%; margin-left: auto; margin-right: auto; }
+
+  /* Fan Favorites lead — balanced wrap, darker color */
+  .menu__lead { text-wrap: balance; color: rgba(57,2,25,0.90) !important; }
+
+  /* Reel section — single-line heading, fix subtitle wrap, top padding */
+  .reel { padding-top: 4.5rem !important; }
+  .reel .reel__head-copy h2 { font-size: clamp(2.1rem, 8vw, 3.6rem) !important; white-space: nowrap; }
+  .reel .reel__head-copy .lead { text-wrap: balance; }
+  .mob-extra { display: inline; }
+
+  /* Fan Favorites head — reduce gap to cards */
+  .menu__head { margin-bottom: 7.5rem !important; }
+
+  /* Slower scroll on mobile */
+  .t-mq-row--fwd .t-mq-strip { animation-duration: 72s; }
+  .t-mq-row--rev .t-mq-strip { animation-duration: 64s; }
+
+  /* Narrower cards — readable without horizontal overflow */
+  .t-mq-card {
+    width: clamp(260px, 78vw, 320px) !important;
+    padding: 1rem 1.1rem !important;
+    border-radius: 20px !important;
+  }
+  .t-mq__headline { font-size: 0.95rem !important; margin-bottom: 0.4rem !important; }
+  .t-mq__body {
+    font-size: 0.88rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.6rem !important;
+    /* Limit to 4 lines so cards stay compact */
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .t-mq__meta     { padding-top: 0.55rem !important; gap: 0.55rem !important; }
+  .t-mq__avatar   { width: 30px !important; height: 30px !important; font-size: 0.62rem !important; }
+  .t-mq__name     { font-size: 0.88rem !important; }  /* 14px */
+  .t-mq__source   { font-size: 0.74rem !important; }  /* 11.8px */
+
+  /* Reserve: hide photo on mobile (main page only) */
+  .reserve__photo-side { display: none !important; }
+
+  /* Reserve: hide dot stepper, show "Step X of 6" text */
+  .reserve__progress { display: none !important; }
+
+  /* Reserve title — smaller font, wraps on very narrow screens */
+  .reserve__form-side .reserve__title {
+    font-size: 1.85rem !important;
+    white-space: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Step counter — normal flow, below title */
+  .reserve__step-text {
+    display: block;
+    position: static;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(57, 2, 25, 0.35);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Hint bigger, question back to original size */
+  .reserve__form-side .reserve__hint { font-size: 1rem !important; opacity: 0.6; }
+  .reserve__form-side .reserve__q { font-size: 1.35rem !important; }
+
+  /* Input underline — always full width on mobile */
+  .reserve__form-side .name-underline { transform: scaleX(1) !important; }
+
+  /* Day chips — force perfect circles on mobile */
+  .reserve__form-side .chip--day {
+    border-radius: 50% !important;
+    justify-content: center;
+    padding: 0 !important;
+    flex: 0 0 60px !important;
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .reserve__form-side .chip--day .chip__num  { font-size: 1.25rem !important; }
+  .reserve__form-side .chip--day .chip__weekday,
+  .reserve__form-side .chip--day .chip__month { font-size: 0.6rem !important; }
+
+  /* Calendar button — slightly smaller */
+}
+
+/* Reserve card: kill the iOS double-tap-to-zoom (and the 300ms tap delay) on the
+   booking UI so quick taps on chips/buttons don't accidentally zoom the page.
+   Vertical scrolling and intentional pinch-zoom are unaffected. */
+.reserve__card { touch-action: manipulation; }
+
+/* Narrow screens (below the 15 Pro's 393px): the two nav buttons shrink to fit
+   the card width and "Book my table →" wraps to two lines. Trim the horizontal
+   padding and forbid wrapping so they stay one clean line side by side.
+   Larger phones (393px+) are untouched. */
+@media (max-width: 392px) {
+  .reserve__form-side .reserve__nav .btn {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+    white-space: nowrap;
+  }
+}
+</style></head>
+<body>
+
+  <!-- =========================================================
+       Custom cursor (desktop) — gets JS-driven via main.js
+       ========================================================= -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       NAV
+       ========================================================= -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo" aria-label="NHOP home">NHOP</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="menu.html">
+          <span class="hover-circle" aria-hidden="true"></span>
+          <span class="label-stack">
+            <span class="pill-label">Menu</span>
+            <span class="pill-label-hover" aria-hidden="true">Menu</span>
+          </span>
+        </a>
+        <a href="reserve.html">
+          <span class="hover-circle" aria-hidden="true"></span>
+          <span class="label-stack">
+            <span class="pill-label">Reserve</span>
+            <span class="pill-label-hover" aria-hidden="true">Reserve</span>
+          </span>
+        </a>
+        <a href="about.html">
+          <span class="hover-circle" aria-hidden="true"></span>
+          <span class="label-stack">
+            <span class="pill-label">About Us</span>
+            <span class="pill-label-hover" aria-hidden="true">About Us</span>
+          </span>
+        </a>
+      </nav>
+      <a href="reserve.html" class="btn">Reserve a table</a>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Mobile Bubble Menu Overlay ── -->
+  <div id="bubble-overlay" class="bubble-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+    <ul class="bubble-pill-list">
+      <li><a href="index.html"  class="bubble-pill is-active"><span class="bubble-pill__label">Home</span></a></li>
+      <li><a href="menu.html"   class="bubble-pill"          ><span class="bubble-pill__label">Menu</span></a></li>
+      <li><a href="reserve.html"class="bubble-pill"          ><span class="bubble-pill__label">Reserve</span></a></li>
+      <li><a href="about.html"  class="bubble-pill"          ><span class="bubble-pill__label">About Us</span></a></li>
+    </ul>
+  </div>
+
+  <main>
+
+    <!-- =========================================================
+         HERO — poster-style centered composition
+         Display headline wraps above and below the photo.
+         All entrance animations are CSS-driven via .fx-* helpers.
+         ========================================================= -->
+    <section class="hero" id="hero">
+
+      <!-- Full-bleed background video; poster = static photo until video loads.
+           Hosted on Cloudinary — `.mp4` URL triggers their auto-transcode so
+           Chrome/Edge/Firefox get H.264 instead of the original .mov.
+           f_auto + q_auto = best codec & quality the browser supports. -->
+      <video class="hero__bg-video"
+             autoplay muted loop playsinline preload="metadata"
+             poster="https://res.cloudinary.com/dksohsy0i/video/upload/f_auto,q_auto,so_0/v1779490697/hero_video_2_cgegov.jpg"
+             aria-hidden="true">
+        <source src="https://res.cloudinary.com/dksohsy0i/video/upload/f_auto,q_auto/v1779490697/hero_video_2_cgegov.mp4" type="video/mp4">
+      </video>
+
+      <!-- Gradient overlay — left-heavy so text stays readable -->
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <!-- Left content -->
+      <div class="container hero__content">
+        <div class="hero__left">
+
+          <!-- Location + rating badges — inline row above title -->
+          <div class="hero__badges fx-fade" style="--d:120ms">
+            <span class="hero__badge">📍 211 N Kings Hwy, Myrtle Beach, SC</span>
+            <span class="hero__badge">⭐ 4.7 · 36K+ Google reviews</span>
+          </div>
+
+          <h1 class="hero-title fx-rise" style="--d:300ms">
+            National House<br>of <em>Pancakes</em>
+          </h1>
+          <p class="lead hero__lead fx-fade" style="--d:600ms">
+            Myrtle Beach's most-loved breakfast spot. Hand-flipped stacks,
+            bottomless syrup, and 36,000 Google fans who always come back
+            for seconds.
+          </p>
+          <div class="hero__cta fx-fade" style="--d:850ms">
+            <a href="reserve.html" class="btn" data-cursor="grow">Reserve a table</a>
+            <a href="#menu" class="btn btn--ghost" data-cursor="grow">See the menu</a>
+          </div>
+        </div>
+      </div>
+
+
+    </section>
+
+    <!-- Wave divider: hero (dark) → menu (cream) -->
+    <div class="wave-divider" aria-hidden="true"></div>
+
+    <!-- =========================================================
+         MENU — Crumbl-style horizontal cards
+         Each card: photo on one side (alternating L/R), title + desc + CTAs
+         on the other. Default has no fill — hover triggers a coloured wash
+         via ::before. Pink/brown alternate down the column.
+         ========================================================= -->
+    <section class="section menu" id="menu">
+      <div class="container">
+
+        <header class="menu__head">
+          <h2 class="menu__title">Fan Favorites</h2>
+          <p class="menu__lead">
+            Fan favorites, here to stay. Stack 'em high, flip 'em fresh, and pour
+            a generous puddle of maple — your booth's already warm.
+          </p>
+        </header>
+
+        <div class="menu__list">
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:0">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251870/02_card_2_n4ammc.png" alt="Wildberry Stack with berries" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Wildberry Stack</h3>
+              <p class="menu-card__desc">Wild blueberries, raspberries, lemon-zest mascarpone, and a slow-pour citrus curd. Bright, tart, stacked tall.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:1">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251870/03_card_2_t2hqu7.png" alt="S'mores Soirée pancakes" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">S'mores Soirée</h3>
+              <p class="menu-card__desc">Marshmallow fluff, dark-chocolate ganache, graham-cracker crumble. Campfire energy — best eaten while it's still steaming.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:2">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251874/05_card_2_qluf9r.png" alt="Chocolate &amp; Reese's Extreme Stack" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Chocolate &amp; Reese's</h3>
+              <p class="menu-card__desc">Cocoa-batter pancakes, melted Reese's cups, dark-fudge ribbon, salty peanut crunch. Gone five minutes after arrival.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:3">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251873/06_card_2_frzriu.png" alt="Nutella Strawberry Banana Blast" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Nutella Banana Blast</h3>
+              <p class="menu-card__desc">Nutella ribbons, banana coins, fresh strawberries, icing sugar. Childhood breakfast — upgraded.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--pink" data-cursor="grow" style="--i:4">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251875/07_card_2_dtjh0a.png" alt="Southern Fried Chicken &amp; Waffles" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Chicken &amp; Waffles</h3>
+              <p class="menu-card__desc">Buttermilk chicken tenders on a Belgian waffle, scallion, chili honey. Sweet, salty, crunchy — built for a lazy brunch.</p>
+            </div>
+          </article>
+
+          <article class="menu-card menu-card--brown" data-cursor="grow" style="--i:5">
+            <div class="menu-card__photo-wrap">
+              <img class="menu-card__photo" src="https://res.cloudinary.com/dksohsy0i/image/upload/f_auto,q_auto/v1777251874/08_card_2_xg8wk4.png" alt="Shrimp &amp; Grits" loading="lazy" />
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Shrimp &amp; Grits</h3>
+              <p class="menu-card__desc">Stone-ground grits, blackened gulf shrimp, cajun butter, scallion, lemon. Low-country comfort — exactly as it should be.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <div style="display:flex; justify-content:center; margin-top: clamp(3rem, 6vw, 5rem);">
+          <a href="menu.html" class="btn" data-cursor="grow">See the full menu →</a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         TESTIMONIALS — Google review cards over cafe photo bg
+         ========================================================= -->
+    <section class="testimonials" id="testimonials">
+
+      <div class="testimonials__bg" aria-hidden="true">
+        <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777241480/hf_20260426_220126_98782551-8d54-4b0e-8d60-3075f4c4b0ec_dpnew0.png"
+             alt="" loading="lazy" />
+        <div class="testimonials__overlay"></div>
+      </div>
+
+      <div class="container testimonials__inner">
+
+        <h2 class="testimonials__title">Hear it from our guests</h2>
+
+        <!-- ── static grid removed — marquee takes over ── -->
+        <div class="testimonials__grid"></div>
+
+      </div><!-- /.container testimonials__inner -->
+
+      <div class="t-mq-outer">
+
+          <!-- ROW 1 — scrolls left → -->
+          <div class="t-mq-row t-mq-row--fwd">
+            <div class="t-mq-strip">
+              <!-- SET A -->
+              <article class="t-mq-card"><h3 class="t-mq__headline">Best breakfast in Myrtle Beach</h3><p class="t-mq__body">The wildberry stack had us coming back the very next morning. Fluffy, fresh, and impossibly good — worth every mile on the drive down.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">SM</span><div><p class="t-mq__name">Sarah M.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Came for brunch, stayed for seconds</h3><p class="t-mq__body">S'mores Soirée is genuinely dangerous. We ordered one to share and immediately got another. The booth was cozy, staff was beyond friendly.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">TW</span><div><p class="t-mq__name">Tyler W.</p><p class="t-mq__source">1 month ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">A Myrtle Beach institution</h3><p class="t-mq__body">We've been coming every summer for six years. The Lemon Ricotta stack is unlike anything else. This place never disappoints — ever.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">AM</span><div><p class="t-mq__name">Amanda M.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Worth the wait — every time</h3><p class="t-mq__body">There was a line out the door on Saturday morning. We waited 20 minutes. Completely worth it. The Chicken &amp; Waffles alone justifies the trip.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">RB</span><div><p class="t-mq__name">Rachel B.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The staff made our anniversary special</h3><p class="t-mq__body">We mentioned it was our anniversary and they surprised us. Small gesture, huge impact. The food was incredible too — obviously.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">LP</span><div><p class="t-mq__name">Laura P.</p><p class="t-mq__source">2 months ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Scratch-made is no joke here</h3><p class="t-mq__body">You can taste the difference the moment it hits your table. Nothing frozen, nothing pre-made. Just real ingredients done right. Try the Blueberry Bliss.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">MK</span><div><p class="t-mq__name">Marcus K.</p><p class="t-mq__source">1 week ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Feels like home</h3><p class="t-mq__body">We moved to Myrtle Beach two years ago and NHOP is already our Sunday tradition. The staff knows our order. That means everything to us.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">CJ</span><div><p class="t-mq__name">Cassie J.</p><p class="t-mq__source">3 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Coffee + pancakes = perfection</h3><p class="t-mq__body">I've been a breakfast snob my whole life. This place converted me. The pour-over coffee paired with the Pecan Praline stack is genuinely unreal.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">DO</span><div><p class="t-mq__name">Derek O.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+              <!-- SET B (seamless loop duplicate) -->
+              <article class="t-mq-card"><h3 class="t-mq__headline">Best breakfast in Myrtle Beach</h3><p class="t-mq__body">The wildberry stack had us coming back the very next morning. Fluffy, fresh, and impossibly good — worth every mile on the drive down.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">SM</span><div><p class="t-mq__name">Sarah M.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Came for brunch, stayed for seconds</h3><p class="t-mq__body">S'mores Soirée is genuinely dangerous. We ordered one to share and immediately got another. The booth was cozy, staff was beyond friendly.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">TW</span><div><p class="t-mq__name">Tyler W.</p><p class="t-mq__source">1 month ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">A Myrtle Beach institution</h3><p class="t-mq__body">We've been coming every summer for six years. The Lemon Ricotta stack is unlike anything else. This place never disappoints — ever.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">AM</span><div><p class="t-mq__name">Amanda M.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Worth the wait — every time</h3><p class="t-mq__body">There was a line out the door on Saturday morning. We waited 20 minutes. Completely worth it. The Chicken &amp; Waffles alone justifies the trip.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">RB</span><div><p class="t-mq__name">Rachel B.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The staff made our anniversary special</h3><p class="t-mq__body">We mentioned it was our anniversary and they surprised us. Small gesture, huge impact. The food was incredible too — obviously.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">LP</span><div><p class="t-mq__name">Laura P.</p><p class="t-mq__source">2 months ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Scratch-made is no joke here</h3><p class="t-mq__body">You can taste the difference the moment it hits your table. Nothing frozen, nothing pre-made. Just real ingredients done right. Try the Blueberry Bliss.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">MK</span><div><p class="t-mq__name">Marcus K.</p><p class="t-mq__source">1 week ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Feels like home</h3><p class="t-mq__body">We moved to Myrtle Beach two years ago and NHOP is already our Sunday tradition. The staff knows our order. That means everything to us.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">CJ</span><div><p class="t-mq__name">Cassie J.</p><p class="t-mq__source">3 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Coffee + pancakes = perfection</h3><p class="t-mq__body">I've been a breakfast snob my whole life. This place converted me. The pour-over coffee paired with the Pecan Praline stack is genuinely unreal.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">DO</span><div><p class="t-mq__name">Derek O.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+            </div>
+          </div>
+
+          <!-- ROW 2 — scrolls ← right (reverse) -->
+          <div class="t-mq-row t-mq-row--rev">
+            <div class="t-mq-strip">
+              <!-- SET A -->
+              <article class="t-mq-card"><h3 class="t-mq__headline">Kids approved, parents obsessed</h3><p class="t-mq__body">Three kids, four pancake orders, zero complaints. The Nutella Banana Blast was gone in 90 seconds. We'll be back every single Myrtle Beach trip.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">JR</span><div><p class="t-mq__name">Jessica R.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Hidden gem on Kings Highway</h3><p class="t-mq__body">Stumbled in after the beach and left with the best brunch memory of the entire trip. Chicken &amp; Waffles — don't even think about skipping it.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">DK</span><div><p class="t-mq__name">David K.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Southern comfort, done properly</h3><p class="t-mq__body">The Shrimp &amp; Grits were better than anything I've had in Charleston. Coming from a South Carolina native, that's not a compliment I give lightly.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">ET</span><div><p class="t-mq__name">Ethan T.</p><p class="t-mq__source">6 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Every bite tells a story</h3><p class="t-mq__body">I tried the Red Velvet stack on a whim and it stopped my whole table mid-conversation. We ordered three more rounds. Absolutely no regrets.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">NF</span><div><p class="t-mq__name">Nicole F.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The kind of place you miss immediately</h3><p class="t-mq__body">We left Myrtle Beach two days ago and my husband has already looked up flights back. That's what NHOP does to you. Absolutely addictive.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">KH</span><div><p class="t-mq__name">Kelly H.</p><p class="t-mq__source">4 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The pancakes convert non-believers</h3><p class="t-mq__body">My dad doesn't do brunch. He's been twice since we brought him here in March. The Banana Foster stack is his new personality trait.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">BW</span><div><p class="t-mq__name">Brittany W.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Breakfast that stays with you</h3><p class="t-mq__body">I'm a food blogger and this is the only restaurant in Myrtle Beach I keep sending people to. Consistent quality, every single visit. Rare and real.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">JS</span><div><p class="t-mq__name">James S.</p><p class="t-mq__source">1 month ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Waffles changed my morning routine</h3><p class="t-mq__body">The Churro Waffle with cinnamon sugar is a life event. I drove back two days in a row. I have no regrets and I would do it again.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">TR</span><div><p class="t-mq__name">Tasha R.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+              <!-- SET B (seamless loop duplicate) -->
+              <article class="t-mq-card"><h3 class="t-mq__headline">Kids approved, parents obsessed</h3><p class="t-mq__body">Three kids, four pancake orders, zero complaints. The Nutella Banana Blast was gone in 90 seconds. We'll be back every single Myrtle Beach trip.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">JR</span><div><p class="t-mq__name">Jessica R.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Hidden gem on Kings Highway</h3><p class="t-mq__body">Stumbled in after the beach and left with the best brunch memory of the entire trip. Chicken &amp; Waffles — don't even think about skipping it.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">DK</span><div><p class="t-mq__name">David K.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Southern comfort, done properly</h3><p class="t-mq__body">The Shrimp &amp; Grits were better than anything I've had in Charleston. Coming from a South Carolina native, that's not a compliment I give lightly.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">ET</span><div><p class="t-mq__name">Ethan T.</p><p class="t-mq__source">6 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Every bite tells a story</h3><p class="t-mq__body">I tried the Red Velvet stack on a whim and it stopped my whole table mid-conversation. We ordered three more rounds. Absolutely no regrets.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">NF</span><div><p class="t-mq__name">Nicole F.</p><p class="t-mq__source">2 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The kind of place you miss immediately</h3><p class="t-mq__body">We left Myrtle Beach two days ago and my husband has already looked up flights back. That's what NHOP does to you. Absolutely addictive.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--honey">KH</span><div><p class="t-mq__name">Kelly H.</p><p class="t-mq__source">4 days ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">The pancakes convert non-believers</h3><p class="t-mq__body">My dad doesn't do brunch. He's been twice since we brought him here in March. The Banana Foster stack is his new personality trait.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--pink">BW</span><div><p class="t-mq__name">Brittany W.</p><p class="t-mq__source">3 weeks ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Breakfast that stays with you</h3><p class="t-mq__body">I'm a food blogger and this is the only restaurant in Myrtle Beach I keep sending people to. Consistent quality, every single visit. Rare and real.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--blue">JS</span><div><p class="t-mq__name">James S.</p><p class="t-mq__source">1 month ago · Google</p></div></footer></article>
+              <article class="t-mq-card"><h3 class="t-mq__headline">Waffles changed my morning routine</h3><p class="t-mq__body">The Churro Waffle with cinnamon sugar is a life event. I drove back two days in a row. I have no regrets and I would do it again.</p><footer class="t-mq__meta"><span class="t-mq__avatar t-mq__av--green">TR</span><div><p class="t-mq__name">Tasha R.</p><p class="t-mq__source">5 days ago · Google</p></div></footer></article>
+            </div>
+          </div>
+
+        </div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div class="testimonials__cta">
+          <a href="https://www.google.com/maps/place/National+House+of+Pancakes/@33.6876842,-78.889208,17z/data=!4m8!3m7!1s0x890069ac291efdf5:0x67f7cff9881bf83c!8m2!3d33.6876842!4d-78.889208!9m1!1b1!16s%2Fg%2F1v2gfmcw?entry=ttu&g_ep=EgoyMDI2MDYwMy4xIKXMDSoASAFQAw%3D%3D"
+             class="btn btn--ghost testimonials__btn"
+             target="_blank" rel="noopener">
+            See all 36,000+ reviews<span class="btn-google-suffix"> on Google</span> →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         REVIEWS — pinned horizontal-scroll reel of polaroid videos
+         The section is tall; a sticky child holds the heading + CTA
+         on top and a horizontal track of tilted polaroid cards below.
+         As the user scrolls vertically, JS translates the track on X.
+         ========================================================= -->
+    <section class="section reel" id="reviews">
+      <div class="reel__pin">
+
+        <div class="container reel__head">
+          <div class="reel__head-copy">
+            <h2>See it on the plate</h2>
+            <p class="lead u-mt-6">
+              Little moments, tall stacks, the kind you want to flip back to every time<span class="mob-extra">, without a doubt</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="reel__viewport">
+          <div class="reel__track" data-reel-track>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v1.mp4" poster="./assets/video/v1.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A fresh pancake being flipped"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Worth every mile.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v2.mp4" poster="./assets/video/v2.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Pancakes stacking up on the plate"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Pink booth fever.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v3.mp4" poster="./assets/video/v3.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Warm maple syrup pouring over pancakes"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Texted my ex.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v4.mp4" poster="./assets/video/v4.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="A tall stack glowing under warm light"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Ten out of ten.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v5.mp4" poster="./assets/video/v5.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="Butter melting on the top of a hot stack"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Fluffy. Emotional.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="reel-card">
+              <div class="reel-card__media">
+                <video src="./assets/video/v6.mp4" poster="./assets/video/v6.jpg"
+                       autoplay muted loop playsinline preload="metadata"
+                       aria-label="First bite taken out of a pancake"></video>
+              </div>
+              <figcaption class="reel-card__meta">
+                <p class="reel-card__quote">Brunch crush.</p>
+              </figcaption>
+            </figure>
+
+            <div class="reel__end-spacer" aria-hidden="true"></div>
+
+          </div>
+        </div>
+
+        <!-- Scroll hint — oryzo.ai style -->
+
+      </div>
+    </section>
+
+    <!-- ── Mobile reel: force-collapse the gap in all scenarios ── -->
+    <script>
+    (function () {
+      var PIN_BP = 860;
+      function isMob() { return window.innerWidth <= PIN_BP; }
+
+      function fix() {
+        if (!isMob()) return;
+        var reel = document.querySelector('.reel');
+        var pin  = document.querySelector('.reel__pin');
+        var head = document.querySelector('.reel__head');
+        var vp   = document.querySelector('.reel__viewport');
+        var trk  = document.querySelector('[data-reel-track]');
+        if (!reel) return;
+
+        reel.classList.remove('is-pinned');
+
+        var I = 'important';
+        /* section */
+        reel.style.setProperty('height',     'auto', I);
+        reel.style.setProperty('min-height', '0',    I);
+
+        /* pin — display:contents removes it from layout entirely.
+           No flex, no height, no padding — JS can't break what isn't there. */
+        if (pin) {
+          pin.style.setProperty('display', 'contents', I);
+        }
+
+        /* head — sits directly in section now, simple block */
+        if (head) {
+          head.style.setProperty('display',         'block', I);
+          head.style.setProperty('padding',         '24px 24px 2rem', I);
+          head.style.setProperty('min-height',      '0',    I);
+        }
+
+        /* viewport — kill flex:1 + min-height:380px, restore overflow-x scroll */
+        if (vp) {
+          vp.style.setProperty('position',       'static', I);
+          vp.style.setProperty('height',         'auto',   I);
+          vp.style.setProperty('min-height',     '0',      I);
+          vp.style.setProperty('flex',           'none',   I);
+          vp.style.setProperty('overflow-x',     'auto',   I);
+          vp.style.setProperty('overflow-y',     'visible',I);
+          vp.style.setProperty('padding-top',    '12px',   I);
+          vp.style.setProperty('padding-bottom', '12px',   I);
+        }
+
+        /* track — reset absolute positioning & JS transform */
+        if (trk) {
+          trk.style.setProperty('position',  'static', I);
+          trk.style.setProperty('transform', 'none',   I);
+          trk.style.setProperty('top',       'auto',   I);
+          trk.style.setProperty('left',      'auto',   I);
+        }
+      }
+
+      fix();
+      document.addEventListener('DOMContentLoaded', fix);
+      window.addEventListener('load', fix);
+    })();
+    </script>
+
+    <!-- LAYERS section removed — Anatomy of a stack block was here.
+         May return later as a dedicated 3D assembly video section. -->
+
+
+
+
+    <!-- =========================================================
+         RESERVE — unified card: form left + photo right (BunBite ref)
+         Dark burgundy bg flows seamlessly into footer blob.
+         ========================================================= -->
+    <section class="section reserve" id="reserve">
+      <div class="container">
+
+        <!-- One cream card: form side + video side -->
+        <div class="reserve__card">
+
+          <!-- ---- Form side — game-format wizard ---- -->
+          <div class="reserve__form-side">
+            <h2 class="reserve__title">Reserve<br class="mob-break"> Your Table</h2>
+
+            <form class="reserve__form" id="reserveForm" novalidate>
+
+              <!-- Progress indicator with step numbers -->
+              <div class="reserve__progress" aria-hidden="true">
+                <span class="reserve__prog-dot is-active" data-step="1">1</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="2">2</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="3">3</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="4">4</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="5">5</span>
+                <span class="reserve__prog-line"></span>
+                <span class="reserve__prog-dot" data-step="6">6</span>
+              </div>
+              <!-- Mobile-only step counter text -->
+              <div class="reserve__step-text" aria-live="polite">Step <span class="reserve__step-current">1</span> of 6</div>
+
+              <!-- Scene 1: Name -->
+              <div class="reserve__scene is-visible" data-scene="1">
+                <p class="reserve__hint">Let's get your booth ready</p>
+                <h3 class="reserve__q">What's your name?</h3>
+                <div class="name-field">
+                  <input class="name-input" id="r-name" type="text"
+                         placeholder="Your name…" autocomplete="name" required />
+                  <div class="name-underline"></div>
+                  <svg class="name-pen" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                  </svg>
+                </div>
+                <div class="reserve__nav">
+                  <span class="reserve__nav-spacer"></span>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 2: Day chips + Time chips -->
+              <div class="reserve__scene" data-scene="2">
+                <p class="reserve__hint">When's the feast?</p>
+                <h3 class="reserve__q">Pick your day</h3>
+                <div class="date-picker">
+                  <div class="date-picker__day-wrap">
+                    <div class="date-picker__row" data-picker="day"></div>
+                    <label class="cal-btn-wrap chip chip--more" aria-label="Pick a different date">
+                      <span class="chip__more-text">Other<br>dates</span>
+                      <input type="date" id="calPicker" aria-label="Pick a different date" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;pointer-events:auto;" />
+                    </label>
+                  </div>
+                  <div class="date-picker__row" data-picker="time" style="display:none">
+                    <button type="button" class="chip" data-time="08:00">8 AM</button>
+                    <button type="button" class="chip" data-time="09:00">9 AM</button>
+                    <button type="button" class="chip" data-time="10:00">10 AM</button>
+                    <button type="button" class="chip" data-time="11:00">11 AM</button>
+                    <button type="button" class="chip" data-time="12:00">12 PM</button>
+                    <button type="button" class="chip" data-time="13:00">1 PM</button>
+                    <button type="button" class="chip" data-time="14:00">2 PM</button>
+                  </div>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 3: Party table + +/- -->
+              <div class="reserve__scene" data-scene="3">
+                <p class="reserve__hint">The more, the merrier</p>
+                <h3 class="reserve__q">How many guests?</h3>
+                <div class="party-table" data-party-table></div>
+                <div class="party-controls">
+                  <button type="button" class="party-btn" data-guests-change="-1">−</button>
+                  <span class="party-display">
+                    <span class="party-count" data-party-count>2</span>
+                    <span> guests</span>
+                  </span>
+                  <button type="button" class="party-btn" data-guests-change="+1">+</button>
+                </div>
+                <p class="party-hint">OR TYPE A NUMBER</p>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 4: Phone keypad -->
+              <div class="reserve__scene" data-scene="4">
+                <h3 class="reserve__q">Your phone?</h3>
+                <div class="phone-display">
+                  <span class="phone-prefix">+1</span>
+                  <span class="phone-number" data-phone-display>_ _ _–_ _ _ _</span>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 5: Email -->
+              <div class="reserve__scene" data-scene="5">
+                <p class="reserve__hint">We'll send your confirmation here</p>
+                <h3 class="reserve__q">Your email?</h3>
+                <div class="name-field">
+                  <input class="name-input" id="r-email" type="email"
+                         placeholder="your@email.com" autocomplete="email" />
+                  <div class="name-underline"></div>
+                  <svg class="name-pen" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="button" class="btn" data-next>Next →</button>
+                </div>
+              </div>
+
+              <!-- Scene 6: Notes -->
+              <div class="reserve__scene" data-scene="6">
+                <p class="reserve__hint">Optional — skip if nothing special</p>
+                <h3 class="reserve__q">Any special wishes?</h3>
+                <div class="notes-field">
+                  <textarea class="notes-input" id="r-notes"
+                            placeholder="Window seat, birthday cake, highchair…"
+                            rows="1" maxlength="400"></textarea>
+                  <div class="notes-underline"></div>
+                </div>
+                <div class="reserve__nav">
+                  <button type="button" class="btn btn--ghost" data-prev>← Back</button>
+                  <button type="submit" class="btn">Book my table →</button>
+                </div>
+              </div>
+
+              <!-- Scene done: Confirmation -->
+              <div class="reserve__scene reserve__scene--done" data-scene="done">
+                <div class="reserve__confirm-card">
+                  <span class="reserve__card-label">You're booked!</span>
+                  <p class="reserve__card-name" data-confirm="name"></p>
+                  <p class="reserve__card-meta" data-confirm="meta"></p>
+                </div>
+                <p class="reserve__done-copy">Confirmation will be sent to <strong data-confirm="email"></strong></p>
+                <button type="button" class="btn btn--ghost" data-restart>New reservation →</button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- ---- Photo side — flush to card edges ---- -->
+          <div class="reserve__photo-side">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777507506/hf_20260430_000351_860f83cf-3445-4155-beb2-ca1d84cfa9e8_qcy6ub.png"
+                 alt="NHOP guests enjoying their meal"
+                 loading="lazy" />
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MERCH CTA — temporarily hidden -->
+  <!-- <section class="section merch-cta" id="merch"> ... </section> -->
+
+  <!-- =========================================================
+       FOOTER — BunBite-style composition:
+       · Dark burgundy blob at top with Opening Hours
+       · Cream area below: 3 columns Location / About+Socials / Contact
+       ========================================================= -->
+  <footer class="footer" id="footer">
+
+    <!-- ---- Hours blob ---- -->
+    <div class="footer__blob">
+      <!-- Scalloped-bottom SVG: solid dark area with 6 downward bumps -->
+      <svg class="footer__blob-svg" viewBox="0 0 1440 460"
+           preserveAspectRatio="none" aria-hidden="true"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 H1440 V330
+          C1360,440 1280,440 1200,330
+          C1120,440 1040,440  960,330
+          C 880,440  800,440  720,330
+          C 640,440  560,440  480,330
+          C 400,440  320,440  240,330
+          C 160,440   80,440    0,330
+          Z" fill="#390219"/>
+      </svg>
+      <div class="footer__blob-inner container">
+        <h2 class="footer__hours-title">Opening Hours</h2>
+        <div class="footer__hours-row">
+          <div class="footer__hours-item">
+            <span class="footer__hours-label">Every day</span>
+            <p class="footer__hours-time"><b>6</b><sup>AM</sup> &ndash; <b>3:30</b><sup>PM</sup></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Three-column info strip ---- -->
+    <div class="container footer__info">
+
+      <!-- Col 1: Location -->
+      <div class="footer__info-col">
+        <h3 class="footer__info-heading">Location</h3>
+        <p class="footer__info-address">211 N Kings Hwy<br>Myrtle Beach, SC 29577</p>
+        <a href="https://www.google.com/maps/place/national+house+of+pancakes/data=!4m2!3m1!1s0x890069ac291efdf5:0x67f7cff9881bf83c?sa=X&ved=1t:242&ictx=111"
+           target="_blank" rel="noopener" class="footer__visit-link">Visit us ↗</a>
+      </div>
+
+      <!-- Col 2: About + Socials -->
+      <div class="footer__info-col footer__info-col--center">
+        <h3 class="footer__info-heading">About Us</h3>
+        <p class="footer__info-text">
+          Myrtle Beach's most-loved breakfast spot — hand-flipped stacks,
+          bottomless syrup, and 36 000 Google fans who always come back for seconds.
+        </p>
+        <div class="footer__socials">
+          <a href="https://www.instagram.com/national_house_of_pancakes"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4.4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@ilovenhop"
+             class="footer__social-btn" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.05a8.27 8.27 0 004.83 1.54V7.14a4.85 4.85 0 01-1.07-.45z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 3: Contact + Email subscribe -->
+      <div class="footer__info-col footer__info-col--right">
+        <h3 class="footer__info-heading">Contact Us</h3>
+        <div class="footer__contact-details">
+          <a href="tel:+18434486149"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="display:inline;vertical-align:-0.12em;margin-right:0.18em"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.39 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (843) 448-6149</a>
+          <a href="mailto:hello@houseofpancakes.net"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="display:inline;vertical-align:-0.12em;margin-right:0.18em"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg> hello@houseofpancakes.net</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ---- Legal strip ---- -->
+    <div class="container footer__bottom">
+      <span class="footer__bottom-copy">All Rights Reserved · National House of Pancakes 2026</span>
+      <span class="footer__bottom-legal">
+        <a href="#" data-legal="privacy" class="footer__bottom-link">Privacy Policy</a>
+        <a href="#" data-legal="terms" class="footer__bottom-link">Terms &amp; Conditions</a>
+      </span>
+    </div>
+
+  </footer>
+
+  <!-- JS hooks: cursor, nav, ScrollTrigger, 3D mount -->
+  <!-- No type="module" so the file works when opened via file:// -->
+  <script src="./scripts/legal-content.js"></script>
+  <script src="./scripts/main.js" defer></script>
+  <!-- Supabase SDK + client init must load before reserve.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./scripts/supabase-client.js"></script>
+  <script src="./scripts/reserve.js" defer></script>
+
+  <!-- ── GSAP (needed for PillNav hover in main.js) ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- ── Menu cards stagger ── -->
+  <script>
+  (function () {
+    /* ═══════════════════════════════════════════════════════════
+       MENU CARDS — stagger via IntersectionObserver
+    ══════════════════════════════════════════════════════════ */
+    const cards = Array.from(document.querySelectorAll('.menu__list .menu-card'));
+    const mob = window.innerWidth <= 860;
+    cards.forEach((card, i) => {
+      if (mob) return; /* mobile: show immediately, no animation */
+      card.style.opacity   = '0';
+      card.style.transform = 'translateY(28px)';
+      card.style.transition =
+        'opacity 0.38s ease ' + (i * 0.055) + 's, ' +
+        'transform 0.38s ease ' + (i * 0.055) + 's';
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity   = '1';
+          e.target.style.transform = 'translateY(0)';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px 0px 0px' });
+    if (!mob) cards.forEach(c => io.observe(c));
+
+  })();
+  </script>
+
+<!-- ══ LEGAL MODAL ══ -->
+<div id="legal-modal" class="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title" hidden>
+  <div class="legal-modal__overlay"></div>
+  <div class="legal-modal__panel">
+    <div class="legal-modal__header">
+      <h2 class="legal-modal__title" id="legal-modal-title"></h2>
+      <button class="legal-modal__close" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="legal-modal__body" id="legal-modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ── Marquee touch: TAP a card to freeze it (read), tap again to resume ──
+   Toggle model — a quick tap reliably stops the strip and keeps it stopped, so
+   you can actually read. Uses touch events (rock-solid on iOS, unlike the
+   (hover) media query that silently disabled the old handler). A drag that
+   moves more than a few px is treated as a page scroll, not a tap, so scrolling
+   never accidentally toggles. pan-y keeps vertical scroll and kills pinch-zoom.
+   Desktop is untouched — mouse fires no touch events, so the :hover CSS rules. */
+(function () {
+  var outer = document.querySelector('.t-mq-outer');
+  if (!outer) return;
+  outer.style.touchAction = 'pan-y';
+  var strips = outer.querySelectorAll('.t-mq-strip');
+  var paused = false, sx = 0, sy = 0, moved = false;
+  function set(state) {
+    strips.forEach(function (s) { s.style.animationPlayState = state; });
+  }
+  outer.addEventListener('touchstart', function (e) {
+    var t = e.touches[0];
+    sx = t.clientX; sy = t.clientY; moved = false;
+  }, { passive: true });
+  outer.addEventListener('touchmove', function (e) {
+    var t = e.touches[0];
+    if (Math.abs(t.clientX - sx) > 8 || Math.abs(t.clientY - sy) > 8) moved = true;
+  }, { passive: true });
+  outer.addEventListener('touchend', function () {
+    if (moved) return;            // it was a scroll/swipe, not a tap
+    paused = !paused;
+    set(paused ? 'paused' : 'running');
+  }, { passive: true });
+})();
+
+/* ── Nav button colour: cream on dark sections, burgundy on cream sections ── */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var darkSections = document.querySelectorAll('.hero, .reel, #reserve');
+  if (!darkSections.length) return;
+  function update() {
+    var navH = nav.offsetHeight || 60;
+    var onDark = Array.from(darkSections).some(function (s) {
+      var r = s.getBoundingClientRect();
+      return r.top < navH && r.bottom > navH;
+    });
+    nav.classList.toggle('nav--on-dark', onDark);
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

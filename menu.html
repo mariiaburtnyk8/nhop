@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>@font-face{font-family:"Atomic Beers";src:url("./assets/fonts/AtomicBeers-Regular.woff2")format("woff2"),url("./assets/fonts/AtomicBeers-Regular.otf")format("opentype");font-weight:400;font-style:normal;font-display:block;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff">
+  <title>Menu — National House of Pancakes</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Fraunces:wght@900&display=swap" />
+
+  <link rel="preload" href="./assets/fonts/AtomicBeers-Regular.woff2" as="font" type="font/woff2" />
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/main.css" />
+
+<style>
+/* ══════════════════════════════════════════
+   NHOP palette — Burgundy · Pink · Cream
+══════════════════════════════════════════ */
+:root {
+  --color-burgundy: #390219;
+  --color-cream:    #FFF8E7;
+  --color-pink:     #FFA5D7;
+  --bg-base:        #FFF8E7;
+  --bg-dark:        #390219;
+  --bg-accent:      #FFA5D7;
+  --fg-base:        #390219;
+  --fg-on-dark:     #FFF8E7;
+  --fg-muted:       rgba(57,2,25,0.50);
+  --cta-bg:         #390219;
+  --cta-fg:         #FFF8E7;
+  --cta-bg-hover:   #5a0a28;
+  --border-soft:    rgba(57,2,25,0.10);
+  --border-med:     rgba(57,2,25,0.20);
+  --shadow-soft:    0 2px 16px rgba(57,2,25,0.07);
+  --shadow-card:    0 4px 20px rgba(57,2,25,0.09);
+  --font-display:   "Atomic Beers","Fraunces",Georgia,serif;
+  --font-body:      "Satoshi","Inter",system-ui,sans-serif;
+}
+
+/* ══ RESET ══ */
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  background: #A5D9FF;
+}
+
+/* ══ NAV OVERRIDE: sticky ══ */
+#nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 600 !important;
+  background: #A5D9FF !important;
+}
+#nav .nav__logo {
+  color: var(--fg-base) !important;
+  background: rgba(255,248,231,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 12px rgba(57,2,25,0.10) !important;
+}
+#nav .nav__links {
+  background: rgba(255,248,231,0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 2px 12px rgba(57,2,25,0.10) !important;
+}
+#nav .nav__links a {
+  color: #390219 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+#nav .nav__links a.menu-active {
+  background: #390219 !important;
+  color: #FFF8E7 !important;
+  pointer-events: none;
+}
+#nav .nav__links a:not(.menu-active):hover {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ══ MENU HERO ══ */
+.menu-hero {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 2.5rem var(--gutter) 1.5rem;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+.menu-hero__tagline {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: #390219;
+  max-width: 50ch;
+  margin: 0;
+  text-shadow: none;
+  opacity: 1;
+  display: none; /* hidden on desktop */
+}
+
+/* ══ MENU CARD LAYOUT ══ */
+.menu-card-outer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-bottom: 6rem;
+  padding-inline: var(--gutter);
+  position: relative;
+  z-index: 1;
+}
+
+/* Sticky tab row — matches the page photo+overlay exactly so panel never bleeds through */
+.menu-tabs-wrap {
+  position: sticky;
+  top: var(--nav-h, 56px);
+  z-index: 400;
+  background: #A5D9FF;
+  padding: 1.4rem 0 0 0;
+  /* Force GPU compositing layer — prevents sub-pixel flicker at scroll boundary */
+  transform: translateZ(0);
+  will-change: transform;
+}
+.menu-tabs {
+  display: flex; gap: 3px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.menu-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 1.5rem 3rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem; font-weight: 900;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  /* inactive = burgundy */
+  background: #390219;
+  border: none;
+  border-radius: 36px 36px 0 0;
+  color: #FFF8E7; cursor: pointer;
+  white-space: nowrap; flex: 1;
+  transition: background 140ms, color 140ms;
+}
+.tab-btn:hover:not(.active) { background: #5a0330; }
+/* Combined mobile-only tab — hidden on desktop */
+.tab-btn--combined { display: none; }
+
+/* active = cream — opens seamlessly into the card below */
+.tab-btn.active {
+  background: #FFF8E7;
+  color: #390219;
+}
+
+/* Menu panel — cream card. Top edge flat (tabs sit there), bottom rounded */
+.menu-panel {
+  background: #FFF8E7;
+  border-radius: 0 0 28px 28px;
+  padding: 2rem 2.5rem 4rem;
+  box-shadow: none;
+  /* Close 1px gap that can appear between tabs and panel at scroll boundary */
+  margin-top: -1px;
+  position: relative;
+  z-index: 1;
+}
+/* ══ MOBILE ══ */
+@media (max-width: 768px) {
+
+  /* Nav — blue on mobile to match page bg */
+  #nav { background: #A5D9FF !important; }
+
+  /* Force "Drinks" onto second line in Sides & Drinks tab */
+  .tab-break { display: block; }
+
+  /* 3 tabs on mobile: hide More + Sides individually, show combined */
+  .tab-btn[data-tab="more"],
+  .tab-btn[data-tab="sides"] { display: none; }
+  .tab-btn--combined { display: block; flex: 1; }
+
+  /* Hero — tighter on mobile */
+  .menu-hero {
+    padding: 1.4rem var(--gutter) 0.9rem;
+  }
+  .menu-hero__tagline {
+    display: none;
+    font-size: 1.15rem;
+    max-width: none;
+  }
+
+  /* Card outer — edge-to-edge on mobile */
+  .menu-card-outer {
+    padding-inline: 0;
+    padding-bottom: 3rem;
+  }
+
+  /* Tabs — fill full width, text wraps, smaller type */
+  .menu-tabs-wrap {
+    padding: 0.8rem 0 0;
+  }
+  .tab-btn {
+    padding: 1rem 0.75rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    border-radius: 26px 26px 0 0;
+    white-space: normal;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  /* Panel */
+  .menu-panel {
+    padding: 1.5rem 1rem 3rem;
+    border-radius: 0 0 20px 20px;
+  }
+
+  /* Sections */
+  .menu-section { margin-bottom: 2.5rem; padding-top: 1.25rem; }
+  .sec-header { margin-bottom: 1rem; }
+
+  /* Grid — 2 cols on tablet/large mobile */
+  .items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 10px;
+    row-gap: 16px;
+  }
+  .items-grid--compact {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  /* Cards — tighter */
+  .item-card--text { padding: 0.15rem 0 !important; }
+  .item-card--featured { padding: 0.15rem 0 !important; }
+  .item-card__name { font-size: 0.92rem; }
+  .item-card__desc { font-size: 1rem; }
+  .item-card--row .item-card__desc { display: none; }
+}
+
+/* ══ SMALL MOBILE ══ */
+@media (max-width: 480px) {
+
+  /* Hero */
+  .menu-hero { padding: 1.2rem var(--gutter) 0.75rem; }
+  .menu-hero__tagline { font-size: 1.15rem; }
+
+  /* Tabs */
+  .tab-btn {
+    padding: 1rem 0.5rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Panel */
+  .menu-panel { padding: 1.25rem 0.85rem 2.5rem; }
+
+  /* Grid — single column on small phones */
+  .items-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .items-grid--compact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ══ TAB PANELS ══ */
+.tab-panel { display: block; }
+
+/* ══ MENU SECTIONS ══ */
+.menu-section { margin-bottom: 4rem; padding-top: 2rem; }
+.sec-header { margin-bottom: 1.5rem; }
+.sec-label {
+  display: block;
+  background: none;
+  color: #390219;
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 0.5rem;
+}
+.sec-note {
+  font-size: 1.05rem; font-weight: 500;
+  color: rgba(57,2,25,0.55); line-height: 1.3;
+}
+
+/* ══ ITEMS GRID ══ */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 18px;
+  row-gap: 22px;
+}
+@media (max-width: 900px) { .items-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .items-grid { grid-template-columns: 1fr; } }
+
+.items-grid--compact {
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 18px;
+  row-gap: 6px;
+}
+@media (max-width: 560px) { .items-grid--compact { grid-template-columns: repeat(2, 1fr); } }
+
+/* ══ ITEM CARDS ══ */
+.item-card { display: flex; flex-direction: column; }
+
+/* — Photo card — */
+.item-card__photo {
+  position: relative;
+  width: 100%; aspect-ratio: 4/3;
+  border-radius: 16px; overflow: hidden;
+  background: #FFA5D7; flex-shrink: 0;
+}
+.item-card__photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.item-card__badge {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 0.6rem; font-weight: 800;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 99px;
+  background: #FFF8E7; color: #390219; line-height: 1;
+}
+.item-card__info { padding: 11px 2px 0; display: flex; flex-direction: column; gap: 4px; }
+.item-card__name {
+  font-family: var(--font-body);
+  font-size: 1rem; font-weight: 800;
+  color: var(--fg-base); line-height: 1.25;
+  text-transform: uppercase; letter-spacing: 0.035em;
+}
+.item-card__desc {
+  font-size: 1.05rem; font-weight: 450;
+  color: rgba(57,2,25,0.70); line-height: 1.3;
+}
+
+/* — Text card (no photo) — */
+.item-card--text { padding: 0.65rem 0; }
+.item-card--text .item-card__info { padding: 0; }
+
+/* — Featured card — */
+.item-card--featured { padding: 0.65rem 0; }
+.item-card--featured .item-card__info { padding: 0; }
+.item-badge-inline { display: none; }
+
+/* — Row card (Sides / Egg Plates) — same plain list style but bigger */
+.item-card--row {
+  padding: 0.65rem 0;
+}
+.item-card--row .item-card__info { padding: 0; flex-direction: row; align-items: baseline; gap: 0.4em; }
+.item-card--row .item-card__name { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.035em; font-weight: 800; }
+.item-card--row .item-card__desc { display: none; }
+
+
+/* ══ DESKTOP ONLY: subtle card for text-only items ══ */
+@media (min-width: 769px) {
+  .item-card--text,
+  .item-card--featured,
+  .item-card--row {
+    background: rgba(57, 2, 25, 0.04);
+    border: 1px solid rgba(57, 2, 25, 0.09);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+  .item-card--text:hover,
+  .item-card--featured:hover,
+  .item-card--row:hover {
+    background: rgba(57, 2, 25, 0.07);
+    border-color: rgba(57, 2, 25, 0.16);
+  }
+}
+
+/* ══ RESERVATION POPUP ══ */
+.res-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: var(--z-modal, 999);
+  background: rgba(57,2,25,0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.res-overlay.open { display: flex; }
+
+.res-modal {
+  background: var(--bg-base);
+  border-radius: 28px;
+  width: 100%; max-width: 480px;
+  padding: 2.25rem 2rem 2rem;
+  position: relative;
+  box-shadow: 0 24px 72px rgba(57,2,25,0.20);
+  animation: modalIn 360ms cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.res-modal__close {
+  position: absolute; top: 1.1rem; right: 1.1rem;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--border-soft); border: none; cursor: pointer;
+  font-size: 1rem; color: var(--fg-base);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 130ms;
+}
+.res-modal__close:hover { background: var(--border-med); }
+.res-modal__eyebrow {
+  font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 0.35rem;
+}
+.res-modal__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  color: var(--fg-base);
+  line-height: 1.05; letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.res-modal__sub {
+  font-size: 0.88rem; color: var(--fg-muted);
+  line-height: 1.5; margin-bottom: 1.5rem;
+}
+.res-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.res-form .full { grid-column: 1 / -1; }
+.res-field { display: flex; flex-direction: column; gap: 0.3rem; }
+.res-field label {
+  font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.res-field input, .res-field select {
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-med);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.92rem; color: var(--fg-base);
+  outline: none;
+  transition: border-color 150ms;
+}
+.res-field input:focus, .res-field select:focus { border-color: var(--fg-base); }
+.res-submit {
+  grid-column: 1 / -1; margin-top: 0.4rem;
+  background: var(--bg-dark); color: var(--fg-on-dark);
+  border: none; border-radius: 12px; padding: 0.95rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem; font-weight: 800;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  cursor: pointer; width: 100%;
+  transition: background 140ms, transform 100ms;
+}
+.res-submit:hover { background: var(--cta-bg-hover); transform: translateY(-1px); }
+
+/* ══ FOOTER — pink ══ */
+.footer { background: #FFA5D7 !important; color: #390219 !important; position: relative; z-index: 100; }
+.footer__blob-svg path { fill: #390219 !important; }
+.footer__hours-title { color: #FFF8E7 !important; }
+.footer__hours-time { color: #FFF8E7 !important; }
+.footer__hours-label { color: rgba(255,248,231,0.60) !important; }
+.footer__hours-sep { background: rgba(255,248,231,0.20) !important; }
+.footer__info-heading { color: #390219 !important; border-bottom-color: rgba(57,2,25,0.25) !important; }
+.footer__info-address, .footer__info-text { color: rgba(57,2,25,0.75) !important; opacity: 1; }
+.footer__visit-link, .footer__contact-details a { color: #390219 !important; }
+.footer__info-col--center { border-color: rgba(57,2,25,0.18) !important; }
+.footer__social-btn { border-color: rgba(57,2,25,0.35) !important; color: #390219 !important; }
+.footer__social-btn:hover { background: #390219 !important; color: #FFA5D7 !important; border-color: #390219 !important; }
+.footer__bottom { border-top-color: rgba(57,2,25,0.18) !important; color: rgba(57,2,25,0.50) !important; }
+</style></head>
+<body>
+
+<div class="cursor" aria-hidden="true"></div>
+
+<!-- ══ NAV ══ -->
+<header class="nav nav--scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="NHOP home">NHOP</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="menu.html" class="menu-active">
+        <span class="label-stack">
+          <span class="pill-label">Menu</span>
+        </span>
+      </a>
+      <a href="reserve.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack">
+          <span class="pill-label">Reserve</span>
+          <span class="pill-label-hover" aria-hidden="true">Reserve</span>
+        </span>
+      </a>
+      <a href="about.html">
+        <span class="hover-circle" aria-hidden="true"></span>
+        <span class="label-stack">
+          <span class="pill-label">About Us</span>
+          <span class="pill-label-hover" aria-hidden="true">About Us</span>
+        </span>
+      </a>
+    </nav>
+    <a href="reserve.html" class="btn">Reserve a table</a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── Mobile Bubble Menu Overlay ── -->
+<div id="bubble-overlay" class="bubble-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+  <ul class="bubble-pill-list">
+    <li><a href="index.html"  class="bubble-pill"          ><span class="bubble-pill__label">Home</span></a></li>
+    <li><a href="menu.html"   class="bubble-pill is-active"><span class="bubble-pill__label">Menu</span></a></li>
+    <li><a href="reserve.html"class="bubble-pill"          ><span class="bubble-pill__label">Reserve</span></a></li>
+    <li><a href="about.html"  class="bubble-pill"          ><span class="bubble-pill__label">About Us</span></a></li>
+  </ul>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<!-- ══ MENU HERO ══ -->
+<div class="menu-hero">
+  <h1 class="menu-hero__tagline">Browse every dish we make.<br>Better come taste them while they're still hot.</h1>
+</div>
+
+<!-- ══ MENU CARD ══ -->
+<div class="menu-card-outer">
+
+  <!-- Tabs: folder-style, sit above the dark panel -->
+  <div class="menu-tabs-wrap" id="menuTabsWrap">
+    <div class="menu-tabs" id="tabNav">
+      <button class="tab-btn active" data-tab="breakfast">Breakfast</button>
+      <button class="tab-btn" data-tab="specials">Specials &amp; Combos</button>
+      <button class="tab-btn" data-tab="more">More</button>
+      <button class="tab-btn" data-tab="sides">Sides &amp; <span class="tab-break">Drinks</span></button>
+      <button class="tab-btn tab-btn--combined" data-tab="more-sides">More &amp; Sides</button>
+    </div>
+  </div>
+
+  <!-- Dark panel: the "physical menu card" -->
+  <div class="menu-panel">
+
+  <!-- ─────────────── TAB: BREAKFAST ─────────────── -->
+  <div class="tab-panel active" id="tab-breakfast">
+
+    <!-- PANCAKES -->
+    <section class="menu-section" id="pancakes">
+      <div class="sec-header">
+        <span class="sec-label">Pancakes</span>
+      </div>
+      <div class="items-grid">
+
+        <!-- Photo cards first -->
+        <!-- PINK bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1778882572/hf_20260426_233954_f33126b3-1230-4e2c-8a03-f056f7f6969c_hferkn.png" alt="3 Nutella Pancakes" loading="lazy" />
+            <span class="item-card__badge">Popular</span>
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">3 Nutella Pancakes</div>
+            <div class="item-card__desc">With fresh strawberry &amp; banana.</div>
+          </div>
+        </div>
+
+        <!-- BLUE bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1778882572/hf_20260426_232424_270a65bb-7bec-464c-8199-f3063eeb3441_twvn8d.png" alt="Reese's PB &amp; Hershey's" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Reese's PB &amp; Hershey's</div>
+            <div class="item-card__desc">Peanut butter swirls with chocolate chips.</div>
+          </div>
+        </div>
+
+        <!-- PINK bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779148269/u3379868971_httpss.mj.run5RRZqC83AG4_ommercial_product_photog_4d1f25e4-e27e-4f1e-8e73-3ab7a88b306e_1_dqxfak.png" alt="Fresh Strawberry" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Fresh Strawberry</div>
+            <div class="item-card__desc">With vanilla drizzle.</div>
+          </div>
+        </div>
+
+        <!-- BLUE bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1778882572/hf_20260426_202301_be12649d-997d-4670-9084-1bbed72d6b03_bsnag5.png" alt="Banana &amp; Pecan" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Banana &amp; Pecan</div>
+            <div class="item-card__desc">With caramel and vanilla drizzle.</div>
+          </div>
+        </div>
+
+        <!-- PINK bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1778882572/hf_20260426_203429_f712c085-df71-49db-898a-eed2d9f31149_lwqgsi.png" alt="Fresh Blueberry" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Fresh Blueberry</div>
+            <div class="item-card__desc">With vanilla drizzle.</div>
+          </div>
+        </div>
+
+        <!-- BLUE bg -->
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779148277/u3379868971_httpss.mj.rundz1W2K1fEsw_Extreme_high-end_commerc_745fc548-a169-44b5-9ca4-7b5166dba342_2_ledkrj.png" alt="Full Stack with M&amp;M's" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Full Stack with M&amp;M's</div>
+            <div class="item-card__desc">Colorful M&amp;M's baked right in.</div>
+          </div>
+        </div>
+
+        <!-- Text-only cards after -->
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Full Stack</div>
+            <div class="item-card__desc">3 old fashioned buttermilk pancakes.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Short Stack</div>
+            <div class="item-card__desc">2 old fashioned pancakes.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Hershey's Choc Chip</div>
+            <div class="item-card__desc">Fluffy pancakes loaded with Hershey's chocolate chips.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- WAFFLES & FRENCH TOAST -->
+    <section class="menu-section" id="waffles">
+      <div class="sec-header">
+        <span class="sec-label">Waffles &amp; French Toast</span>
+        <p class="sec-note">Toppings available: Hershey's Chips, Strawberries, Blueberries, Reese's PB, Banana Nut, M&M's, Nutella</p>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779150863/u3379868971_Extreme_high-end_commercial_food_photography_of_a_a244ff89-5592-4681-a5ca-9968a49d4161_3_envbfd.png" alt="Waffle & Chicken" loading="lazy" />
+            <span class="item-card__badge">Popular</span>
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Waffle &amp; Chicken*</div>
+            <div class="item-card__desc">Fresh jumbo chicken marinated 12h, battered in spices &amp; fried per order.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779149965/u3379868971_High-end_commercial_studio_food_photography._A_si_6369be76-20aa-4c0d-9f1e-6049d3aa755b_2_yzzyfe.png" alt="Red Velvet Waffle" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Red Velvet Waffle</div>
+            <div class="item-card__desc">Red velvet batter, house made vanilla drizzle, dollop of strawberry cream cheese, fresh strawberries.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780348402/churos_evousa.png" alt="Churro Waffle" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Churro Waffle</div>
+            <div class="item-card__desc">Deep fried waffle topped with cinnamon sugar, vanilla and a side of chocolate.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Bacon Waffle</div>
+            <div class="item-card__desc">Real butter old fashioned recipe cooked with top cut bacon.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Waffle &amp; Ice Cream</div>
+            <div class="item-card__desc">Old fashioned waffle topped with 2 scoops of ice cream and cones.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">French Toast</div>
+            <div class="item-card__desc">3 thick slices with powdered sugar &amp; cinnamon.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- OMELETS -->
+    <section class="menu-section" id="omelets">
+      <div class="sec-header">
+        <span class="sec-label">Omelets</span>
+        <p class="sec-note">All made with 4 eggs. Comes with grits / home fries / pancakes or fresh fruit cup. Egg white substitution available.</p>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779148823/u3379868971_httpss.mj.runz0fy1hmJQSQ_Extreme_high-end_commerc_55e07106-0b22-43e6-8ef2-e5561ba8b216_0_xd4lbp.png" alt="Crab Meat Omelet" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Crab Meat Omelet*</div>
+            <div class="item-card__desc">Lump crab cake, sautéed shrimp, premium feta, house made seafood remoulade sauce.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779151540/u3379868971_Extreme_high-end_commercial_food_photography_of_a_04f90667-6f8e-49ee-aaf7-6eb64b5a4457_0_mko5bx.png" alt="Meat Lovers Omelet" loading="lazy" />
+            <span class="item-card__badge">Popular</span>
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Meat Lovers*</div>
+            <div class="item-card__desc">Top cut bacon, ham, artisan sausage, cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779151348/u3379868971_Professional_catalog_product_photography_ultra-wi_274d3724-fade-48f0-9175-eca55fa7d57f_1_spscqu.png" alt="Ribeye Shaved Steak Omelet" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Ribeye Shaved Steak*</div>
+            <div class="item-card__desc">Fresh rib eye sliced every morning — peppers, onions, Swiss cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Salmon Omelet*</div>
+            <div class="item-card__desc">Smoked salmon, roasted red pepper, cherry tomato, white wine creamy sauce.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Western Omelet*</div>
+            <div class="item-card__desc">Ham, peppers, onions, cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Spanish Omelet*</div>
+            <div class="item-card__desc">Ham, peppers, onions, salsa. Fresh pico de gallo.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Veggie Omelet*</div>
+            <div class="item-card__desc">Peppers, onions, tomatoes, mushrooms.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Mushroom &amp; Spinach*</div>
+            <div class="item-card__desc">Mushrooms, spinach &amp; Swiss cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Bacon / Sausage / Ham &amp; Cheese*</div>
+            <div class="item-card__desc">Your choice of premium meat topped with cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Make it Your Way!</div>
+            <div class="item-card__desc">Cheese base + your choice: ham, bacon, sausage, corned beef, onions, tomato, mushrooms, peppers, shaved steak or shrimp.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EGG PLATES -->
+    <section class="menu-section" id="eggplates">
+      <div class="sec-header">
+        <span class="sec-label">Egg Plates</span>
+        <p class="sec-note">Comes with grits / home fries and toast.</p>
+      </div>
+      <div class="items-grid items-grid--compact">
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Hand Cut Steak &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Salmon on Flat Grill &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Bacon &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Chicken &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Corned Beef Hash &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Pork Chops &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Patties/Links &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Ham &amp; 2 eggs*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Smoked Sausage &amp; 2 eggs*</div></div></div>
+      </div>
+    </section>
+
+  </div><!-- /tab-breakfast -->
+
+  <!-- ─────────────── TAB: SPECIALS & COMBOS ─────────────── -->
+  <div class="tab-panel" id="tab-specials">
+
+    <!-- CHEF'S SPECIALS -->
+    <section class="menu-section" id="specials">
+      <div class="sec-header">
+        <span class="sec-label">Chef's Specials</span>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1778840561/0_3_1_fyjbdh.png" alt="Shrimp & Grits" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Shrimp &amp; Grits*</div>
+            <div class="item-card__desc">Jumbo shrimp sautéed to perfection, delicate onions and red bell pepper, top cut bacon, artisan bloody mary sauce.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779154361/u3379868971_Professional_catalog_product_photography_ultra-wi_8bf8365c-ea1c-417d-aed0-cfade5b86f74_0_qqzcul.png" alt="3 Nutella Pancakes" loading="lazy" />
+            <span class="item-card__badge">Popular</span>
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">3 Nutella Pancakes</div>
+            <div class="item-card__desc">With fresh strawberry &amp; banana.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1779152364/00000000_cwgqke.png" alt="Crab Cake Benedict" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Crab Cake Benedict*</div>
+            <div class="item-card__desc">Two lump crab cakes on an English muffin, grilled tomato, 2 poached eggs, Hollandaise, Cajun remoulade. Served with grits or home fries.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMBOS -->
+    <section class="menu-section" id="combos">
+      <div class="sec-header">
+        <span class="sec-label">Combos</span>
+        <p class="sec-note">Extra toppings available.</p>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Combo 1 — 2 Pancakes</div>
+            <div class="item-card__desc">+ 3 eggs* + bacon / sausage</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Combo 2 — 2 Pancakes</div>
+            <div class="item-card__desc">+ 2 eggs* + bacon / sausage</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Combo 3 — Butter Waffle</div>
+            <div class="item-card__desc">+ 2 eggs* + bacon / sausage</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--featured">
+          <div class="item-card__info">
+            <div class="item-card__name">Combo 4 — Red Velvet Waffle</div>
+            <div class="item-card__desc">Strawberry cream cheese, fresh strawberries.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Combo 5 — French Toast</div>
+            <div class="item-card__desc">+ 2 eggs* + bacon / sausage</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /tab-specials -->
+
+  <!-- ─────────────── TAB: MORE ─────────────── -->
+  <div class="tab-panel" id="tab-more">
+
+    <!-- BURGERS & SANDWICHES -->
+    <section class="menu-section" id="burgers">
+      <div class="sec-header">
+        <span class="sec-label">Burgers &amp; Sandwiches</span>
+        <p class="sec-note">Burgers: fresh ground beef on brioche bun, with French fries OR onion rings.</p>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780355617/Bacon_Swiss_Burger_yyhbkb.png" alt="Bacon Swiss Burger" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Bacon Swiss Burger*</div>
+            <div class="item-card__desc">Beef patty, Swiss, 2 bacon strips, sautéed onions, lettuce, tomato, mayo.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780355617/Philly_Sandwich_l92v4h.png" alt="Philly Sandwich" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Philly Sandwich</div>
+            <div class="item-card__desc">Freshly sliced ribeye, pepper, onions, mushrooms, Swiss cheese on hot grilled roll.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780357105/Grilled_Chicken_Deluxe_aaymfs.png" alt="Grilled Chicken Deluxe" loading="lazy" style="object-position: center 70%;" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Grilled Chicken Deluxe*</div>
+            <div class="item-card__desc">Chicken breast, lettuce, tomato, mayo.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Hidden Egg Burger*</div>
+            <div class="item-card__desc">Over medium egg, beef patty, American cheese.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Cheeseburger*</div>
+            <div class="item-card__desc">100% house beef patty, American cheese, tomato, lettuce, mayo.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Double Cheeseburger*</div>
+            <div class="item-card__desc">2 juicy beef patties, cheese, lettuce, tomato, mayo.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Club Sandwich</div>
+            <div class="item-card__desc">Triple-decker, lettuce, tomato, bacon, ham &amp; cheese, mayo.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Chicken Fingers</div>
+            <div class="item-card__desc">6 fresh chicken fingers.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Patty Melt*</div>
+            <div class="item-card__desc">Ground beef &amp; Swiss, grilled onions on rye bread.</div>
+          </div>
+        </div>
+
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Bacon / Sausage &amp; Egg* Sandwich</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Fried Egg* &amp; Cheese</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Grilled Cheese</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SALADS -->
+    <section class="menu-section" id="salads">
+      <div class="sec-header">
+        <span class="sec-label">Salads</span>
+      </div>
+      <div class="items-grid">
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">House Salad</div>
+            <div class="item-card__desc">Lettuce, tomato, cheddar, your choice of dressing. Chicken or shrimp available as add-on.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BISCUITS -->
+    <section class="menu-section" id="biscuits">
+      <div class="sec-header">
+        <span class="sec-label">Biscuits</span>
+        <p class="sec-note">Egg* and cheese available as add-ons.</p>
+      </div>
+      <div class="items-grid">
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Biscuit with Sausage Gravy</div>
+          </div>
+        </div>
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Egg* Biscuit</div>
+          </div>
+        </div>
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Bacon / Sausage / Ham Biscuit</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /tab-more -->
+
+  <!-- ─────────────── TAB: SIDES & DRINKS ─────────────── -->
+  <div class="tab-panel" id="tab-sides">
+
+    <!-- SIDES -->
+    <section class="menu-section" id="sides">
+      <div class="sec-header">
+        <span class="sec-label">Breakfast Sides</span>
+      </div>
+      <div class="items-grid items-grid--compact">
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Home Fries</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">French Fries</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Onion Rings</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Grits Cup</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">One Egg*</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">All Natural Bacon (3)</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Smoked Sausage</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Chicken Tenders</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Fruit Cup</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Corned Beef Hash</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Toast w/ Butter &amp; Jelly</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">One Scoop Ice Cream (w/ Cone)</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Country Ham</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Turkey Sausage</div><div class="item-card__desc">2 pieces.</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Sausage Patties</div><div class="item-card__desc">2 pieces.</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Sausage Links</div><div class="item-card__desc">2 pieces.</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Ham (6 oz)</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">One Pancake</div><div class="item-card__desc">Old fashioned buttermilk.</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Banana Nut Pancake</div><div class="item-card__desc">With caramel drizzle.</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Salsa</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Tomato Slices</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Cream Cheese</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Banana</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Salmon Chunks</div></div></div>
+      </div>
+    </section>
+
+    <!-- DRINKS -->
+    <section class="menu-section" id="drinks">
+      <div class="sec-header">
+        <span class="sec-label">Drinks</span>
+      </div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780355617/Iced_coffee_tqnypb.png" alt="Iced Coffee" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Iced Coffee</div>
+            <div class="item-card__desc">Cold brew over ice, topped with whipped cream and caramel drizzle.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780355617/Jumbo_Mimosa_dpitdr.png" alt="Jumbo Mimosa" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Jumbo Mimosa</div>
+            <div class="item-card__desc">100% orange juice, or pineapple juice (or both!) topped with Champagne.</div>
+          </div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-card__photo">
+            <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1780355617/Bloody_mary_ujarkq.png" alt="Bloody Mary Absolut" loading="lazy" />
+          </div>
+          <div class="item-card__info">
+            <div class="item-card__name">Bloody Mary Absolut</div>
+            <div class="item-card__desc">Generous splash of vodka, spices, dressed with bacon slice and a smile.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Willy Wonka Hot Chocolate</div>
+            <div class="item-card__desc">Made with premium Ghirardelli cocoa (no refills).</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Irish Coffee</div>
+            <div class="item-card__desc">Bailey's Irish Cream, whipped cream, garnished with cinnamon.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--text">
+          <div class="item-card__info">
+            <div class="item-card__name">Freshly Brewed Iced Tea</div>
+            <div class="item-card__desc">Sweet or unsweet, served over ice.</div>
+          </div>
+        </div>
+
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Rum &amp; Coke</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Coffee</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Soft Drinks</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">Milk (no refills)</div></div></div>
+        <div class="item-card item-card--row"><div class="item-card__info"><div class="item-card__name">100% Juice (no refills)</div></div></div>
+
+      </div>
+    </section>
+
+  </div><!-- /tab-sides -->
+
+</div><!-- /menu-panel -->
+</div><!-- /menu-card-outer -->
+
+<!-- ══ RESERVATION POPUP ══ -->
+<div class="res-overlay" id="resOverlay" onclick="overlayClose(event)">
+  <div class="res-modal" role="dialog" aria-modal="true" aria-labelledby="resTitle">
+    <button class="res-modal__close" onclick="closeReservation()" aria-label="Close">✕</button>
+    <p class="res-modal__eyebrow">Reserve your spot</p>
+    <h2 class="res-modal__title" id="resTitle">Book a Table</h2>
+    <p class="res-modal__sub">Come taste what you've been craving — reserve a table at NHOP Myrtle Beach.</p>
+    <form class="res-form" onsubmit="submitReservation(event)">
+      <div class="res-field full">
+        <label for="resName">Your name</label>
+        <input id="resName" type="text" placeholder="e.g. Sarah Johnson" required />
+      </div>
+      <div class="res-field">
+        <label for="resDate">Date</label>
+        <input id="resDate" type="date" required />
+      </div>
+      <div class="res-field">
+        <label for="resTime">Time</label>
+        <select id="resTime" required>
+          <option value="">— pick —</option>
+          <option>07:00 AM</option><option>07:30 AM</option>
+          <option>08:00 AM</option><option>08:30 AM</option>
+          <option>09:00 AM</option><option>09:30 AM</option>
+          <option>10:00 AM</option><option>10:30 AM</option>
+          <option>11:00 AM</option><option>11:30 AM</option>
+          <option>12:00 PM</option><option>12:30 PM</option>
+          <option>01:00 PM</option><option>01:30 PM</option>
+          <option>02:00 PM</option>
+        </select>
+      </div>
+      <div class="res-field">
+        <label for="resGuests">Guests</label>
+        <select id="resGuests" required>
+          <option value="">—</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8+</option>
+        </select>
+      </div>
+      <div class="res-field">
+        <label for="resPhone">Phone / Email</label>
+        <input id="resPhone" type="text" placeholder="+1 (555) 000-0000" required />
+      </div>
+      <button type="submit" class="res-submit">Confirm Reservation →</button>
+    </form>
+  </div>
+</div>
+
+<script src="./scripts/main.js"></script>
+
+<script>
+/* Force nav always sticky */
+(function() {
+  const nav = document.getElementById('nav');
+  if (!nav) return;
+  nav.style.setProperty('position', 'sticky', 'important');
+  nav.style.setProperty('top', '0', 'important');
+  nav.classList.add('nav--scrolled');
+  window.addEventListener('scroll', function() {
+    if (nav.classList.contains('menu-is-open')) return;
+    nav.style.setProperty('position', 'sticky', 'important');
+    nav.style.setProperty('top', '0', 'important');
+    nav.classList.add('nav--scrolled');
+  }, { passive: true });
+  function syncNavHeight() {
+    document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+  }
+  syncNavHeight();
+  new ResizeObserver(syncNavHeight).observe(nav);
+})();
+
+/* Tab navigation — click scrolls to section, scroll updates active tab */
+(function() {
+  var btns     = document.querySelectorAll('.tab-btn');
+  var panels   = document.querySelectorAll('.tab-panel');
+  var nav      = document.getElementById('nav');
+  var tabsWrap = document.getElementById('menuTabsWrap');
+
+  function setActive(id) {
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    var btn = document.querySelector('.tab-btn[data-tab="' + id + '"]');
+    /* mobile combined tab covers "more" and "sides" */
+    if (!btn || getComputedStyle(btn).display === 'none') {
+      btn = document.querySelector('.tab-btn[data-tab="more-sides"]');
+    }
+    if (btn) btn.classList.add('active');
+  }
+
+  /* click → scroll to panel */
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = btn.dataset.tab === 'more-sides' ? 'more' : btn.dataset.tab;
+      var panel = document.getElementById('tab-' + id);
+      if (!panel) return;
+      setActive(id);
+      var navH  = (nav      || {}).offsetHeight || 56;
+      var tabsH = (tabsWrap || {}).offsetHeight || 60;
+      var top = panel.getBoundingClientRect().top + window.scrollY - navH - tabsH;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+  });
+
+  /* scroll → update active tab */
+  function onScroll() {
+    var navH  = (nav      || {}).offsetHeight || 56;
+    var tabsH = (tabsWrap || {}).offsetHeight || 60;
+    var mark  = window.scrollY + navH + tabsH + 32;
+    var current = panels[0];
+    panels.forEach(function(p) {
+      if (p.getBoundingClientRect().top + window.scrollY <= mark) current = p;
+    });
+    setActive(current.id.replace('tab-', ''));
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* Reservation popup */
+function openReservation() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('resDate').min = today;
+  document.getElementById('resDate').value = '';
+  document.getElementById('resOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReservation() {
+  document.getElementById('resOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClose(e) {
+  if (e.target === document.getElementById('resOverlay')) closeReservation();
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeReservation();
+});
+function submitReservation(e) {
+  e.preventDefault();
+  const name   = document.getElementById('resName').value;
+  const date   = document.getElementById('resDate').value;
+  const time   = document.getElementById('resTime').value;
+  const guests = document.getElementById('resGuests').value;
+  const modal  = document.querySelector('.res-modal');
+  modal.innerHTML = `
+    <button class="res-modal__close" onclick="closeReservation()" aria-label="Close">✕</button>
+    <p class="res-modal__eyebrow" style="color:var(--fg-base)">You're all set 🥞</p>
+    <h2 class="res-modal__title">See you soon,<br>${name.split(' ')[0]}!</h2>
+    <p style="font-size:0.92rem;color:var(--fg-muted);line-height:1.6;margin-top:0.75rem">
+      <strong style="color:var(--fg-base)">${guests} guest${guests === '1' ? '' : 's'}</strong> ·
+      <strong style="color:var(--fg-base)">${date}</strong> ·
+      <strong style="color:var(--fg-base)">${time}</strong><br>
+      211 N Kings Hwy, Myrtle Beach, SC 29577<br><br>
+      We'll have your table ready. See you at NHOP!
+    </p>
+    <div style="margin-top:1.75rem;background:rgba(250,227,142,.3);border-radius:14px;padding:1rem 1.2rem;font-size:0.85rem;font-weight:700;color:var(--fg-base)">
+      📍 211 N Kings Hwy, Myrtle Beach · Open 7 AM – 3 PM
+    </div>
+  `;
+}
+</script>
+
+<!-- Reserve Modal -->
+<div class="nhop-reserve-modal" id="nhopReserveModal" role="dialog" aria-modal="true" aria-label="Reserve your table">
+  <div class="nhop-reserve-modal__inner">
+    <button class="nhop-reserve-modal__close" id="nhopModalClose" aria-label="Close">✕</button>
+    <div class="reserve__card">
+      <div class="reserve__form-side">
+        <h2 class="reserve__title">Reserve Your Table</h2>
+        <form class="reserve__form" id="reserveForm" novalidate>
+          <div class="reserve__progress" aria-hidden="true">
+            <span class="reserve__prog-dot is-active" data-step="1">1</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="2">2</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="3">3</span>
+            <span class="reserve__prog-line"></span>
+            <span class="reserve__prog-dot" data-step="4">4</span>
+          </div>
+          <div class="reserve__scene is-visible" data-scene="1">
+            <p class="reserve__hint">Let's get your booth ready</p>
+            <h3 class="reserve__q">What's your name?</h3>
+            <div class="name-field">
+              <input class="name-input" id="r-name" type="text" placeholder="Your name…" autocomplete="name" required />
+              <div class="name-underline"></div>
+              <svg class="name-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </div>
+            <div class="reserve__nav"><span class="reserve__nav-spacer"></span><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="2">
+            <p class="reserve__hint">When's the feast?</p>
+            <h3 class="reserve__q">Pick your day</h3>
+            <div class="date-picker">
+              <div class="date-picker__day-wrap">
+                <div class="date-picker__row" data-picker="day"></div>
+                <button type="button" class="cal-btn" aria-label="Pick a different date">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <input type="date" id="calPicker" tabindex="-1" aria-hidden="true" />
+                </button>
+              </div>
+              <div class="date-picker__row" data-picker="time" style="display:none">
+                <button type="button" class="chip" data-time="08:00">8 AM</button>
+                <button type="button" class="chip" data-time="09:00">9 AM</button>
+                <button type="button" class="chip" data-time="10:00">10 AM</button>
+                <button type="button" class="chip" data-time="11:00">11 AM</button>
+                <button type="button" class="chip" data-time="12:00">12 PM</button>
+                <button type="button" class="chip" data-time="13:00">1 PM</button>
+                <button type="button" class="chip" data-time="14:00">2 PM</button>
+              </div>
+            </div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="3">
+            <p class="reserve__hint">The more, the merrier</p>
+            <h3 class="reserve__q">How many guests?</h3>
+            <div class="party-table" data-party-table></div>
+            <div class="party-controls">
+              <button type="button" class="party-btn" data-guests-change="-1">−</button>
+              <span class="party-display"><span class="party-count" data-party-count>2</span><span> guests</span></span>
+              <button type="button" class="party-btn" data-guests-change="+1">+</button>
+            </div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="button" class="btn" data-next>Next →</button></div>
+          </div>
+          <div class="reserve__scene" data-scene="4">
+            <p class="reserve__hint">Last step — we'll text your confirmation</p>
+            <h3 class="reserve__q">Your phone?</h3>
+            <div class="phone-display"><span class="phone-prefix">+1</span><span class="phone-number" data-phone-display>_ _ _–_ _ _ _</span></div>
+            <div class="reserve__nav"><button type="button" class="btn btn--ghost" data-prev>← Back</button><button type="submit" class="btn">Book my table →</button></div>
+          </div>
+          <div class="reserve__scene reserve__scene--done" data-scene="done">
+            <div class="reserve__confirm-card">
+              <span class="reserve__card-label">You're booked!</span>
+              <p class="reserve__card-name" data-confirm="name"></p>
+              <p class="reserve__card-meta" data-confirm="meta"></p>
+            </div>
+            <p class="reserve__done-copy">See you soon! We'll confirm by text.</p>
+            <button type="button" class="btn btn--ghost" data-restart>New reservation →</button>
+          </div>
+        </form>
+      </div>
+      <div class="reserve__photo-side">
+        <img src="https://res.cloudinary.com/dksohsy0i/image/upload/v1777507506/hf_20260430_000351_860f83cf-3445-4155-beb2-ca1d84cfa9e8_qcy6ub.png" alt="NHOP guests enjoying their meal" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./scripts/reserve.js" defer></script>
+<script>
+(function(){
+  var modal = document.getElementById('nhopReserveModal');
+  document.getElementById('nhopModalClose').addEventListener('click', function(){ modal.classList.remove('is-open'); document.body.style.overflow=''; });
+  modal.addEventListener('click', function(e){ if(e.target===modal){ modal.classList.remove('is-open'); document.body.style.overflow=''; }});
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ modal.classList.remove('is-open'); document.body.style.overflow=''; }});
+})();
+</script>
+</body>
+</html>
